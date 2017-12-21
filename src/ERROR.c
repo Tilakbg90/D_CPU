@@ -32,7 +32,7 @@
 
 ****************************************************************/
 #include <xc.h>
-#include <string.h>
+
 
 #include "COMMON.h"
 #include "DAC_MAIN.h"
@@ -648,8 +648,7 @@ Algorithm           :1.Update the down and up stream error code if the flag of t
 *************************************************************/
 void Update_Error_Code(void)
 {
-    if(DIP_Switch_Info.Configuration == G39_DAC)
-    {
+
       switch (DIP_Switch_Info.DAC_Unit_Type)
         {
             case DAC_UNIT_TYPE_SF:
@@ -694,23 +693,7 @@ void Update_Error_Code(void)
                      }
                  break;
         }
-    }
-    else
-    {
-        switch (DIP_Switch_Info.FDP_Unit_Type)
-            {
-            case FDP_2C1E:
-            case FDP_2C2E:
-                break;
-            case FDP_1C1E:
-                    if(Error_Code.Flags.US_Section == FALSE)
-                     {
-                       Error_Code.US_Error = (BYTE)Error_Display.Error_Code;
-                       Error_Code.Flags.US_Section = TRUE;
-                     }
-                    break;
-            }
-    }
+
 
 }
 

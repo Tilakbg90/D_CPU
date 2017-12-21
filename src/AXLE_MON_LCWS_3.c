@@ -58,7 +58,7 @@
 
 *****************************************************************************/
 #include <xc.h>
-#include <string.h>
+
 
 #include "COMMON.h"
 #include "AXLE_MON.h"
@@ -68,7 +68,7 @@
 extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
  /*near*/  track_info_t Track_Info_3;
-extern fdp_info FDP_Info;
+
 
 
 extern const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIONS];
@@ -2674,11 +2674,7 @@ void Start_US_Axle_Counting_3(void)
  Track_Info_3.Flags.US_Counting_Enable = SET_HIGH;
 }
 
-//01/09/10
-void Start_FDP_US_Axle_Counting_3(void)
-{
- Track_Info_3.Flags.FDP_US_Counting_Enable = SET_HIGH;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_DS_Axle_Counting(void)
@@ -2733,11 +2729,7 @@ void Start_DS_Axle_Counting_3(void)
 {
  Track_Info_3.Flags.DS_Counting_Enable = SET_HIGH;
 }
-//01/09/10
-void Start_FDP_DS_Axle_Counting_3(void)
-{
- Track_Info_3.Flags.FDP_DS_Counting_Enable = SET_HIGH;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_US_Axle_Counting(void)
@@ -2789,11 +2781,7 @@ void Stop_US_Axle_Counting_3(void)
 {
  Track_Info_3.Flags.US_Counting_Enable = SET_LOW;
 }
-//01/09/10
-void Stop_FDP_US_Axle_Counting_3(void)
-{
- Track_Info_3.Flags.FDP_US_Counting_Enable = SET_LOW;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_DS_Axle_Counting(void)
@@ -2849,10 +2837,7 @@ void Stop_DS_Axle_Counting_3(void)
 }
 //01/09/10
 
-void Stop_FDP_DS_Axle_Counting_3(void)
-{
- Track_Info_3.Flags.FDP_DS_Counting_Enable = SET_LOW;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_DS_Local_Counts_Clearing_Status(void)

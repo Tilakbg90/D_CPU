@@ -92,7 +92,7 @@ reset_button_info_t Reset_Button_Info;
 reset_button_info_t Reset_Button2_Info;
 extern  ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
 extern  us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
-extern fdp_info FDP_Info;
+
 
 const BYTE uchDAC_Status_Table[NO_OF_REMOTE_UNIT_STATES][NO_OF_LOCAL_UNIT_STATES] = {
 {ZERO_MODE, ZERO_MODE,                         ERROR_RESET_APPLIED_AT_LOCAL_UNIT, ZERO_MODE,                   ZERO_MODE,                   ZERO_MODE,                      SECTION_ERROR_AT_BOTH_UNITS},
@@ -108,7 +108,7 @@ const BYTE uchDAC_Status_Table[NO_OF_REMOTE_UNIT_STATES][NO_OF_LOCAL_UNIT_STATES
 void SF_Wait_for_Local_Reset(void);
 void CF_Wait_for_Local_Reset(void);
 void EF_Wait_for_Local_Reset(void);
-void FDP_US_Wait_for_Reset(void);
+
 void SF_Reset_Sequence_Complete(void);
 void CF_DS_Reset_Sequence_Complete(void);
 void CF_US_Reset_Sequence_Complete(void);
@@ -437,12 +437,7 @@ void Initialise_EF_Reset_Monitor(void)
     US_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
 }
 
-void Initialise_FDP_US_Reset_Monitor(void)
-{
- Reset_Button_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
- Reset_Button_Info.Timeout_ms = 0;
- Reset_Info.FDP.Flags.Peer_CPU_has_been_Reset = FALSE;
-}
+
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Start_SF_Reset_Monitor(void)
@@ -665,13 +660,6 @@ void Start_EF_Reset_Monitor(void)
     }
 }
 
-void Start_FDP_US_Reset_Monitor(void)
-{
-    if (Status.Flags.Local_Reset_Done == SM_RESET_PENDING)
-    {
-        Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
-    }
-}
 
 /*********************************************************************
 Component name      :RESET
@@ -2707,52 +2695,6 @@ void EF_Wait_for_Local_Reset(void)
     }
 }
 
-void Update_FDP_Comm1_Reset_State(void)
-{
-  Update_Reset_Button_State();
-  FDP_US_Wait_for_Reset();
-
-    switch (Reset_Info.FDP.US_State)
-    {
-        case FDP_US_WAIT_FOR_RESET:
-            break;
-        case FDP_US_WAIT_FOR_PEER_TO_RESET:
-            if (Reset_Info.FDP.Flags.Peer_CPU_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
-            {
-                Reset_Info.FDP.US_State = FDP_US_RESET_SEQUENCE_COMPLETED;
-                FDP_Info.State = UNIT_RESETTED;
-                     /* Update CheckSum  */
-            }
-            break;
-        case FDP_US_RESET_SEQUENCE_COMPLETED:
-            break;
-    }
-}
-
-void FDP_US_Wait_for_Reset(void)
-{
- if (Reset_Button_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
- {
-    Reset_Button_Info.State  = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;    /* Start reset button polling */
-        if (Reset_Allowed_For_FDP_US())
-        {
-            /* Preparatory reset at Runtime */
-            Reset_Info.FDP.US_State = (BYTE) FDP_US_WAIT_FOR_PEER_TO_RESET;
-            /* Preparatory reset is accepted only once */
-            Reset_Info.FDP.Flags.Peer_CPU_has_been_Reset = FALSE;
-                 /* Update CheckSum  */
-            {__asm__ volatile ("reset");} // RESET();               /* Reset the System */
-            return;
-        }
-        if(Reset_Info.FDP.US_State == FDP_US_WAIT_FOR_RESET)
-        {
-            /* Preparatory reset at start-up */
-            Status.Flags.Local_Reset_Done  = SM_HAS_RESETTED_SYSTEM;
-            Reset_Info.FDP.US_State = (BYTE) FDP_US_WAIT_FOR_PEER_TO_RESET;
-            
-        }
-    }
-}
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_Reset_Button_State(void)
@@ -4199,13 +4141,6 @@ BYTE Get_EF_US2_Reset_State(void)
 }
 
 
-BYTE Get_FDP_US_Reset_State(void)
-{
-    BYTE uchState;
-    uchState = (BYTE) Reset_Info.FDP.US_State;
-
-    return(uchState);
-}
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_DS1_has_been_Reset(BYTE uchData)
@@ -4560,14 +4495,7 @@ void Post_Peer_CPU_Reset1(BYTE uchData)
     
 }
 
-void Post_FDP_US_Reset(bitadrb_t uchreset)
-{
 
- if(uchreset.Bit.b0 == FDP_RESET_COMMAND)
- {
-    Reset_Button_Info.State = (BYTE) RESET_BUTTON_PRESS_ACCEPTED;
- }
-}
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_DS_Section_Remote_Reset(void)
@@ -5285,50 +5213,3 @@ void Clear_Reset_State(void)
 
 }
 
-void Clear_FDP_Reset_State(void)
-{
-    switch(DIP_Switch_Info.FDP_Unit_Type)
-    {
-        case FDP_1C1E:
-            Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
-            Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
-            Reset_Info.FDP.US_State = (BYTE) FDP_US_WAIT_FOR_RESET;
-            Reset_Info.FDP.Flags.Peer_CPU_has_been_Reset = FALSE;
-            
-            Clear_FDP_Reset_Info();
-            break;
-        case FDP_2C1E:
-            break;
-        case FDP_2C2E:
-            break;
-        default:
-            break;
-     }
-
-}
-
-
-void Clear_FDP_Reset_Info(void)
-{
-    switch(DIP_Switch_Info.FDP_Unit_Type)
-    {
-        case FDP_1C1E:
-            Reset_Info.EF.Flags.Peer_CPU_has_been_Reset = FALSE;
-            
-            break;
-
-        case FDP_2C1E:
-            break;
-        case FDP_2C2E:
-            Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
-            Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1= FALSE;
-            
-            break;
-     }
-
-    Reset_Button_Info.Timeout_ms = 0;
-    Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
-    Reset_Button2_Info.Timeout_ms = 0;
-    Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;  /* Start reset button polling */
-
-}

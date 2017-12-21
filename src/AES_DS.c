@@ -22,10 +22,10 @@ extern const BYTE x3[256];
 extern const unsigned char E_Key[16];
 extern const unsigned char D_Key[16];
 
-void DS_EncodeShiftRow(BYTE* block);
-void DS_DecodeShiftRow(BYTE* stateTable);
-void DS_EncKeySchedule(BYTE* key);
-void DS_DecKeySchedule(BYTE* key);
+void DS_EncodeShiftRow(void);
+void DS_DecodeShiftRow(void);
+void DS_EncKeySchedule(void);
+void DS_DecKeySchedule(void);
 void Load_DS_Encrypt_Key(void);
 void Load_DS_Decrypt_Key(void);
 
@@ -47,12 +47,12 @@ void Update_DS_Data_Encode(void)
                 break;
             case START_ENCRYPTION:
                 Load_DS_Encrypt_Key();
-                DS_Encode_Key_Addition(Com2XmitObject.Msg_Buffer, DS_Ciper_Message_Info.Encrypt_key);
+                DS_Encode_Key_Addition();
                 DS_Enciper_Info.State = ENCRYPT_KEY_ADDITION;
                 DS_Enciper_Info.Timeout_ms = ENCRYPT_TIMEOUT;
                 break;
             case ENCRYPT_KEY_ADDITION:
-                DS_Encode_Data(Com2XmitObject.Msg_Buffer, DS_Ciper_Message_Info.Encrypt_key);
+                DS_Encode_Data();
                 if(DS_roundCounter == 0)
                 {
                  DS_Enciper_Info.State = ENCRYPTION_COMLETED;
@@ -79,7 +79,7 @@ void Load_DS_Encrypt_Key(void)
     }
 }
 
-void DS_Encode_Key_Addition(BYTE* block, BYTE* key)
+void DS_Encode_Key_Addition(void)
 {
 
     BYTE i;
@@ -91,21 +91,21 @@ void DS_Encode_Key_Addition(BYTE* block, BYTE* key)
     /* key addition */
     for(i=0;i<BLOCKSIZE;i++)
     {
-        block[i] ^= key[i];
+        Com2XmitObject.Msg_Buffer[i] ^= DS_Ciper_Message_Info.Encrypt_key[i];
     }
 }
 
-void DS_Encode_Data(BYTE* block, BYTE* key)
+void DS_Encode_Data()
 {
 
     /* s table substitution */
         for(DS_iE=0;DS_iE<BLOCKSIZE;DS_iE++)
         {
-            block[DS_iE]=STable[block[DS_iE]];
+            Com2XmitObject.Msg_Buffer[DS_iE]=STable[Com2XmitObject.Msg_Buffer[DS_iE]];
         }
 
         /*   encode shift row */
-        DS_EncodeShiftRow(block);
+        DS_EncodeShiftRow();
 
         /*   if round counter != 1 */
         if(DS_roundCounter != 1)
@@ -114,90 +114,92 @@ void DS_Encode_Data(BYTE* block, BYTE* key)
             /*     mix column */
             for(DS_iE=0;DS_iE<16;DS_iE+=4)
             {
-                aux1= block[DS_iE+0] ^ block[DS_iE+1];
-                aux3= block[DS_iE+2]^block[DS_iE+3];
+                aux1= Com2XmitObject.Msg_Buffer[DS_iE+0] ^ Com2XmitObject.Msg_Buffer[DS_iE+1];
+                aux3= Com2XmitObject.Msg_Buffer[DS_iE+2]^Com2XmitObject.Msg_Buffer[DS_iE+3];
                 aux = aux1 ^ aux3;
-                aux2= block[DS_iE+2]^block[DS_iE+1];
+                aux2= Com2XmitObject.Msg_Buffer[DS_iE+2]^Com2XmitObject.Msg_Buffer[DS_iE+1];
 
                 aux1 = xtime(aux1);
                 aux2 = xtime(aux2);
                 aux3 = xtime(aux3);
 
-                block[DS_iE+0]= aux^aux1^block[DS_iE+0];
-                block[DS_iE+1]= aux^aux2^block[DS_iE+1];
-                block[DS_iE+2]= aux^aux3^block[DS_iE+2];
-                block[DS_iE+3]= block[DS_iE+0]^block[DS_iE+1]^block[DS_iE+2]^aux;
+                Com2XmitObject.Msg_Buffer[DS_iE+0]= aux^aux1^Com2XmitObject.Msg_Buffer[DS_iE+0];
+                Com2XmitObject.Msg_Buffer[DS_iE+1]= aux^aux2^Com2XmitObject.Msg_Buffer[DS_iE+1];
+                Com2XmitObject.Msg_Buffer[DS_iE+2]= aux^aux3^Com2XmitObject.Msg_Buffer[DS_iE+2];
+                Com2XmitObject.Msg_Buffer[DS_iE+3]= Com2XmitObject.Msg_Buffer[DS_iE+0]^Com2XmitObject.Msg_Buffer[DS_iE+1]^Com2XmitObject.Msg_Buffer[DS_iE+2]^aux;
             }
         }
-        /*   encode key schedule */
-        DS_EncKeySchedule(key);
+        /*   encode DS_Ciper_Message_Info.Encrypt_key schedule */
+        DS_EncKeySchedule();
 
-        /*   key addition */
+        /*   DS_Ciper_Message_Info.Encrypt_key addition */
         for(DS_iE=0;DS_iE<BLOCKSIZE;DS_iE++)
         {
-            block[DS_iE] ^= key[DS_iE];
+            Com2XmitObject.Msg_Buffer[DS_iE] ^= DS_Ciper_Message_Info.Encrypt_key[DS_iE];
         }
 
         DS_roundCounter--;
 }
 
-void DS_EncodeShiftRow(BYTE* stateTable)
+
+
+void DS_EncodeShiftRow(void)
 {
     BYTE temp;
 
     /* first row (row 0) unchanged */
 
     /* second row (row 1) shifted left by one */
-    temp=stateTable[1];
-    stateTable[1]=stateTable[5];
-    stateTable[5]=stateTable[9];
-    stateTable[9]=stateTable[13];
-    stateTable[13]=temp;
+    temp=Com2XmitObject.Msg_Buffer[1];
+    Com2XmitObject.Msg_Buffer[1]=Com2XmitObject.Msg_Buffer[5];
+    Com2XmitObject.Msg_Buffer[5]=Com2XmitObject.Msg_Buffer[9];
+    Com2XmitObject.Msg_Buffer[9]=Com2XmitObject.Msg_Buffer[13];
+    Com2XmitObject.Msg_Buffer[13]=temp;
 
     /* third row (row 2) shifted left by two */
-    temp=stateTable[2];
-    stateTable[2]=stateTable[10];
-    stateTable[10]=temp;
-    temp=stateTable[14];
-    stateTable[14]=stateTable[6];
-    stateTable[6]=temp;
+    temp=Com2XmitObject.Msg_Buffer[2];
+    Com2XmitObject.Msg_Buffer[2]=Com2XmitObject.Msg_Buffer[10];
+    Com2XmitObject.Msg_Buffer[10]=temp;
+    temp=Com2XmitObject.Msg_Buffer[14];
+    Com2XmitObject.Msg_Buffer[14]=Com2XmitObject.Msg_Buffer[6];
+    Com2XmitObject.Msg_Buffer[6]=temp;
 
     /* fourth row (row 3) shifted left by three (or right by one) */
-    temp=stateTable[3];
-    stateTable[3]=stateTable[15];
-    stateTable[15]=stateTable[11];
-    stateTable[11]=stateTable[7];
-    stateTable[7]=temp;
+    temp=Com2XmitObject.Msg_Buffer[3];
+    Com2XmitObject.Msg_Buffer[3]=Com2XmitObject.Msg_Buffer[15];
+    Com2XmitObject.Msg_Buffer[15]=Com2XmitObject.Msg_Buffer[11];
+    Com2XmitObject.Msg_Buffer[11]=Com2XmitObject.Msg_Buffer[7];
+    Com2XmitObject.Msg_Buffer[7]=temp;
 }
 
-void DS_EncKeySchedule(BYTE* key)
+void DS_EncKeySchedule(void)
 {
     /* column 1 */
-    key[0]^=STable[key[13]];
-    key[1]^=STable[key[14]];
-    key[2]^=STable[key[15]];
-    key[3]^=STable[key[12]];
+    DS_Ciper_Message_Info.Encrypt_key[0]^=STable[DS_Ciper_Message_Info.Encrypt_key[13]];
+    DS_Ciper_Message_Info.Encrypt_key[1]^=STable[DS_Ciper_Message_Info.Encrypt_key[14]];
+    DS_Ciper_Message_Info.Encrypt_key[2]^=STable[DS_Ciper_Message_Info.Encrypt_key[15]];
+    DS_Ciper_Message_Info.Encrypt_key[3]^=STable[DS_Ciper_Message_Info.Encrypt_key[12]];
 
-    key[0]^=DS_rcon;
+    DS_Ciper_Message_Info.Encrypt_key[0]^=DS_rcon;
     DS_rcon = xtime(DS_rcon);
 
     /* column 2 */
-    key[4]^=key[0];
-    key[5]^=key[1];
-    key[6]^=key[2];
-    key[7]^=key[3];
+    DS_Ciper_Message_Info.Encrypt_key[4]^=DS_Ciper_Message_Info.Encrypt_key[0];
+    DS_Ciper_Message_Info.Encrypt_key[5]^=DS_Ciper_Message_Info.Encrypt_key[1];
+    DS_Ciper_Message_Info.Encrypt_key[6]^=DS_Ciper_Message_Info.Encrypt_key[2];
+    DS_Ciper_Message_Info.Encrypt_key[7]^=DS_Ciper_Message_Info.Encrypt_key[3];
 
     /* column 3 */
-    key[8]^=key[4];
-    key[9]^=key[5];
-    key[10]^=key[6];
-    key[11]^=key[7];
+    DS_Ciper_Message_Info.Encrypt_key[8]^=DS_Ciper_Message_Info.Encrypt_key[4];
+    DS_Ciper_Message_Info.Encrypt_key[9]^=DS_Ciper_Message_Info.Encrypt_key[5];
+    DS_Ciper_Message_Info.Encrypt_key[10]^=DS_Ciper_Message_Info.Encrypt_key[6];
+    DS_Ciper_Message_Info.Encrypt_key[11]^=DS_Ciper_Message_Info.Encrypt_key[7];
 
     /* column 4 */
-    key[12]^=key[8];
-    key[13]^=key[9];
-    key[14]^=key[10];
-    key[15]^=key[11];
+    DS_Ciper_Message_Info.Encrypt_key[12]^=DS_Ciper_Message_Info.Encrypt_key[8];
+    DS_Ciper_Message_Info.Encrypt_key[13]^=DS_Ciper_Message_Info.Encrypt_key[9];
+    DS_Ciper_Message_Info.Encrypt_key[14]^=DS_Ciper_Message_Info.Encrypt_key[10];
+    DS_Ciper_Message_Info.Encrypt_key[15]^=DS_Ciper_Message_Info.Encrypt_key[11];
 
 }
 
@@ -210,12 +212,12 @@ void Update_DS_Data_Decode(void)
                 break;
             case START_DECRYPTION:
                 Load_DS_Decrypt_Key();
-                DS_Decode_Key_Addition(Com2RecvObject.Msg_Buffer, DS_Ciper_Message_Info.Decrypt_key);
+                DS_Decode_Key_Addition();
                 DS_Deciper_Info.State = DECRYPT_KEY_ADDITION;
                 DS_Deciper_Info.Timeout_ms = DECRYPT_TIMEOUT;
                 break;
             case DECRYPT_KEY_ADDITION:
-                DS_Decode_Data(Com2RecvObject.Msg_Buffer, DS_Ciper_Message_Info.Decrypt_key);
+                DS_Decode_Data();
                 if(DS_roundCounter == 0)
                 {
                  DS_Deciper_Info.State = DECRYPTION_COMPLETED;
@@ -242,7 +244,7 @@ void Load_DS_Decrypt_Key(void)
     }
 }
 
-void DS_Decode_Key_Addition(BYTE* block, BYTE* key)
+void DS_Decode_Key_Addition(void)
 {
     BYTE i;
 
@@ -257,12 +259,12 @@ void DS_Decode_Key_Addition(BYTE* block, BYTE* key)
     /* key addition */
     for(i=0;i<BLOCKSIZE;i++)
     {
-        block[i] ^= key[i];
+        Com2RecvObject.Msg_Buffer[i] ^= DS_Ciper_Message_Info.Decrypt_key[i];
     }
 
 }
 
-void DS_Decode_Data(BYTE* block, BYTE* key)
+void DS_Decode_Data(void)
 {
     if( DS_roundCounter != 10)
         {
@@ -273,27 +275,27 @@ void DS_Decode_Data(BYTE* block, BYTE* key)
                 BYTE temp0,temp1,temp2,temp3;
                 for(DS_iD=0;DS_iD<16;DS_iD+=4)
                 {
-                    temp3=x3[block[DS_iD+0x00]]^x3[block[DS_iD+0x01]]^x3[block[DS_iD+0x02]]^x3[block[DS_iD+0x03]]^block[DS_iD+0x00]^block[DS_iD+0x01]^block[DS_iD+0x02]^block[DS_iD+0x03];
-                    temp0=x2[block[DS_iD+0x00]]^x1[block[DS_iD+0x00]]
-                              ^x1[block[DS_iD+0x01]]
-                              ^x2[block[DS_iD+0x02]]
-                              ^temp3^block[DS_iD+0x00];
-                    temp1=x2[block[DS_iD+0x01]]^x1[block[DS_iD+0x01]]
-                              ^x1[block[DS_iD+0x02]]
-                              ^x2[block[DS_iD+0x03]]
-                              ^temp3^block[DS_iD+0x01];
-                    temp2=x2[block[DS_iD+0x02]]^x1[block[DS_iD+0x02]]
-                              ^x1[block[DS_iD+0x03]]
-                              ^x2[block[DS_iD+0x00]]
-                              ^temp3^block[DS_iD+0x02];
-                    temp3^=x2[block[DS_iD+0x03]]^x1[block[DS_iD+0x03]]
-                              ^x1[block[DS_iD+0x00]]
-                              ^x2[block[DS_iD+0x01]]
-                              ^block[DS_iD+0x03];
-                    block[DS_iD+0]=temp0;
-                    block[DS_iD+1]=temp1;
-                    block[DS_iD+2]=temp2;
-                    block[DS_iD+3]=temp3;
+                    temp3=x3[Com2RecvObject.Msg_Buffer[DS_iD+0x00]]^x3[Com2RecvObject.Msg_Buffer[DS_iD+0x01]]^x3[Com2RecvObject.Msg_Buffer[DS_iD+0x02]]^x3[Com2RecvObject.Msg_Buffer[DS_iD+0x03]]^Com2RecvObject.Msg_Buffer[DS_iD+0x00]^Com2RecvObject.Msg_Buffer[DS_iD+0x01]^Com2RecvObject.Msg_Buffer[DS_iD+0x02]^Com2RecvObject.Msg_Buffer[DS_iD+0x03];
+                    temp0=x2[Com2RecvObject.Msg_Buffer[DS_iD+0x00]]^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x00]]
+                              ^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x01]]
+                              ^x2[Com2RecvObject.Msg_Buffer[DS_iD+0x02]]
+                              ^temp3^Com2RecvObject.Msg_Buffer[DS_iD+0x00];
+                    temp1=x2[Com2RecvObject.Msg_Buffer[DS_iD+0x01]]^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x01]]
+                              ^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x02]]
+                              ^x2[Com2RecvObject.Msg_Buffer[DS_iD+0x03]]
+                              ^temp3^Com2RecvObject.Msg_Buffer[DS_iD+0x01];
+                    temp2=x2[Com2RecvObject.Msg_Buffer[DS_iD+0x02]]^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x02]]
+                              ^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x03]]
+                              ^x2[Com2RecvObject.Msg_Buffer[DS_iD+0x00]]
+                              ^temp3^Com2RecvObject.Msg_Buffer[DS_iD+0x02];
+                    temp3^=x2[Com2RecvObject.Msg_Buffer[DS_iD+0x03]]^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x03]]
+                              ^x1[Com2RecvObject.Msg_Buffer[DS_iD+0x00]]
+                              ^x2[Com2RecvObject.Msg_Buffer[DS_iD+0x01]]
+                              ^Com2RecvObject.Msg_Buffer[DS_iD+0x03];
+                    Com2RecvObject.Msg_Buffer[DS_iD+0]=temp0;
+                    Com2RecvObject.Msg_Buffer[DS_iD+1]=temp1;
+                    Com2RecvObject.Msg_Buffer[DS_iD+2]=temp2;
+                    Com2RecvObject.Msg_Buffer[DS_iD+3]=temp3;
                 }
             }
 
@@ -302,79 +304,79 @@ void DS_Decode_Data(BYTE* block, BYTE* key)
         /* s table substitution */
         for(DS_iD=0;DS_iD<BLOCKSIZE;DS_iD++)
         {
-            block[DS_iD]=SiTable[block[DS_iD]];
+            Com2RecvObject.Msg_Buffer[DS_iD]=SiTable[Com2RecvObject.Msg_Buffer[DS_iD]];
         }
 
         /* decode shift row */
-        DS_DecodeShiftRow(block);
+        DS_DecodeShiftRow();
 
-        /* decode key schedule */
-        DS_DecKeySchedule(key);
+        /* decode DS_Ciper_Message_Info.Decrypt_key schedule */
+        DS_DecKeySchedule();
 
         for(DS_iD=0;DS_iD<BLOCKSIZE;DS_iD++)
         {
-            block[DS_iD] ^= key[DS_iD];
+            Com2RecvObject.Msg_Buffer[DS_iD] ^= DS_Ciper_Message_Info.Decrypt_key[DS_iD];
         }
 
         DS_roundCounter--;
 }
 
-void DS_DecodeShiftRow(BYTE* stateTable)
+void DS_DecodeShiftRow(void)
 {
     BYTE temp;
 
     /* first row (row 0) unchanged */
 
     /* second row (row 1) shifted left by three (or right by one) */
-    temp=stateTable[1];
-    stateTable[1]=stateTable[13];
-    stateTable[13]=stateTable[9];
-    stateTable[9]=stateTable[5];
-    stateTable[5]=temp;
+    temp=Com2RecvObject.Msg_Buffer[1];
+    Com2RecvObject.Msg_Buffer[1]=Com2RecvObject.Msg_Buffer[13];
+    Com2RecvObject.Msg_Buffer[13]=Com2RecvObject.Msg_Buffer[9];
+    Com2RecvObject.Msg_Buffer[9]=Com2RecvObject.Msg_Buffer[5];
+    Com2RecvObject.Msg_Buffer[5]=temp;
 
     /* third row (row 2) shifted left by two */
-    temp=stateTable[2];
-    stateTable[2]=stateTable[10];
-    stateTable[10]=temp;
-    temp=stateTable[14];
-    stateTable[14]=stateTable[6];
-    stateTable[6]=temp;
+    temp=Com2RecvObject.Msg_Buffer[2];
+    Com2RecvObject.Msg_Buffer[2]=Com2RecvObject.Msg_Buffer[10];
+    Com2RecvObject.Msg_Buffer[10]=temp;
+    temp=Com2RecvObject.Msg_Buffer[14];
+    Com2RecvObject.Msg_Buffer[14]=Com2RecvObject.Msg_Buffer[6];
+    Com2RecvObject.Msg_Buffer[6]=temp;
 
     /* fourth row (row 3) shifted left by one */
-    temp=stateTable[7];
-    stateTable[7]=stateTable[11];
-    stateTable[11]=stateTable[15];
-    stateTable[15]=stateTable[3];
-    stateTable[3]=temp;
+    temp=Com2RecvObject.Msg_Buffer[7];
+    Com2RecvObject.Msg_Buffer[7]=Com2RecvObject.Msg_Buffer[11];
+    Com2RecvObject.Msg_Buffer[11]=Com2RecvObject.Msg_Buffer[15];
+    Com2RecvObject.Msg_Buffer[15]=Com2RecvObject.Msg_Buffer[3];
+    Com2RecvObject.Msg_Buffer[3]=temp;
 }
 
-void DS_DecKeySchedule(BYTE* key)
+void DS_DecKeySchedule(void)
 {
         /* column 4 */
-    key[12]^=key[8];
-    key[13]^=key[9];
-    key[14]^=key[10];
-    key[15]^=key[11];
+    DS_Ciper_Message_Info.Decrypt_key[12]^=DS_Ciper_Message_Info.Decrypt_key[8];
+    DS_Ciper_Message_Info.Decrypt_key[13]^=DS_Ciper_Message_Info.Decrypt_key[9];
+    DS_Ciper_Message_Info.Decrypt_key[14]^=DS_Ciper_Message_Info.Decrypt_key[10];
+    DS_Ciper_Message_Info.Decrypt_key[15]^=DS_Ciper_Message_Info.Decrypt_key[11];
 
     /* column 3 */
-    key[8]^=key[4];
-    key[9]^=key[5];
-    key[10]^=key[6];
-    key[11]^=key[7];
+    DS_Ciper_Message_Info.Decrypt_key[8]^=DS_Ciper_Message_Info.Decrypt_key[4];
+    DS_Ciper_Message_Info.Decrypt_key[9]^=DS_Ciper_Message_Info.Decrypt_key[5];
+    DS_Ciper_Message_Info.Decrypt_key[10]^=DS_Ciper_Message_Info.Decrypt_key[6];
+    DS_Ciper_Message_Info.Decrypt_key[11]^=DS_Ciper_Message_Info.Decrypt_key[7];
 
     /* column 2 */
-    key[4]^=key[0];
-    key[5]^=key[1];
-    key[6]^=key[2];
-    key[7]^=key[3];
+    DS_Ciper_Message_Info.Decrypt_key[4]^=DS_Ciper_Message_Info.Decrypt_key[0];
+    DS_Ciper_Message_Info.Decrypt_key[5]^=DS_Ciper_Message_Info.Decrypt_key[1];
+    DS_Ciper_Message_Info.Decrypt_key[6]^=DS_Ciper_Message_Info.Decrypt_key[2];
+    DS_Ciper_Message_Info.Decrypt_key[7]^=DS_Ciper_Message_Info.Decrypt_key[3];
 
     /* column 1 */
-    key[0]^=STable[key[13]];
-    key[1]^=STable[key[14]];
-    key[2]^=STable[key[15]];
-    key[3]^=STable[key[12]];
+    DS_Ciper_Message_Info.Decrypt_key[0]^=STable[DS_Ciper_Message_Info.Decrypt_key[13]];
+    DS_Ciper_Message_Info.Decrypt_key[1]^=STable[DS_Ciper_Message_Info.Decrypt_key[14]];
+    DS_Ciper_Message_Info.Decrypt_key[2]^=STable[DS_Ciper_Message_Info.Decrypt_key[15]];
+    DS_Ciper_Message_Info.Decrypt_key[3]^=STable[DS_Ciper_Message_Info.Decrypt_key[12]];
 
-    key[0]^= DS_rcon;
+    DS_Ciper_Message_Info.Decrypt_key[0]^= DS_rcon;
     if(DS_rcon &0x01)
     {
         DS_rcon = 0x80;
@@ -386,18 +388,7 @@ void DS_DecKeySchedule(BYTE* key)
 
 }
 
-void DS_AESCalcDecodeKey(BYTE* key)
-{
-    DS_roundCounter = 10;
 
-    DS_rcon=0x01;
-    do
-    {
-        DS_EncKeySchedule(key);
-        DS_roundCounter--;
-    }
-    while(DS_roundCounter>0);
-}
 
 void Decrement_DS_Crypto_msTmr(void)
 {

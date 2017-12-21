@@ -47,19 +47,14 @@ extern const unsigned char SW_Version_No;           /* Hold the software version
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
 extern  /*near*/  dac_status_t Status;                    /* from DAC_MAIN.c */
 void Build_Interprocess_Message(void);
-void Build_FDP_Interprocess_Message(void);
+
 void Build_Interprocess_Reset_Info_Message(void);
-void Build_FDP_Reset_Info_Message(void);
 void Build_Interprocess_Post_Reset_Message(void);
-void Build_FDP_Post_Reset_Message(void);
 void Clear_SPI_Receive_Buffer(void);
 void Clear_SPI_Transmit_Buffer(void);
 void Process_Interprocess_Message(void);
-void Process_FDP_Interprocess_Message(void);
 void Process_Interprocess_Reset_Info_Message(void);
-void Process_FDP_Reset_Info_Message(void);
 void Process_Interprocess_Post_Reset_Message(void);
-void Process_FDP_Post_Reset_Message(void);
 void re_init_spi(void);
 void de_init_spi(void);
 void process_spi_tx_fifo(void);
@@ -376,7 +371,7 @@ void Update_SPI_State(void)
 
             break;
         case SPI_CHECK_CRC:
-            Crc16_Return_Value = Crc16(SPI_Receive_Object.Msg_Buffer,80);
+            Crc16_Return_Value = Crc16(SPI_RX,80);
 
             de_init_spi();
             
@@ -400,63 +395,7 @@ void Update_SPI_State(void)
     }
 }
 
-void Update_FDP_SPI_State(void)
-{
-    UINT16 Crc16_Return_Value = 0;
 
-    switch (SPI_Transmit_Object.State)
-    {
-        case SPI_WAIT_FOR_SS_LOW:
-            if (SPI_SLAVE_SELECT == 0)
-            {
-                re_init_spi();
-
-                SPI_Transmit_Object.State = SPI_TRANSMIT_DATA_BYTES;
-                SPI_Transmit_Object.Index = (BYTE) 0;
-                SPI_Receive_Object.Index  = (BYTE) 0;
-                Clear_SPI_Transmit_Buffer();
-                Build_FDP_Interprocess_Message();
-            }
-            break;
-        case SPI_TRANSMIT_DATA_BYTES:
-            if (SPI_SLAVE_SELECT == 1)
-            {
-                /* Master (SM-CPU)  has de-selected Slave (this board) */
-                SPI_Transmit_Object.State = SPI_CHECK_CRC;
-                SPI_Transmit_Object.Index = (BYTE) 0;
-                //break;
-            }
-
-            process_spi_rx_fifo();
-            process_spi_tx_fifo();
-            
-            break;
-        case SPI_CHECK_CRC:
-            Crc16_Return_Value = Crc16(SPI_Receive_Object.Msg_Buffer,64);
-
-            de_init_spi();
-
-            if(Crc16_Return_Value != 0)
-            {
-                /* Invalid CRC-16 Checksum */
-                SPI_Transmit_Object.State = SPI_WAIT_FOR_SS_LOW;
-            }
-            else
-            {
-                SPI_Transmit_Object.State = PROCESS_RECEIVED_MESSAGE;
-            }
-            break;
-        case PROCESS_RECEIVED_MESSAGE:
-            Process_FDP_Interprocess_Message();
-            Clear_SPI_Receive_Buffer();
-            SPI_Transmit_Object.State = SPI_WAIT_FOR_SS_LOW;
-            break;
-        default:
-            break;
-    }
-
-
-}
 /******************************************************************************
 Component name      :COMM_SM
 Module Name         :void Decrement_SPI_50msTmr(void)
@@ -690,18 +629,7 @@ void Build_Interprocess_Message(void)
         }
 }
 
-void Build_FDP_Interprocess_Message(void)
- {
-     if(Status.Flags.Preparatory_Reset_DS == PREPARATORY_RESET_COMPLETED ||
-         Status.Flags.Preparatory_Reset_US == PREPARATORY_RESET_COMPLETED)
-      {
-        Build_FDP_Post_Reset_Message();
-       }
-      else
-        {
-         Build_FDP_Reset_Info_Message();
-        }
-}
+
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Build_Interprocess_Post_Reset_Message(void)
@@ -992,7 +920,6 @@ void Build_Interprocess_Post_Reset_Message(void)
     US_Error_Code = Get_US_Error_Code();
     SPI_Transmit_Object.Msg_Buffer[28] = US_Error_Code;
 
-#warning "Need the Speed information from US and DS Systems - Shankar"
     SPI_LU_Speed_Info.Word = LU_Speed_Info.SpeedValue;
 
     SPI_Transmit_Object.Msg_Buffer[29] = SPI_LU_Speed_Info.Byte.Lo;
@@ -1080,7 +1007,7 @@ void Build_Interprocess_Post_Reset_Message(void)
 
     SPI_Transmit_Object.Msg_Buffer[77] = READ_AXLE_COUNT;
 
-    TempBuf.Word = Crc16(SPI_Transmit_Object.Msg_Buffer, 78);
+    TempBuf.Word = Crc16(SPI_TX, 78);
 
     SPI_Transmit_Object.Msg_Buffer[78]= TempBuf.Byte.Lo;
     SPI_Transmit_Object.Msg_Buffer[79]= TempBuf.Byte.Hi;
@@ -1089,144 +1016,7 @@ void Build_Interprocess_Post_Reset_Message(void)
 
 }
 
-void Build_FDP_Post_Reset_Message(void)
-{
-    wordtype_t DS_Fwd_AxleCount,DS_Rev_AxleCount;
-    wordtype_t US_Fwd_AxleCount,US_Rev_AxleCount;
-    wordtype_t DS_Axle_Count;
-    wordtype_t US_Axle_Count;
-    wordtype_t TempBuf;
-    BYTE uchDirection;
-    wordtype_t SPI_Relay_A_InfoLU1_Fwd_Count, SPI_Relay_A_InfoUS1_IN_Count, SPI_Relay_A_InfoLU2_Fwd_Count, SPI_Relay_A_InfoUS2_IN_Count;
-    wordtype_t SPI_Relay_A_InfoLU1_Rev_Count, SPI_Relay_A_InfoUS1_OUT_Count, SPI_Relay_A_InfoLU2_Rev_Count, SPI_Relay_A_InfoUS2_OUT_Count;
-    wordtype_t SPI_Relay_B_InfoLU1_Fwd_Count, SPI_Relay_B_InfoDS1_OUT_Count, SPI_Relay_B_InfoLU2_Fwd_Count, SPI_Relay_B_InfoDS2_OUT_Count;
-    wordtype_t SPI_Relay_B_InfoLU1_Rev_Count, SPI_Relay_B_InfoDS1_IN_Count, SPI_Relay_B_InfoLU2_Rev_Count, SPI_Relay_B_InfoDS2_IN_Count;
 
-    /* Load the Message Buffer with Data */
-    US_Fwd_AxleCount.Word = Get_US_Fwd_AxleCount();     /* from axle_mon.c */
-    US_Rev_AxleCount.Word = Get_US_Rev_AxleCount();     /* from axle_mon.c */
-    DS_Fwd_AxleCount.Word = Get_DS_Fwd_AxleCount();     /* from axle_mon.c */
-    DS_Rev_AxleCount.Word = Get_DS_Rev_AxleCount();     /* from axle_mon.c */
-    DS_Axle_Count.Word    = Get_DS_AxleCount();         /* from axle_mon.c */
-    US_Axle_Count.Word    = Get_US_AxleCount();         /* from axle_mon.c */
-
-    SPI_Relay_A_InfoLU1_Fwd_Count.Word = Relay_A_Info.LU1_Fwd_Count;	// Local Fwd Count CPU1
-    SPI_Relay_A_InfoUS1_IN_Count.Word = Relay_A_Info.US1_IN_Count;		// Remote Fwd Count/Remote Rev Count (3S) CPU1
-    SPI_Relay_A_InfoLU2_Fwd_Count.Word = Relay_A_Info.LU2_Fwd_Count;	// Local Fwd Count CPU2
-    SPI_Relay_A_InfoUS2_IN_Count.Word = Relay_A_Info.US2_IN_Count;		// Remote Fwd Count/Remote Rev Count (3S) CPU2
-    SPI_Relay_A_InfoLU1_Rev_Count.Word = Relay_A_Info.LU1_Rev_Count;	// Local Rev Count CPU1
-    SPI_Relay_A_InfoUS1_OUT_Count.Word = Relay_A_Info.US1_OUT_Count;	// Remote Rev Count/Remote Fwd Count (3S) CPU1
-    SPI_Relay_A_InfoLU2_Rev_Count.Word = Relay_A_Info.LU2_Rev_Count;	// Local Rev Count CPU2
-    SPI_Relay_A_InfoUS2_OUT_Count.Word = Relay_A_Info.US2_OUT_Count;	// Remote Rev Count/Remote Fwd Count (3S) CPU2
-    SPI_Relay_B_InfoLU1_Fwd_Count.Word = Relay_B_Info.LU1_Fwd_Count;	// Local Fwd Count CPU1
-    SPI_Relay_B_InfoDS1_OUT_Count.Word = Relay_B_Info.DS1_OUT_Count;	// Remote Fwd Count/Remote Rev Count (3S) CPU1
-    SPI_Relay_B_InfoLU2_Fwd_Count.Word = Relay_B_Info.LU2_Fwd_Count;	// Local Fwd Count CPU2
-    SPI_Relay_B_InfoDS2_OUT_Count.Word = Relay_B_Info.DS2_OUT_Count;	// Remote Fwd Count/Remote Rev Count (3S) CPU2
-    SPI_Relay_B_InfoLU1_Rev_Count.Word = Relay_B_Info.LU1_Rev_Count;	// Local Rev Count CPU1
-    SPI_Relay_B_InfoDS1_IN_Count.Word = Relay_B_Info.DS1_IN_Count;		// Remote Rev Count/Remote Fwd Count (3S) CPU1
-    SPI_Relay_B_InfoLU2_Rev_Count.Word = Relay_B_Info.LU2_Rev_Count;	// Local Rev Count CPU2
-    SPI_Relay_B_InfoDS2_IN_Count.Word = Relay_B_Info.DS2_IN_Count;		// Remote Rev Count/Remote Fwd Count (3S) CPU2
-
-    SPI_Transmit_Object.Msg_Buffer[0] = DIP_Switch_Info.FDP_CPU_ID;
-    SPI_Transmit_Object.Msg_Buffer[1] = Status.Byte[0];
-    SPI_Transmit_Object.Msg_Buffer[2] = Status.Byte[1];
-    SPI_Transmit_Object.Msg_Buffer[3] = Status.Byte[2];
-    SPI_Transmit_Object.Msg_Buffer[4] = Status.Byte[3];
-    SPI_Transmit_Object.Msg_Buffer[5] = Status.Byte[4];
-    SPI_Transmit_Object.Msg_Buffer[6] = Status.Byte[5];
-    SPI_Transmit_Object.Msg_Buffer[7] = Status.Byte[6];
-    SPI_Transmit_Object.Msg_Buffer[8] = US_Fwd_AxleCount.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[9] = US_Fwd_AxleCount.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[10]= US_Rev_AxleCount.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[11]= US_Rev_AxleCount.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[12]= DS_Fwd_AxleCount.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[13]= DS_Fwd_AxleCount.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[14]= DS_Rev_AxleCount.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[15]= DS_Rev_AxleCount.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[16]= DS_Axle_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[17]= DS_Axle_Count.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[20]= US_Axle_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[21]= US_Axle_Count.Byte.Hi;
-    uchDirection = Get_US_AxleDirection();
-    SPI_Transmit_Object.Msg_Buffer[24]= uchDirection;
-    uchDirection = Get_DS_AxleDirection();
-    SPI_Transmit_Object.Msg_Buffer[25]= uchDirection;
-
-#warning "Need the Speed information from US and DS Systems - Shankar"
-    SPI_Transmit_Object.Msg_Buffer[29] = 0;
-    SPI_Transmit_Object.Msg_Buffer[30] = 0;
-    SPI_Transmit_Object.Msg_Buffer[31] = 0;
-    SPI_Transmit_Object.Msg_Buffer[32] = 0;
-    SPI_Transmit_Object.Msg_Buffer[33] = 0;
-    SPI_Transmit_Object.Msg_Buffer[34] = 0;
-    SPI_Transmit_Object.Msg_Buffer[35] = 0;
-    SPI_Transmit_Object.Msg_Buffer[36] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[37] = SPI_Relay_A_InfoLU1_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[38] = SPI_Relay_A_InfoLU1_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[39] = SPI_Relay_A_InfoUS1_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[40] = SPI_Relay_A_InfoUS1_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[41] = SPI_Relay_A_InfoLU2_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[42] = SPI_Relay_A_InfoLU2_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[43] = SPI_Relay_A_InfoUS2_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[44] = SPI_Relay_A_InfoUS2_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[45] = SPI_Relay_A_InfoLU1_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[46] = SPI_Relay_A_InfoLU1_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[47] = SPI_Relay_A_InfoUS1_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[48] = SPI_Relay_A_InfoUS1_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[49] = SPI_Relay_A_InfoLU2_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[50] = SPI_Relay_A_InfoLU2_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[51] = SPI_Relay_A_InfoUS2_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[52] = SPI_Relay_A_InfoUS2_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[53] = SPI_Relay_B_InfoLU1_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[54] = SPI_Relay_B_InfoLU1_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[55] = SPI_Relay_B_InfoDS1_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[56] = SPI_Relay_B_InfoDS1_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[57] = SPI_Relay_B_InfoLU2_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[58] = SPI_Relay_B_InfoLU2_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[59] = SPI_Relay_B_InfoDS2_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[60] = SPI_Relay_B_InfoDS2_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[61] = SPI_Relay_B_InfoLU1_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[62] = SPI_Relay_B_InfoLU1_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[63] = SPI_Relay_B_InfoDS1_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[64] = SPI_Relay_B_InfoDS1_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[65] = SPI_Relay_B_InfoLU2_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[66] = SPI_Relay_B_InfoLU2_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[67] = SPI_Relay_B_InfoDS2_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[68] = SPI_Relay_B_InfoDS2_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[69] = ErrorCodeForSPI;
-    SPI_Transmit_Object.Msg_Buffer[70] = 0;
-    SPI_Transmit_Object.Msg_Buffer[71] = 0;
-    SPI_Transmit_Object.Msg_Buffer[72] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[73] = 0;
-    SPI_Transmit_Object.Msg_Buffer[74] = 0;
-    SPI_Transmit_Object.Msg_Buffer[75] = 0;
-    SPI_Transmit_Object.Msg_Buffer[76] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[77] = READ_AXLE_COUNT;
-    TempBuf.Word = Crc16(SPI_Transmit_Object.Msg_Buffer, 78);
-
-    SPI_Transmit_Object.Msg_Buffer[78]= TempBuf.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[79]= TempBuf.Byte.Hi;
-
-}
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Build_Interprocess_Reset_Info_Message(void)
@@ -1443,152 +1233,14 @@ void Build_Interprocess_Reset_Info_Message(void)
     SPI_Transmit_Object.Msg_Buffer[76] = 0;
 
     SPI_Transmit_Object.Msg_Buffer[77] = READ_RESET_INFO;
-    TempBuf.Word = Crc16(SPI_Transmit_Object.Msg_Buffer, 78);
+    TempBuf.Word = Crc16(SPI_TX, 78);
     SPI_Transmit_Object.Msg_Buffer[78]= TempBuf.Byte.Lo;
     SPI_Transmit_Object.Msg_Buffer[79]= TempBuf.Byte.Hi;
 
 
 }
 
-void Build_FDP_Reset_Info_Message(void)
-{
 
-    wordtype_t TempBuf;
-    BYTE uchDirection;
-    longtype_t Compared_Checksum;
-    longtype_t Calculated_Checksum;
-    BYTE System_Mode;
-    BYTE DS_Error_Code;
-    BYTE US_Error_Code;
-
-    wordtype_t SPI_Relay_A_InfoLU1_Fwd_Count, SPI_Relay_A_InfoUS1_IN_Count, SPI_Relay_A_InfoLU2_Fwd_Count, SPI_Relay_A_InfoUS2_IN_Count;
-    wordtype_t SPI_Relay_A_InfoLU1_Rev_Count, SPI_Relay_A_InfoUS1_OUT_Count, SPI_Relay_A_InfoLU2_Rev_Count, SPI_Relay_A_InfoUS2_OUT_Count;
-    wordtype_t SPI_Relay_B_InfoLU1_Fwd_Count, SPI_Relay_B_InfoDS1_OUT_Count, SPI_Relay_B_InfoLU2_Fwd_Count, SPI_Relay_B_InfoDS2_OUT_Count;
-    wordtype_t SPI_Relay_B_InfoLU1_Rev_Count, SPI_Relay_B_InfoDS1_IN_Count, SPI_Relay_B_InfoLU2_Rev_Count, SPI_Relay_B_InfoDS2_IN_Count;
-
-    SPI_Relay_A_InfoLU1_Fwd_Count.Word = Relay_A_Info.LU1_Fwd_Count;	// Local Fwd Count CPU1
-    SPI_Relay_A_InfoUS1_IN_Count.Word = Relay_A_Info.US1_IN_Count;		// Remote Fwd Count/Remote Rev Count (3S) CPU1
-    SPI_Relay_A_InfoLU2_Fwd_Count.Word = Relay_A_Info.LU2_Fwd_Count;	// Local Fwd Count CPU2
-    SPI_Relay_A_InfoUS2_IN_Count.Word = Relay_A_Info.US2_IN_Count;		// Remote Fwd Count/Remote Rev Count (3S) CPU2
-    SPI_Relay_A_InfoLU1_Rev_Count.Word = Relay_A_Info.LU1_Rev_Count;	// Local Rev Count CPU1
-    SPI_Relay_A_InfoUS1_OUT_Count.Word = Relay_A_Info.US1_OUT_Count;	// Remote Rev Count/Remote Fwd Count (3S) CPU1
-    SPI_Relay_A_InfoLU2_Rev_Count.Word = Relay_A_Info.LU2_Rev_Count;	// Local Rev Count CPU2
-    SPI_Relay_A_InfoUS2_OUT_Count.Word = Relay_A_Info.US2_OUT_Count;	// Remote Rev Count/Remote Fwd Count (3S) CPU2
-    SPI_Relay_B_InfoLU1_Fwd_Count.Word = Relay_B_Info.LU1_Fwd_Count;	// Local Fwd Count CPU1
-    SPI_Relay_B_InfoDS1_OUT_Count.Word = Relay_B_Info.DS1_OUT_Count;	// Remote Fwd Count/Remote Rev Count (3S) CPU1
-    SPI_Relay_B_InfoLU2_Fwd_Count.Word = Relay_B_Info.LU2_Fwd_Count;	// Local Fwd Count CPU2
-    SPI_Relay_B_InfoDS2_OUT_Count.Word = Relay_B_Info.DS2_OUT_Count;	// Remote Fwd Count/Remote Rev Count (3S) CPU2
-    SPI_Relay_B_InfoLU1_Rev_Count.Word = Relay_B_Info.LU1_Rev_Count;	// Local Rev Count CPU1
-    SPI_Relay_B_InfoDS1_IN_Count.Word = Relay_B_Info.DS1_IN_Count;		// Remote Rev Count/Remote Fwd Count (3S) CPU1
-    SPI_Relay_B_InfoLU2_Rev_Count.Word = Relay_B_Info.LU2_Rev_Count;	// Local Rev Count CPU2
-    SPI_Relay_B_InfoDS2_IN_Count.Word = Relay_B_Info.DS2_IN_Count;		// Remote Rev Count/Remote Fwd Count (3S) CPU2
-
-    /* Load the Message Buffer with Data */
-    SPI_Transmit_Object.Msg_Buffer[0] = DIP_Switch_Info.FDP_CPU_ID;
-    SPI_Transmit_Object.Msg_Buffer[1] = Status.Byte[0];
-    SPI_Transmit_Object.Msg_Buffer[2] = Status.Byte[1];
-    SPI_Transmit_Object.Msg_Buffer[3] = Status.Byte[2];
-    SPI_Transmit_Object.Msg_Buffer[4] = Status.Byte[3];
-    SPI_Transmit_Object.Msg_Buffer[5] = Status.Byte[4];
-    SPI_Transmit_Object.Msg_Buffer[6] = Status.Byte[5];
-    SPI_Transmit_Object.Msg_Buffer[7] = Status.Byte[6];
-    Compared_Checksum.LWord = Get_Compared_Checksum();
-    SPI_Transmit_Object.Msg_Buffer[8] = Compared_Checksum.DWord.HiWord.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[9] = Compared_Checksum.DWord.HiWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[10]= Compared_Checksum.DWord.LoWord.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[11]= Compared_Checksum.DWord.LoWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[12]= DIP_Switch_Info.FDP_Unit_Type;
-    SPI_Transmit_Object.Msg_Buffer[13]= SW_Version_No;
-    Calculated_Checksum.LWord = Get_Calculated_Checksum();
-    SPI_Transmit_Object.Msg_Buffer[14] = Calculated_Checksum.DWord.HiWord.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[15] = Calculated_Checksum.DWord.HiWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[16] =  Calculated_Checksum.DWord.LoWord.Byte.Hi;
-    SPI_Transmit_Object.Msg_Buffer[17] =  Calculated_Checksum.DWord.LoWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[20] =  DIP_Switch_Info.Configuration;
-    uchDirection = Get_US_AxleDirection();
-    SPI_Transmit_Object.Msg_Buffer[24]= uchDirection;
-    uchDirection = Get_DS_AxleDirection();
-    SPI_Transmit_Object.Msg_Buffer[25]= uchDirection;
-    System_Mode = Update_System_Mode();
-    SPI_Transmit_Object.Msg_Buffer[26] = System_Mode;
-    DS_Error_Code = Get_DS_Error_Code();
-    SPI_Transmit_Object.Msg_Buffer[27] = DS_Error_Code;
-    US_Error_Code = Get_US_Error_Code();
-    SPI_Transmit_Object.Msg_Buffer[28] = US_Error_Code;
-
-    SPI_Transmit_Object.Msg_Buffer[29] = 0;
-    SPI_Transmit_Object.Msg_Buffer[30] = 0;
-    SPI_Transmit_Object.Msg_Buffer[31] = 0;
-    SPI_Transmit_Object.Msg_Buffer[32] = 0;
-    SPI_Transmit_Object.Msg_Buffer[33] = 0;
-    SPI_Transmit_Object.Msg_Buffer[34] = 0;
-    SPI_Transmit_Object.Msg_Buffer[35] = 0;
-    SPI_Transmit_Object.Msg_Buffer[36] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[37] = SPI_Relay_A_InfoLU1_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[38] = SPI_Relay_A_InfoLU1_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[39] = SPI_Relay_A_InfoUS1_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[40] = SPI_Relay_A_InfoUS1_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[41] = SPI_Relay_A_InfoLU2_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[42] = SPI_Relay_A_InfoLU2_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[43] = SPI_Relay_A_InfoUS2_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[44] = SPI_Relay_A_InfoUS2_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[45] = SPI_Relay_A_InfoLU1_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[46] = SPI_Relay_A_InfoLU1_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[47] = SPI_Relay_A_InfoUS1_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[48] = SPI_Relay_A_InfoUS1_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[49] = SPI_Relay_A_InfoLU2_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[50] = SPI_Relay_A_InfoLU2_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[51] = SPI_Relay_A_InfoUS2_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[52] = SPI_Relay_A_InfoUS2_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[53] = SPI_Relay_B_InfoLU1_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[54] = SPI_Relay_B_InfoLU1_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[55] = SPI_Relay_B_InfoDS1_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[56] = SPI_Relay_B_InfoDS1_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[57] = SPI_Relay_B_InfoLU2_Fwd_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[58] = SPI_Relay_B_InfoLU2_Fwd_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[59] = SPI_Relay_B_InfoDS2_OUT_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[60] = SPI_Relay_B_InfoDS2_OUT_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[61] = SPI_Relay_B_InfoLU1_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[62] = SPI_Relay_B_InfoLU1_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[63] = SPI_Relay_B_InfoDS1_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[64] = SPI_Relay_B_InfoDS1_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[65] = SPI_Relay_B_InfoLU2_Rev_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[66] = SPI_Relay_B_InfoLU2_Rev_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[67] = SPI_Relay_B_InfoDS2_IN_Count.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[68] = SPI_Relay_B_InfoDS2_IN_Count.Byte.Hi;
-
-    SPI_Transmit_Object.Msg_Buffer[69] = ErrorCodeForSPI;
-    SPI_Transmit_Object.Msg_Buffer[70] = 0;
-    SPI_Transmit_Object.Msg_Buffer[71] = 0;
-    SPI_Transmit_Object.Msg_Buffer[72] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[73] = 0;
-    SPI_Transmit_Object.Msg_Buffer[74] = 0;
-    SPI_Transmit_Object.Msg_Buffer[75] = 0;
-    SPI_Transmit_Object.Msg_Buffer[76] = 0;
-
-    SPI_Transmit_Object.Msg_Buffer[77] = READ_RESET_INFO;
-    TempBuf.Word = Crc16(SPI_Transmit_Object.Msg_Buffer, 78);
-    SPI_Transmit_Object.Msg_Buffer[78]= TempBuf.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[79]= TempBuf.Byte.Hi;
-
-}
 /***************************************************************************
 Component name      :COMM_SM
 Module Name         :void Process_Interprocess_Message(void)
@@ -1668,20 +1320,7 @@ void Process_Interprocess_Message(void)
 }
 
 //01/09/10
-void Process_FDP_Interprocess_Message(void)
-{
-   BYTE uchCommand = 0;
 
-   uchCommand = SPI_Receive_Object.Msg_Buffer[77];
-   if(uchCommand == READ_RESET_INFO)
-      {
-         Process_FDP_Reset_Info_Message();
-       }
-   if (uchCommand == READ_AXLE_COUNT)
-      {
-       Process_FDP_Post_Reset_Message();
-      }
-}
 /***************************************************************************
 Component name      :COMM_SM
 Module Name         :
@@ -1892,90 +1531,6 @@ void Process_Interprocess_Reset_Info_Message(void)
             default:
                 break;
         }
-
-}
-
-//01/09/10
-void Process_FDP_Reset_Info_Message(void)
-{
-  wordtype_t DS_Fwd_AxleCount,DS_Rev_AxleCount;
-  wordtype_t US_Fwd_AxleCount,US_Rev_AxleCount,Axle_Count;
-  BYTE uchDirection;
-  bitadrb_t Buffer,SrcAdr;
-  longtype_t Calculated_Checksum;
-  longtype_t Peer_CPU_Checksum;
-  BYTE Peer_CPU_Unit_Type;
-
-  SrcAdr.Byte  = SPI_Receive_Object.Msg_Buffer[0];
-//  if (SrcAdr.Byte != DIP_Switch_Info.Peer_Address)
-//  {
-//  Declare_DAC_Defective();
-//    Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
-//  return;
-//  }
-//  Peer_CPU_Configuration = SPI_Receive_Object.Msg_Buffer[20];
-//  if(DIP_Switch_Info.Configuration != Peer_CPU_Configuration)
-//   {
-//  Declare_DAC_Defective();
-//    Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
-//  return;
-//   }
-  Peer_CPU_Unit_Type = SPI_Receive_Object.Msg_Buffer[12];
-
-
-//   if(DIP_Switch_Info.FDP_Unit_Type != Peer_CPU_Unit_Type)
-//  {
-//   Declare_DAC_Defective();
-//    Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
-//  return;
-//  }
-
-  SPI_Transmit_Object.Timeout = (SPI_SCAN_RATE * MAXIMUM_SPI_RETRIES);
-  US_Fwd_AxleCount.Byte.Lo    = 0x00;
-  US_Fwd_AxleCount.Byte.Hi    = 0x00;
-  US_Rev_AxleCount.Byte.Lo    = 0x00;
-  US_Rev_AxleCount.Byte.Hi    = 0x00;
-  DS_Fwd_AxleCount.Byte.Lo    = 0x00;
-  DS_Fwd_AxleCount.Byte.Hi    = 0x00;
-  DS_Rev_AxleCount.Byte.Lo    = 0x00;
-  DS_Rev_AxleCount.Byte.Hi    = 0x00;
-  Axle_Count.Byte.Lo          = 0x00;
-  Axle_Count.Byte.Hi          = 0x00;
-
-  Peer_CPU_Checksum.DWord.HiWord.Byte.Hi = SPI_Receive_Object.Msg_Buffer[14];
-  Peer_CPU_Checksum.DWord.HiWord.Byte.Lo = SPI_Receive_Object.Msg_Buffer[15];
-  Peer_CPU_Checksum.DWord.LoWord.Byte.Hi = SPI_Receive_Object.Msg_Buffer[16];
-  Peer_CPU_Checksum.DWord.LoWord.Byte.Lo = SPI_Receive_Object.Msg_Buffer[17];
-
-  Calculated_Checksum.LWord = Get_Calculated_Checksum();
-  if(Calculated_Checksum.LWord != Peer_CPU_Checksum.LWord)
-   {
-     Status.Flags.System_Status  = CATASTROPHIC_ERROR;
-     Set_Error_Status_Bit(INCORRECT_CODE_CRC_ERROR_NUM);
-   }
-
-  Buffer.Byte = SPI_Receive_Object.Msg_Buffer[1];
-
-  Post_Peer_CPU_Reset((BYTE) Buffer.Bit.b4);
-  Post_Peer_CPU_Reset1((BYTE) Buffer.Bit.b7);
-
-
-
-  switch (DIP_Switch_Info.FDP_Unit_Type)
-    {
-
-        case FDP_1C1E:
-            Process_Peer_Relay_A_AxleCount(US_Fwd_AxleCount.Word,US_Rev_AxleCount.Word);
-            uchDirection      = SPI_Receive_Object.Msg_Buffer[24];
-            Process_Peer_Relay_A_Direction(uchDirection);
-            break;
-        case FDP_2C1E:
-            break;
-        case FDP_2C2E:
-            break;
-        default:
-            break;
-    }
 
 }
 
@@ -2229,56 +1784,6 @@ void Process_Interprocess_Post_Reset_Message(void)
 }
 
 
-void Process_FDP_Post_Reset_Message(void)
-{
-  wordtype_t DS_Fwd_AxleCount,DS_Rev_AxleCount;
-  wordtype_t US_Fwd_AxleCount,US_Rev_AxleCount,Axle_Count;
-  BYTE uchDirection;
-  bitadrb_t Buffer,SrcAdr;
-
-  SrcAdr.Byte  = SPI_Receive_Object.Msg_Buffer[0];
-//  if (SrcAdr.Byte != DIP_Switch_Info.Peer_Address)
-//  {
-//  Declare_DAC_Defective();
-//    Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
-//  return;
-//  }
-
-  SPI_Transmit_Object.Timeout = (SPI_SCAN_RATE * MAXIMUM_SPI_RETRIES);
-
-  US_Fwd_AxleCount.Byte.Lo    = SPI_Receive_Object.Msg_Buffer[8];
-  US_Fwd_AxleCount.Byte.Hi    = SPI_Receive_Object.Msg_Buffer[9];
-  US_Rev_AxleCount.Byte.Lo    = SPI_Receive_Object.Msg_Buffer[10];
-  US_Rev_AxleCount.Byte.Hi    = SPI_Receive_Object.Msg_Buffer[11];
-  DS_Fwd_AxleCount.Byte.Lo    = SPI_Receive_Object.Msg_Buffer[12];
-  DS_Fwd_AxleCount.Byte.Hi    = SPI_Receive_Object.Msg_Buffer[13];
-  DS_Rev_AxleCount.Byte.Lo    = SPI_Receive_Object.Msg_Buffer[14];
-  DS_Rev_AxleCount.Byte.Hi    = SPI_Receive_Object.Msg_Buffer[15];
-  Axle_Count.Byte.Lo          = SPI_Receive_Object.Msg_Buffer[16];
-  Axle_Count.Byte.Hi          = SPI_Receive_Object.Msg_Buffer[17];
-
-  Buffer.Byte = SPI_Receive_Object.Msg_Buffer[1];
-
-  Post_Peer_CPU_Reset((BYTE) Buffer.Bit.b4);
-  Post_Peer_CPU_Reset1((BYTE) Buffer.Bit.b7);
-
- switch (DIP_Switch_Info.FDP_Unit_Type)
-    {
-
-        case FDP_1C1E:
-            Process_Peer_Relay_A_AxleCount(US_Fwd_AxleCount.Word,US_Rev_AxleCount.Word);
-            uchDirection      = SPI_Receive_Object.Msg_Buffer[24];
-            Process_Peer_Relay_A_Direction(uchDirection);
-            break;
-        case FDP_2C1E:
-            break;
-        case FDP_2C2E:
-            break;
-        default:
-            break;
-    }
-
-}
 
 void Update_SM_DS_Remote_Axle_Counts(BYTE DS_Count_Lo_byte,BYTE DS_Count_Hi_byte)
 {

@@ -31,13 +31,12 @@
                     void Control_DAC_Type_DE(void)
                     void Control_DAC_Type_D3(void)
                     void DisplayDAC_InfoLine(void)
-                    void Itoac(UINT16 uiInput, BYTE uchOutput[])
                     void Decrement_Bootuplock_50msTmr(void)
 
 *****************************************************************************/
 #include <xc.h>
 #include <stdio.h>
-#include <string.h>
+
 //#include <sys.h>
 /*
  * Set configuration bits/fuses
@@ -105,13 +104,13 @@ checksum_info_t Checksum_Info;              /*structure to hold the CRC values*/
 ds_section_mode DS_Section_Mode;            /*structure to hold the DS section local and remote unit modes */
 us_section_mode US_Section_Mode;            /*structure to hold the US section local and remote unit modes */
 BYTE uchIDInfo_List[20];
-BYTE uchIDInfo_List_FDP[20];
+
 BYTE uchCheckSum_List[10];
 
 union def_SPI_Failure SPI_Failure;
 
 extern error_display Error_Display;
-extern fdp_info FDP_Info;
+
 void Initialise_System(void);
 void Start_SF_Reset_Sequence(void);
 void Start_CF_Reset_Sequence(void);
@@ -128,7 +127,7 @@ void Control_DAC_Type_EF(void);
 void Control_DAC_Type_D3(void);
 void Control_DAC_Type_D4(void);
 void Control_DAC_Type_3S(void);
-void Control_FDP_Type_1C1E(void);
+
 void Initialize_Reset(void);
 void Update_SPI_Error(void);
 void Control_DAC_Type_LCWS(void);
@@ -241,8 +240,7 @@ int main(void)
     {
         Initialize_Reset();
     }
-        if(DIP_Switch_Info.Configuration == G39_DAC)
-        {
+        
             switch (DIP_Switch_Info.DAC_Unit_Type)
             {
             case DAC_UNIT_TYPE_SF:
@@ -352,26 +350,7 @@ int main(void)
                 //Start_DE_Reset_Sequence();
                 break;
             }
-         }
-      else if(DIP_Switch_Info.Configuration == G39_FDP)
-      {
-           switch (DIP_Switch_Info.FDP_Unit_Type)
-            {
-             case FDP_1C1E:
-                Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_PENDING;
-                Start_1C1E_Reset_Sequence();
-                Status.Flags.Local_Power_Status = SET_HIGH;
-                Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
-                Start_Relay_A_Mgr();                                        /* from rlya_mgr.c */
-                // Clear_Line_on_LCD((BYTE) 3);
-                Control_FDP_Type_1C1E();
-                break;
-             case FDP_2C1E:
-                break;
-             case FDP_2C2E:
-                break;
-            }
-        }
+         
     return(0);
 }
 /*********************************************************************************
@@ -410,7 +389,6 @@ Interfaces
                             RELAYMGR.c  -   Initialise_Relay_Mgr()
                             SYS_MON.c   -   Initialise_Sys_Mon()
                             DAC_MAIN.c  -   DisplayDAC_InfoLine()
-                            LCD_DRV.c   -   Display_on_LCD()
                             ERROR.c     -   Set_Error_Status_Bit()
                             WRITETIMER0()   -   Compiler defined function
 
@@ -622,12 +600,12 @@ void Initialise_System(void)
     DIP_Switch_Info.DAC_Unit_Type       = (BYTE) 0x00;      /* Unit Type */
     DIP_Switch_Info.Baud_Rate           = (BYTE) 0x00;      /* 1200/2400/9600/19200 */
     DIP_Switch_Info.Peer_Address        = (BYTE) 0x00;      /* Address of Peer CPU */
-    DIP_Switch_Info.FDP_Unit_Type       = (BYTE) 0x00;        /* FDP Unit Type*/
+
     DIP_Switch_Info.COM1_Mode           = (BYTE) 0x00;
     DIP_Switch_Info.COM2_Mode           = (BYTE) 0x00;
     DIP_Switch_Info.COM1_NW_Address     = (BYTE) 0x00;
     DIP_Switch_Info.COM2_NW_Address     = (BYTE) 0x00;
-    DIP_Switch_Info.FDP_CPU_ID          = (BYTE) 0x00;
+
 
     Bootup_Lock.Timeout_50ms = BOOTUP_RESET_TIMEOUT;
 
@@ -783,73 +761,14 @@ void Initialise_System(void)
     }
     else
     {
-          if(Status.Flags.Flash_CheckSum == CRC32_CHECKSUM_BAD)
-          {
-            ////strcpy(uchString, uchCheckSum_List);
-            ////Display_on_LCD(0,5,uchString);
+        if(Status.Flags.Flash_CheckSum == CRC32_CHECKSUM_BAD)
+        {
             Set_Error_Status_Bit(INCORRECT_CODE_CRC_ERROR_NUM);
-          }
+        }
     }
    return;
   }
- if(DIP_Switch_Info.Configuration == G39_FDP)
-  {
 
-    Setup_FDP_COM1BaudRate();                       /* from comm_us.c */
-    Initialise_Comm1_Sch();                         /* from comm_us.c */
-//  Initialise_Comm2_Sch();                         /* from comm_ds.c */
-    Initialise_AxleMon();                           /* from axle_mon.c */
-    Initialise_Sys_Mon();                           /* Initialise System Monitor */
-    //Initialise_DisplayManager();                    /* Initialise Display manager */
-
-    if (Status.Flags.System_Status == NORMAL)
-    {
-        /*
-        if (DIP_Switch_Info.Flags.Is_FDP_CPU1 == TRUE)
-         {
-            strcpy(uchIDInfo_List, "CPU1");
-         }
-        else
-         {
-          strcpy(uchIDInfo_List, "CPU2");
-         }
-        switch (DIP_Switch_Info.FDP_Unit_Type)
-        {
-            case FDP_1C1E:
-                strcat(uchIDInfo_List, "   1C1E ");
-                strcat(uchIDInfo_List,uchCheckSum_List);
-                DisplayDAC_InfoLine();
-                sprintf(uchIDInfo_List_FDP, "NWID:%02d    ", DIP_Switch_Info.COM1_NW_Address);
-                sprintf(uchString, " DPID:%02d ", DIP_Switch_Info.Address);
-                strcat(uchIDInfo_List_FDP, uchString);
-                Display_on_LCD(1, 0, uchIDInfo_List_FDP);
-                break;
-            case FDP_2C1E:
-                strcat(uchIDInfo_List, "  2C1E ");
-                strcat(uchIDInfo_List,uchCheckSum_List);
-                DisplayDAC_InfoLine();
-                break;
-            case FDP_2C2E:
-                strcat(uchIDInfo_List, "  2C2E ");
-                strcat(uchIDInfo_List,uchCheckSum_List);
-                DisplayDAC_InfoLine();
-                break;
-            default:
-                break;
-
-        }
-        */
-    }
-    else
-    {
-          if(Status.Flags.Flash_CheckSum == CRC32_CHECKSUM_BAD)
-          {
-            ////strcpy(uchString, uchCheckSum_List);
-            ////Display_on_LCD(0,5,uchString);
-            Set_Error_Status_Bit(INCORRECT_CODE_CRC_ERROR_NUM);
-          }
-    }
-  }
 }
 /*********************************************************************************
 Component name      :DAC_MAIN
@@ -876,7 +795,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_SF_Reset_State()
                         RESET.c     -   Initialise_SF_Reset_Monitor()
                         RESET.c     -   Start_SF_Reset_Monitor()
@@ -965,10 +884,7 @@ void Start_SF_Reset_Sequence(void)
      */
 
 
-    ////strcpy(uchString, "WAITING FOR RESET");
-    ////Display_on_LCD(3, 1, uchString);
-    ////strcpy(uchString, "S/W Version - S001");
-    ////Display_on_LCD(2, 1, uchString);
+
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
     if (uchPreparatoryState == SF_WAIT_FOR_RESET)
@@ -1088,7 +1004,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_CF_DS_Reset_State()
                         RESET.c     -   Get_CF_US_Reset_State()
                         RESET.c     -   Get_CF_DS1_Reset_State()
@@ -1190,10 +1106,7 @@ void Start_CF_Reset_Sequence(void)
      */
 
 
-    //strcpy(uchString, "WAITING FOR RESET");
-    //Display_on_LCD(3, 1, uchString);
-    //strcpy(uchString, "S/W Version - S001");
-    //Display_on_LCD(2, 1, uchString);
+    
     uchPreparatoryState = Get_CF_DS_Reset_State();
     uchPreparatoryState1 = Get_CF_US_Reset_State();
     if((uchPreparatoryState == CF_DS_WAIT_FOR_RESET) &&
@@ -1347,7 +1260,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_CF_DS_Reset_State()
                         RESET.c     -   Get_CF_US_Reset_State()
                         RESET.c     -   Get_CF_DS1_Reset_State()
@@ -1447,10 +1360,7 @@ void Start_LCWS_Reset_Sequence(void)
      */
 
 
-    ////strcpy(uchString, "WAITING FOR RESET");
-    ////Display_on_LCD(3, 1, uchString);
-    ////strcpy(uchString, "S/W Version - S001");
-    ////Display_on_LCD(2, 1, uchString);
+
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
     if (uchPreparatoryState == SF_WAIT_FOR_RESET)
@@ -1575,7 +1485,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_CF_DS_Reset_State()
                         RESET.c     -   Get_CF_US_Reset_State()
                         RESET.c     -   Initialise_CF_Reset_Monitor()
@@ -1661,10 +1571,7 @@ void Start_D3_Reset_Sequence(void)
      */
 
 
-    //strcpy(uchString, "WAITING FOR RESET");
-    //Display_on_LCD(3, 1, uchString);
-    //strcpy(uchString, "S/W Version - S001");
-    //Display_on_LCD(2, 1, uchString);
+    
     uchPreparatoryState  = Get_CF_DS_Reset_State();
     uchPreparatoryState1 = Get_CF_US_Reset_State();
     if((uchPreparatoryState == CF_DS_WAIT_FOR_RESET) &&
@@ -1785,7 +1692,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_CF_DS_Reset_State()
                         RESET.c     -   Get_CF_US_Reset_State()
                         RESET.c     -   Initialise_CF_Reset_Monitor()
@@ -1989,7 +1896,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_EF_Reset_State()
                         RESET.c     -   Get_EF_US1_Reset_State()
                         RESET.c     -   Get_EF_US2_Reset_State()
@@ -2078,10 +1985,7 @@ void Start_EF_Reset_Sequence(void)
      */
 
 
-    //strcpy(uchString, "WAITING FOR RESET");
-    //Display_on_LCD(3, 1, uchString);
-    //strcpy(uchString, "S/W Version - S001");
-    //Display_on_LCD(2, 1, uchString);
+    
 //    Reset_Info.EF.US_State = EF_WAIT_FOR_RESET;
 
     uchPreparatoryState = Get_EF_Reset_State();
@@ -2197,7 +2101,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         RESET.c     -   Get_DE_Reset_State()
                         RESET.c     -   Initialise_DE_Reset_Monitor()
                         RESET.c     -   Start_DE_Reset_Monitor()
@@ -2266,10 +2170,7 @@ void Start_DE_Reset_Sequence(void)
      */
 
 
-    ////strcpy(uchString, "WAITING FOR RESET");
-    ////Display_on_LCD(3, 1, uchString);
-    ////strcpy(uchString, "S/W Version - S001");
-    ////Display_on_LCD(2, 1, uchString);
+    
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
     if (uchPreparatoryState == SF_WAIT_FOR_RESET)
@@ -2368,200 +2269,7 @@ void Start_DE_Reset_Sequence(void)
         ClrWdt();
     }
 }
-/*********************************************************************************
-Component name      :DAC_MAIN
-Module Name         :void Start_1C1E_Reset_Sequence(void)
-Created By          :
-Date Created        :
-Modification History:
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |             |               |                 |             |                              |
-                    |             |               |                 |             |                              |
-                    |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract            :Start the Dead End reset sequence
-                        1.Get the DE reset state
-                        2.Update the reset state
-                        4.In error condition update the error display and wait for 6s then reboot the system except
-                          for the flash checksum failure
-                        5.Update SPI state and LCD state
 
-Design Requirements     :
-
-
-
-Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
-                        RESET.c     -   Get_EF_Reset_State()
-                        RESET.c     -   Get_EF_US1_Reset_State()
-                        RESET.c     -   Get_EF_US2_Reset_State()
-                        RESET.c     -   Initialise_EF_Reset_Monitor()
-                        RESET.c     -   Start_EF_Reset_Monitor()
-                        COMM_US.c   -   Start_US_CommSch()
-                        SYS_MON.c   -   Start_Sys_Mon_Decrement_50msTmr()
-                        COMM_SM.c   -   Decrement_SPI_50msTmr()
-                        ERROR.c     -   Decrement_Err_display_50msTmr()
-                        RESET.c     -   Decrement_Reset_msTmr()
-                        RESET.c     -   Decrement_Reset_300sTmr()
-                        RESET.c     -   Decrement_Reset_300sTmr2()
-                        COMM_US.c   -   Decrement_US_Sch_msTmr()
-                        LCD_DRV.c   -   Decrement_LCD_msTmr()
-                        DISPLAY.c   -   Decrement_itoa_msTmr()
-                        RESET.c     -   Update_EF_Reset_Monitor_State()
-                        ERROR.c     -   Update_Display_Error()
-                        DISPLAY.c   -   Update_itoa_SF_State()
-                        COMM_US.c   -   Update_US_Sch_State()
-                        COMM_SM.c   -   Update_SPI_State()
-                        LCD_DRV.c   -   Update_LCD_State()
-                        WRITETIMER3 -   Compiler defined function
-                        CLRWDT()    -   Compiler defined function
-                        RESET()     -   Compiler defined function
-                        DAC_MAIN.c  -   Decrement_Bootuplock_50msTmr()
-                        RESTORE.c   -   Clear_US_Checksum_Info()
-                        RESET.c     -   Clear_Reset_State()
-
-    Called by       :   DAC_MAIN.c  -   main()
-
-Input Variables         Name                            Type
-    Global          :   EF_WAIT_FOR_RESET               Enumerator
-                        TMR3IF                          Timer3 overflow interrupt flag bit
-                        TMR4IF                          Timer4 overflow interrupt flag bit
-                        Status.Flags.System_Status      Bit
-                        EF_RESET_SEQUENCE_COMPLETED     Enumerator
-                        RESET_APPLIED_MODE              Enumerator
-                        EF_WAIT_FOR_US_TO_RESET         Enumerator
-                        Status.Flags.Flash_CheckSum     Bit
-                        Bootup_Lock.Timeout_50ms        UINT16
-
-    Local           :   uchPreparatoryState             BYTE
-                        uchReset_Pending                BYTE
-                        uchString                       Array of BYTEs
-                        US1_Reset_Status;               BYTE
-                        US2_Reset_Status;               BYTE
-
-Output Variables        Name                            Type
-    Global          :   Status.Flags.Local_Reset_Done   Bit
-                        Status.Flags.Local_Reset_Done2  Bit
-                        TMR3IF                          Timer3 overflow interrupt flag bit
-                        TMR4IF                          Timer4 overflow interrupt flag bit
-                        US_Section_Mode.Local_Unit      BYTE
-
-    Local           :   None
-
-Signal Variables
-
-                                    Nil                          Nil                        Nil
-
-Macro definitions used:     Macro                           Value
-                            SEVEN_SEGMENT_UNIT1             1
-                            SEVEN_SEGMENT_UNIT2             2
-                            SM_HAS_RESETTED_SYSTEM          1
-                            TRUE                            1
-                            FALSE                           0
-                            SET_LOW                         0
-                            CRC32_CHECKSUM_BAD              0
-                            TIMEOUT_EVENT                   0
-
-References          :
-
-Derived Requirements:
-*********************************************************************************/
-void Start_1C1E_Reset_Sequence(void)
-{
-    BYTE uchPreparatoryState;
-    BYTE uchReset_Pending;
-    BYTE Modem_State;
-
-    /*
-     * Station master has to ensure that there are no trains in the
-     * controlled section by pressing the Preparatory reset button
-     */
-
-
-    //strcpy(uchString, "WAITING FOR RESET");
-    //Display_on_LCD(3, 1, uchString);
-    //strcpy(uchString, "S/W Version - S001");
-    //Display_on_LCD(2, 1, uchString);
-    uchPreparatoryState = Get_FDP_US_Reset_State();
-    if (uchPreparatoryState == FDP_US_WAIT_FOR_RESET)
-    {
-        Initialise_FDP_US_Reset_Monitor();
-    }
-    else
-    {
-        Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
-    //  US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
-    }
-    Start_FDP_US_Reset_Monitor();
-    uchReset_Pending = TRUE;
-
-    Start_Comm1_Sch();                                  /* Start Upstream communication scheduler */
-
-    while (uchReset_Pending)
-    {
-        if (IFS0bits.T3IF)
-        {
-            /* 50-mS Timer has overflowed */
-            IFS0bits.T3IF = SET_LOW;
-            //WRITETIMER3((UINT16)TIMER3_SETPOINT);
-            Start_Sys_Mon_Decrement_50msTmr();              /* from sys_mon.c */
-            Decrement_SPI_50msTmr();                        /* from comm_sm.c */
-            Decrement_Err_display_50msTmr();
-            Decrement_Bootuplock_50msTmr();
-        }
-        if (IFS1bits.T5IF)
-        {
-            /* 1-mS Timer has overflowed */
-            IFS1bits.T5IF = SET_LOW;
-            Decrement_Reset_msTmr();                        /* from reset.c */
-            Decrement_FDP_Comm1_Sch_msTmr();                /* from comm1_FDP.c */
-            //Decrement_LCD_msTmr();                          /* from lcd_drv.c */
-            //Decrement_itoa_msTmr();                         /* from display.c */
-
-        }
-        if (Status.Flags.System_Status == NORMAL)
-        {
-            if (SPI_Failure.Failure_Data == 0)
-            {
-                ErrorCodeForSPI = 255;
-            }
-            else
-            {
-                Update_SPI_Error();
-            }
-            Update_FDP_Comm1_Reset_State();
-            uchPreparatoryState = Get_FDP_US_Reset_State();
-            if(uchPreparatoryState == FDP_US_RESET_SEQUENCE_COMPLETED)
-            {
-              uchReset_Pending = FALSE;
-            }
-        }
-        else
-        {
-            Update_Display_Error();
-            //Update_itoa_1C1E_State();                           /* from display.c  */
-            if(Status.Flags.Flash_CheckSum != CRC32_CHECKSUM_BAD)
-              {
-               if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
-                {
-                 Clear_FDP_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
-                }
-              }
-        }
-
-        Configure_FDP_Modem_A ();                       /*configure Modem A*/
-        Modem_State = Get_FDP_Modem_A_State();
-        if(Modem_State == CONFIGURATION_COMPLETED)
-         {
-          Update_FDP_COM1Sch_State();                               /* from comm_us.c */
-         }
-        Update_FDP_SPI_State();                                 /* from comm_sm.c */
-        //Update_LCD_State();                                 /* from lcd_drv.c */
-        ClrWdt();
-    }
-}
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_SF(void)
@@ -2589,7 +2297,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         AXLE_MON.c  -   Start_DS_Axle_Counting()
                         AXLE_MON.c  -   Decrement_TrackMon_50msTmr()
                         SYS_MON.c   -   Start_Sys_Mon_Decrement_50msTmr()
@@ -2653,7 +2361,7 @@ void Control_DAC_Type_SF(void)
     if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
     {
         //strcpy(uchString,"Wait For Pilot Train");
-        //Display_on_LCD(3, 0, uchString);
+        
         DS_Section_Mode.Local_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
     }
     Start_DS_Axle_Counting();
@@ -2729,7 +2437,7 @@ Abstract            :1.Start the up stream axle counting
 Design Requirements     :
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         AXLE_MON.c  -   Start_US_Axle_Counting()
                         AXLE_MON.c  -   Start_DS_Axle_Counting()
                         AXLE_MON.c  -   Decrement_TrackMon_50msTmr()
@@ -2821,8 +2529,7 @@ void Control_DAC_Type_CF(void)
     // Clear_Line_on_LCD((BYTE) 2);
     if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
     {
-        //strcpy(uchString,"Wait For Pilot Train");
-        //Display_on_LCD(3,0,uchString);
+
     }
     do {
         ClrWdt();
@@ -2931,7 +2638,7 @@ Abstract            :1.Start the up stream axle counting
 Design Requirements     :
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         AXLE_MON.c  -   Start_US_Axle_Counting()
                         AXLE_MON.c  -   Start_DS_Axle_Counting()
                         AXLE_MON.c  -   Decrement_TrackMon_50msTmr()
@@ -3016,15 +2723,6 @@ Derived Requirements:
 extern BYTE Relay_B_State, Relay_B_PR_State;
 void Control_DAC_Type_LCWS(void)
 {
-
-    // Clear_Line_on_LCD((BYTE) 2);
-//    if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
-//    {
-//        //strcpy(uchString,"Wait For Pilot Train");
-//        //Display_on_LCD(3, 0, uchString);
-//        DS_Section_Mode.Local_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
-//    }
-//    Start_DS_Axle_Counting();
     do {
         ClrWdt();
         CS11 = !CS11;
@@ -3104,14 +2802,7 @@ void Control_DAC_Type_LCWS(void)
 void Control_DAC_Type_DE(void)
 {
 
-    // Clear_Line_on_LCD((BYTE) 2);
-//    if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
-//    {
-//        //strcpy(uchString,"Wait For Pilot Train");
-//        //Display_on_LCD(3, 0, uchString);
-//        DS_Section_Mode.Local_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
-//    }
-//    Start_DS_Axle_Counting();
+
         UINT16 uiAuthorisationKey;
         uiAuthorisationKey = Get_Relay_Energising_Key();
         Energise_Vital_Relay_B(uiAuthorisationKey);
@@ -3187,7 +2878,7 @@ Design Requirements     :
 
 
 Interfaces
-    Calls           :   LCD_DRV.c   -   Display_on_LCD()
+    Calls           :   
                         AXLE_MON.c  -   Start_US_Axle_Counting()
                         AXLE_MON.c  -   Decrement_TrackMon_50msTmr()
                         SYS_MON.c   -   Start_Sys_Mon_Decrement_50msTmr()
@@ -3251,8 +2942,6 @@ void Control_DAC_Type_EF(void)
     // Clear_Line_on_LCD((BYTE) 2);
     if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
     {
-        //strcpy(uchString,"Wait For Pilot Train");
-        //Display_on_LCD(3, 0, uchString);
         US_Section_Mode.Local_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
     }
     Start_US_Axle_Counting();
@@ -3302,56 +2991,7 @@ void Control_DAC_Type_EF(void)
 }
 
 //19_12_09
-void Control_FDP_Type_1C1E(void)
-{
 
-    Start_FDP_US_Axle_Counting();
-    do {
-        ClrWdt();
-        CS11 = !CS11;
-        if (IFS0bits.T3IF)
-        {
-            /* 50-mS Timer has overflowed */
-            IFS0bits.T3IF = SET_LOW;
-            //WRITETIMER3((UINT16) TIMER3_SETPOINT);
-            Decrement_TrackMon_50msTmr();               /* from axle_mon.c */
-            Start_Sys_Mon_Decrement_50msTmr();          /* from sys_mon.c  */
-            Decrement_SPI_50msTmr();                    /* from comm_sm.c  */
-            Decrement_Err_display_50msTmr();
-        }
-        if (IFS1bits.T5IF)
-        {
-            /* 1-mS Timer has overflowed */
-            IFS1bits.T5IF = SET_LOW;
-            Decrement_FDP_Comm1_Sch_msTmr();            /* from comm1_FDP.c */
-            //Decrement_LCD_msTmr();                      /* from lcd_drv.c */
-            Decrement_Reset_msTmr();                    /* from reset.c */
-            //Decrement_itoa_msTmr();                     /* from display.c */
-         }
-        if (Status.Flags.System_Status == NORMAL)
-        {
-            Validate_FDP_PD_Signals();                      /* from axle_mon.c */
-//          Chk_for_AxleCount_Completion();             /* from axle_mon.c */
-            Update_FDP_Relay_A_Counts();                /* from relaymgr.c */
-        //  Update_EF_Track_Status();                   /* from relaymgr.c  the LED should be driven as per the section status command from MDP*/
-            if(Status.Flags.System_Status != CATASTROPHIC_ERROR)
-                ErrorCodeForSPI = 0xFF; 
-        }
-        else
-        {
-            /* Catastrophic Error */
-            Update_Display_Error();                     /* from error.c */
-        }
-        Update_FDP_COM1Sch_State();                         /* from comm_us.c */
-        Update_FDP_SPI_State();                             /* from comm_sm.c */
-        //Update_LCD_State();                             /* from lcd_drv.c */
-        Update_FDP_Mon_State();                         /* from sys_mon.c */
-        Update_FDP_Comm1_Reset_State();             /* from reset.c */
-        //Update_itoa_1C1E_State();                           /* from display.c  */
-    } while (1);
-
-
-}
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_D3(void)
@@ -3726,93 +3366,7 @@ void Control_DAC_Type_3S(void)
         }
     } while (1);
 }
-/*********************************************************************************
-Component name      :DAC_MAIN
-Module Name         :void Itoac(UINT16 uiInput, BYTE uchOutput[])
-Created By          :
-Date Created        :
-Modification History:
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |             |               |                 |             |                              |
-                    |             |               |                 |             |                              |
-                    |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract            :It converts integer value to ascii characters.
 
-Allocated Requirements  :
-
-Design Requirements     :
-
-
-
-Interfaces
-    Calls           :   Nil
-
-    Called by       :   DISPLAY.c   -   Update_itoa_SF_State()
-                        DISPLAY.c   -   Update_itoa_EF_State()
-                        DISPLAY.c   -   Update_itoa_CF_State()
-                        DISPLAY.c   -   Update_itoa_D3_State()
-                        DISPLAY.c   -   Update_itoa_DE_State()
-
-Input Variables         Name                            Type
-    Global          :   None
-
-    Local           :   uiInput                         UINT16
-                        uchOutput                       BYTE
-                        uchi                            BYTE
-
-Output Variables        Name                            Type
-    Global          :   None
-
-    Local           :   None
-
-Signal Variables
-
-                                    Nil                          Nil                        Nil
-
-Macro definitions used:     Macro                       Value
-                            None
-
-References          :
-
-Derived Requirements:
-
-Algorithm           :
-                     1.Do the modulus 10 for  integer value which gives last digit of that Integer
-                     2.Add ascii value of Zero to the last digit. Store the resultant character in Output Array.
-                     3.Divide the integer value by 10. Then check whether Integer value is more than Zero,
-                        go to Step 1.
-                     4.Return from the function
-
-*********************************************************************************/
-void Itoac(UINT16 uiInput, BYTE uchOutput[])
-{
-    BYTE uchi;
-
-    if (uiInput > 9999)
-    {
-        uchOutput[0] = '*';
-        uchOutput[1] = '*';
-        uchOutput[2] = '*';
-        uchOutput[3] = '*';
-        return;
-    }
-    else
-    {
-        uchOutput[0] = '0';
-        uchOutput[1] = '0';
-        uchOutput[2] = '0';
-        uchOutput[3] = '0';
-    }
-    uchi = (BYTE) 3;
-
-    do {
-        /* Generate digits in reverse order */
-        uchOutput[uchi] = uiInput % 10 + '0';
-        uchi = uchi - 1;
-       } while ((uiInput /= 10) > 0);
-}
 
 /*********************************************************************
 Component name      :RESET

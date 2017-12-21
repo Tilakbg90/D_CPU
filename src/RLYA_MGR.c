@@ -210,10 +210,7 @@ void Start_Relay_A_Mgr(void)
         Relay_A_Info.State = WAIT_FOR_PILOT_TRAIN;
      }
     }
-    if(DIP_Switch_Info.Configuration == G39_FDP)
-    {
-     Clear_FDP_Reset_Info();
-    }
+
     Clear_Error_Display();              /* Clear Errors set in Minor & Major Errors */
 
 }
@@ -890,18 +887,7 @@ BOOL Reset_Allowed_For_US(void)
        return(ReturnValue);
 }
 
-BOOL Reset_Allowed_For_FDP_US(void)
-{
-    BOOL ReturnValue = FALSE;
 
-    if( Relay_A_Info.State == DAC_DEFECTIVE)
-    {
-        ReturnValue = (BOOL) TRUE;
-        return(ReturnValue);
-    }
-
-    return(ReturnValue);
-}
 
 /******************************************************************************
 Component name      :RLYA_MGR
@@ -2359,13 +2345,6 @@ void Clear_Relay_A_Counts(void)
      Relay_A_Info.US1_OUT_Count = 0;
      Relay_A_Info.US2_OUT_Count = 0;
  }
-if(DIP_Switch_Info.Configuration == G39_FDP)
- {
-    /*clear local counts */
-     Relay_A_Info.LU1_Fwd_Count = 0;
-     Relay_A_Info.LU2_Fwd_Count = 0;
-     Relay_A_Info.LU1_Rev_Count = 0;
-     Relay_A_Info.LU2_Rev_Count = 0;
- }
+
 }
 

@@ -308,7 +308,7 @@ typedef struct {
 
 extern void Initialise_AxleMon(void);           //Defined in AXLE_MON.c
 extern void Validate_PD_Signals(void);          //Defined in AXLE_MON.c
-extern void Validate_FDP_PD_Signals(void);          //Defined in AXLE_MON.c
+
 extern void Chk_for_AxleCount_Completion(void); //Defined in AXLE_MON.c
 extern void Decrement_TrackMon_50msTmr(void);   //Defined in AXLE_MON.c
 

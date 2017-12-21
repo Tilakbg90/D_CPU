@@ -149,37 +149,6 @@ typedef enum {
 
 /************************ CF Reset States ****************************/
 
-/************************ FDP Reset States ****************************/
-typedef enum {
-    /* State to indicate that FDP unit is waiting for reset */
-            FDP_DS_WAIT_FOR_RESET = 0,
-//  /*  State to wait for DS reset for CF unit */
-//          CF_WAIT_FOR_DS_TO_RESET,
-//  /*  State to wait for DS1 reset for CF unit */
-//          CF_WAIT_FOR_DS1_TO_RESET,
-//  /*  State to wait for DS2 reset for CF unit */
-//          CF_WAIT_FOR_DS2_TO_RESET,
-    /* State to wait for peer to reset for FDP unit */
-            FDP_DS_WAIT_FOR_PEER_TO_RESET,
-    /* State to indicate that the reset sequence is completed for FDP_DS unit*/
-            FDP_DS_RESET_SEQUENCE_COMPLETED
-} fdp_ds_reset_type_t;
-
-typedef enum {
-    /* State to indicate that FDP unit is waiting for reset */
-            FDP_US_WAIT_FOR_RESET = 0,
-//  /*  State to wait for US reset for CF unit */
-//          CF_WAIT_FOR_US_TO_RESET,
-//  /* State to wait for US1 reset for CF unit */
-//          CF_WAIT_FOR_US1_TO_RESET,
-//  /* State to wait for US2 reset for CF unit */
-//          CF_WAIT_FOR_US2_TO_RESET,
-    /* State to wait for peer to reset for FDP unit */
-            FDP_US_WAIT_FOR_PEER_TO_RESET,
-    /* State to indicate that the reset sequence is completed for CF_US unit*/
-            FDP_US_RESET_SEQUENCE_COMPLETED
-} fdp_us_reset_type_t;
-
 /************************ CF Reset States ****************************/
 
 
@@ -322,20 +291,6 @@ typedef union {
                 unsigned : 3;
                 } Flags;
             } EF ;
-    struct  {
-    /* To assign various reset state for FDP unit */
-            fdp_us_reset_type_t US_State;
-            fdp_ds_reset_type_t DS_State;
-            struct {
-
-                unsigned : 4;
-        /* Flag to check peer CPU reset for FDP unit */
-                unsigned Peer_CPU_has_been_Reset :1;
-        /* Flag to check peer CPU reset for FDP unit */
-                unsigned Peer_CPU_has_been_Reset1 :1;
-                unsigned                     :2;
-                } Flags;
-            } FDP ;
 
 
 } reset_info_t;
@@ -361,15 +316,15 @@ typedef struct  {
 extern void Initialise_SF_Reset_Monitor(void);      //Defined in RESET.c
 extern void Initialise_CF_Reset_Monitor(void);      //Defined in RESET.c
 extern void Initialise_EF_Reset_Monitor(void);      //Defined in RESET.c
-extern void Initialise_FDP_US_Reset_Monitor(void);  //Defined in RESET.c
+
 extern void Start_SF_Reset_Monitor(void);           //Defined in RESET.c
 extern void Start_CF_Reset_Monitor(void);           //Defined in RESET.c
 extern void Start_EF_Reset_Monitor(void);           //Defined in RESET.c
-extern void Start_FDP_US_Reset_Monitor(void);       //Defined in RESET.c
+
 extern void Update_SF_Reset_Monitor_State(void);    //Defined in RESET.c
 extern void Update_CF_Reset_Monitor_State(void);    //Defined in RESET.c
 extern void Update_EF_Reset_Monitor_State(void);    //Defined in RESET.c
-extern void Update_FDP_Comm1_Reset_State(void);     //Defined in RESET.c
+
 extern void Decrement_Reset_msTmr(void);            //Defined in RESET.c
 extern void Decrement_Reset_300sTmr(void);          //Defined in RESET.c
 extern void Decrement_Reset_300sTmr2(void);         //Defined in RESET.c
@@ -377,7 +332,7 @@ extern BYTE Get_SF_Reset_State(void);               //Defined in RESET.c
 extern BYTE Get_CF_DS_Reset_State(void);            //Defined in RESET.c
 extern BYTE Get_CF_US_Reset_State(void);            //Defined in RESET.c
 extern BYTE Get_EF_Reset_State(void);               //Defined in RESET.c
-extern BYTE Get_FDP_US_Reset_State(void);           //Defined in RESET.c
+
 extern BYTE Get_EF_US1_Reset_State(void);           //Defined in RESET.c
 extern BYTE Get_EF_US2_Reset_State(void);           //Defined in RESET.c
 extern BYTE Get_SF_DS1_Reset_State(void);           //Defined in RESET.c
@@ -387,9 +342,9 @@ extern BYTE Get_CF_DS2_Reset_State(void);           //Defined in RESET.c
 extern BYTE Get_CF_US1_Reset_State(void);           //Defined in RESET.c
 extern BYTE Get_CF_US2_Reset_State(void);           //Defined in RESET.c
 extern void Clear_Reset_Info(void);                 //Defined in RESET.c
-extern void Clear_FDP_Reset_Info(void);                 //Defined in RESET.c
+
 extern void Clear_Reset_State(void);                //Defined in RESET.c
-extern void Clear_FDP_Reset_State(void);            //Defined in RESET.c
+
 extern void Clear_Local_Reset_Flag(void);           //Defined in RESET.c
 extern void Clear_Local_Reset2_Flag(void);          //Defined in RESET.c
 extern void Post_DS1_has_been_Reset(BYTE);          //Defined in RESET.c
@@ -404,5 +359,5 @@ extern void Update_DS_Section_Remote_Preparatory(void);   //Defined in RESET.c
 extern void Update_US_Section_Remote_Preparatory(void);   //Defined in RESET.c
 extern void Clear_DS_Remote_Reset_Flag(void);        //Defined in RESET.c
 extern void Clear_US_Remote_Reset_Flag(void);         //Defined in RESET.c
-extern void Post_FDP_US_Reset(bitadrb_t);               // Define in COMM1_FDP.c
+
 #endif

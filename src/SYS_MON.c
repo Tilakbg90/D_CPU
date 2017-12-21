@@ -64,7 +64,7 @@ extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
 extern comm_a_countdown_t Comm_A_CountDown;         /* from comm_us.c */
 extern comm_b_countdown_t Comm_B_CountDown;         /* from comm_ds.c */
-extern comm_a_countdown_t FDP_Comm1_CountDown;      /*from COMM1_FDP.c*/
+
 extern spi_transmit_object SPI_Transmit_Object;
 power_supply_status Power_Supply_Status;
 
@@ -88,7 +88,7 @@ void Check_Comm_Links_1C1E_CPU2(void);
 void Check_Communication_Links_EF2(void);
 void Check_Communication_Links_DE(void);
 void Check_Inter_Processor_Link(void);
-void Check_FDP_Inter_Processor_Link(void);
+
 void Check_Power_Status(void);
 void Check_US_Power_Status(void);
 void Check_DS_Power_Status(void);
@@ -279,27 +279,7 @@ void Update_Sys_Mon_State(void)
 
 //21_12_09
 
-void Update_FDP_Mon_State(void)
-{
 
-    Decrement_Sys_Mon_50msTmr();
-
-    switch (SysMon_Info.State)
-    {
-        case SYS_CHECK_BOARDS:
-            Check_DAC_Boards_Runtime();     /* from restore.c */
-            SysMon_Info.State = SYS_CHECK_COMMUNICATION_LINKS;
-            break;
-        case SYS_CHECK_COMMUNICATION_LINKS:
-            Check_Communication_Links();
-            Check_FDP_Inter_Processor_Link();
-            SysMon_Info.State = SYS_CHECK_BOARDS;
-            break;
-        case SYS_FEEDBACK_SIGNALS:
-        case SYS_CHECK_POWER_STATUS:
-            break;
-    }
-}
 /*******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Start_Sys_Mon_Decrement_50msTmr(void)
@@ -1352,27 +1332,7 @@ void Check_Communication_Links(void)
         }
     return;
     }
-//   if(DIP_Switch_Info.Configuration == G39_FDP)
-//   {
-//    switch (DIP_Switch_Info.FDP_Unit)
-//   {
-//      case FDP_1C1E:
-//          if(DIP_Switch_Info.Flags.FDP_CPU1 == TRUE)
-//          {
-//           Check_Comm_Links_1C1E_CPU1();
-//          }
-//          else
-//          {
-//           Check_Comm_Links_1C1E_CPU2();
-//          }
-//          break;
-//      case FDP_2C1E:
-//          break;
-//      case FDP_2C2E:
-//          break;
-//    }
-//
-//   }
+
 }
 /******************************************************************************
 Component name      :SYS_MON
@@ -2032,28 +1992,7 @@ void Check_Communication_Links_EF1(void)
 
 //21_12_2009
 
-void Check_Comm_Links_1C1E_CPU1(void)
-{
- BYTE uchFailure = FALSE;
 
-    if (FDP_Comm1_CountDown.US1_to_LU1 == TIMEOUT_EVENT)
-    {
-        Status.Flags.US1_to_LU1_Link = COMMUNICATION_FAILED;
-        uchFailure = TRUE;
-    }
-    if (Status.Flags.LU1_to_US1_Link == COMMUNICATION_FAILED ||
-        Status.Flags.LU2_to_US1_Link == COMMUNICATION_FAILED)
-    {
-        uchFailure = TRUE;
-    }
-    if (uchFailure)
-    {
-        Declare_DAC_Defective();
-        Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
-        Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
-    }
-
-}
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links_EF2(void)
@@ -2151,28 +2090,7 @@ void Check_Communication_Links_EF2(void)
 
 //21_12_2009
 
-void Check_Comm_Links_1C1E_CPU2(void)
-{
- BYTE uchFailure = FALSE;
 
-    if (FDP_Comm1_CountDown.US1_to_LU2 == TIMEOUT_EVENT)
-    {
-        Status.Flags.US1_to_LU2_Link = COMMUNICATION_FAILED;
-        uchFailure = TRUE;
-    }
-    if (Status.Flags.LU1_to_US1_Link == COMMUNICATION_FAILED ||
-        Status.Flags.LU2_to_US1_Link == COMMUNICATION_FAILED)
-    {
-        uchFailure = TRUE;
-    }
-    if (uchFailure)
-    {
-        Declare_DAC_Defective();
-        Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
-        Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
-    }
-
-}
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Inter_Processor_Link(void)
@@ -2234,15 +2152,7 @@ void Check_Inter_Processor_Link(void)
 }
 
 //01/09/10
-void Check_FDP_Inter_Processor_Link(void)
-{
-    if(SPI_Transmit_Object.Timeout == TIMEOUT_EVENT)
-    {
-      Status.Flags.Peer_CPU_Link = COMMUNICATION_FAILED;
-      Set_Error_Status_Bit(ASSOCIATE_CPU_LINK_FAILURE_ERROR_NUM);
-      Declare_FDP_Defective();
-    }
-}
+
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_DS_Track_Status(BYTE new_Status)

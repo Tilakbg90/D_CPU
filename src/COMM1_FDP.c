@@ -809,107 +809,7 @@ Algorithm           :1.Check for overrun error, if it is there clear the error
                         if it is not generated release the buffer
 
 **************************************************************************/
-void Receive_FDP_COM1_Message(void)
-{
-    UINT16 Crc16_Return_Value = 0;
-    BYTE   uchData =0;
 
-    if (U1STAbits.PERR == 1)
-    {
-        U1STAbits.PERR = 0;
-    }
-    if(U1STAbits.FERR == 1)
-    {
-        U1STAbits.FERR = 0;
-    }
-    if(U1STAbits.OERR == 1)
-    {
-        uchData = U1RXREG;
-        U1STAbits.OERR = 0;
-    }
-
-    if(IFS4bits.U1ERIF == 1)
-    {
-        IFS4bits.U1ERIF = 0;
-    }
-
-
-    while (U1STAbits.URXDA)
-    {
-        uchData = U1RXREG;
-        FDP_Com1RecvObject.Timeout_ms = COM_INVALID_MESSAGE_TIMEOUT;
-//      FDP_Com1RecvObject.Timeout_ms = 200;
-        switch (FDP_Com1RecvObject.State)
-        {
-            case COM_RECV_BUFFER_EMPTY:
-//              if(uchData == DIP_Switch_Info.Address)
-//              {
-                FDP_Com1RecvObject.Msg_Buffer[0] = uchData;
-                FDP_Com1RecvObject.Index = 1;
-                FDP_Com1RecvObject.State = COM_RECV_SRC_ADDR;
-//              }
-                break;
-            case COM_RECV_SRC_ADDR:
-//              if(uchData == DIP_Switch_Info.COM1_NW_Address)
-//              {
-                FDP_Com1RecvObject.Msg_Buffer[FDP_Com1RecvObject.Index] = uchData;
-                FDP_Com1RecvObject.Index = FDP_Com1RecvObject.Index + 1;
-                FDP_Com1RecvObject.State = COM_RECV_DATA_ID;
-        //      }
-                break;
-            case COM_RECV_DATA_ID:
-                FDP_Com1RecvObject.Msg_Buffer[FDP_Com1RecvObject.Index] = uchData;
-                FDP_Com1RecvObject.Index = FDP_Com1RecvObject.Index + 1;
-                FDP_Com1RecvObject.State = COM_RECV_DATA_BYTES;
-                if(MODEM_A_CD != TRUE)
-                {
-                FDP_Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
-                }
-                break;
-            case COM_RECV_DATA_BYTES:
-                FDP_Com1RecvObject.Msg_Buffer[FDP_Com1RecvObject.Index] = uchData;
-                FDP_Com1RecvObject.Index = FDP_Com1RecvObject.Index + 1;
-//              if (FDP_Com1RecvObject.Index >= COMM1_MESSAGE_LENGTH )
-                if (FDP_Com1RecvObject.Index >= 16 )
-                {
-                    FDP_Com1RecvObject.State = COM_CHECK_CRC16;
-                }
-                break;
-        }
-    }
-    if (FDP_Com1RecvObject.State == COM_CHECK_CRC16)
-    {
-
-        Crc16_Return_Value = Crc16(FDP_Com1RecvObject.Msg_Buffer,COMM1_MESSAGE_LENGTH);
-        if (Crc16_Return_Value != 0)
-        {
-            FDP_Com1RecvObject.State = COM_INVALID_MESSAGE;
-            Status.Flags.Modem_A_Err_Toggle_Bit = !(Status.Flags.Modem_A_Err_Toggle_Bit);
-            return;     /* Invalid CRC-16 Checksum */
-        }
-        FDP_Com1RecvObject.State = COM_VALID_MESSAGE;
-        return;
-    }
-    if (FDP_Com1RecvObject.State != COM_RECV_BUFFER_EMPTY)
-    {
-        /* Message is not in expected format/incomplete, probably it is out of SYNC */
-        if (FDP_Com1RecvObject.Timeout_ms == TIMEOUT_EVENT)
-        {
-            FDP_Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
-        }
-    }
-    if (FDP_Com1RecvObject.State == COM_INVALID_MESSAGE)
-    {
-        /*
-         * Message can be invalid for following reasons:
-         *  - Reception out of Sync.
-         *  - probably it is not addressed to DAC
-         *  - Corrupted message
-         */
-            FDP_Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
-
-    }
-}
 /***************************************************************************
 Component name      :COMM_US
 Module Name         :void Set_US_Sch_Idle(void)
@@ -936,14 +836,10 @@ Interfaces
 
 Input Variables         Name                            Type
     Global          :   COMM_SCHEDULER_IDLE             Enumerator
-                        FDP_Com1_Sch_Info.ScanPeriod            UINT16
-                        FDP_Com1_Sch_Info.ElapsedTime           UINT16
 
     Local           :   uiTmp                           UINT16
 
 Output Variables        Name                            Type
-    Global          :   FDP_Com1_Sch_Info.State             Enumerator
-                        FDP_Com1_Sch_Info.Timeout_ms            UINT16
 
     Local           :   None
 Signal Variables
@@ -963,28 +859,7 @@ Algorithm           :1.Set the upstream schedular state as idle
                      2.Calculate the  schedular timeout
                      3.Release the modem channel
 *****************************************************************************/
-void Set_FDP_Comm1_Sch_Idle(void)
-{
 
-
-//      FDP_Com1_Sch_Info.State = COMM_SCHEDULER_IDLE;
-        FDP_Com1_Sch_Info.State =   COMM_SCHEDULER_NOT_STARTED;
-//      if(FDP_Com1_Sch_Info.ElapsedTime > FDP_Com1_Sch_Info.ScanPeriod)
-//      {
-//          uiTmp = (FDP_Com1_Sch_Info.ElapsedTime % FDP_SCHEDULER_SCAN_RATE);
-//      }
-//      else
-//      {
-//          uiTmp = FDP_Com1_Sch_Info.ElapsedTime;
-//      }
-//      FDP_Com1_Sch_Info.Timeout_ms = FDP_Com1_Sch_Info.ScanPeriod - uiTmp;
-        if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
-        {
-        MODEM_A_M0 = SET_LOW;
-        MODEM_A_M1 = SET_HIGH;
-        }
-        MODEM_A_CHANNEL_CONTROL = RELEASE_MODEM_CHANNEL;
-}
 /*************************************************************************
 Component name      :COMM_US
 Module Name         :void Decrement_US_Sch_msTmr(void)

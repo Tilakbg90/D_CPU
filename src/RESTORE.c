@@ -42,8 +42,7 @@
     /*DE     SF   EF    CF   D3A   D3B   D3C   3D_SF  3D_EF LCWS  LCWS_DL*/
 const char Board_data_List[15] = {0xD8, 0xD0, 0xE0, 0xC0, 0xD0, 0xD0, 0xD0, 0xC0,  0xC0, 0xE8, 0xE8, 0xD0, 0xD0, 0xD0, 0xD0};
 
-                                    /*    1C1E 2C1E 2C2E               */
-const char FDP_Board_data_List[7] = {0x00,0xF0,0xF0,0xF0,0x00,0x00,0x00};
+
 static UINT32 CPU_Calculated_Checksum;
 extern  /*near*/  dac_status_t Status;                    /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
@@ -169,10 +168,10 @@ void Check_DIP_Switches(void)
      * After selecting the DIP switch block, at least 1.2 microsecond delay
      * is needed for I/O lines on High Nibble of Port J to stabilise
      */
-    LATAbits.LATA4 = 0;  //              /* DIP switch S1 1:2 - Configuration SSDAC or FDP */
-    Nop();                  /* SSDAC - 1 Bit-1 set & Bit-2 noset,    FDP - 2  Bit-2 set & Bit-1 noset*/
+    LATAbits.LATA4 = 0;  //              /* DIP switch S1 1:2 - Configuration SSDAC */
+    Nop();                  /* SSDAC - 1 Bit-1 set & Bit-2 noset,    */
     Nop();                  /* DIP switch S1 bit-3 for direct clear without pilot option */
-    Nop();                  /* DIP switch S1 bit-4 for setting CPU ID in FDP configuration. Bit Set makes CPU1 and no set makes CPU2*/
+    Nop();                  
     Nop();
     Nop();
     Nop();
@@ -200,7 +199,7 @@ void Check_DIP_Switches(void)
     Buffer.Byte = (BYTE) 0;
     Buffer.Byte = PortBuffer.Byte;
     DIP_Switch_Info.DAC_Unit_Type = (BYTE)(Buffer.Byte);
-    DIP_Switch_Info.FDP_Unit_Type = (BYTE)(Buffer.Byte);
+
 
     LATAbits.LATA5 = 1;
     LATAbits.LATA6 = 0;   /* DIP switch S2 1:4 gives Configuration & Baud Rate */
@@ -476,83 +475,6 @@ void Check_DIP_Switches(void)
                 }
             }
             return;
-     case FIELD_DETECTION_POINT:
-            Status.Flags.Configuration = CONFIGURATION_OK;
-            switch (DIP_Switch_Info.FDP_Unit_Type)
-                {
-                case FDP_1C1E:
-                    if (DIP_Switch_Info.Address   >= (BYTE) FDP_UNIT_MIN_ADDRESS &&
-                        DIP_Switch_Info.Address   <= (BYTE) FDP_UNIT_MAX_ADDRESS)
-                    {
-                        if(DIP_Switch_Info.COM1_NW_Address >= (BYTE)FDP_UNIT_MIN_NW_ADDRESS &&
-                           DIP_Switch_Info.COM1_NW_Address <= (BYTE)FDP_UNIT_MAX_NW_ADDRESS)
-                        {
-                        Status.Flags.Network_Addr = VALID_ADDRESS;
-                        }
-                    }
-                    else
-                    {
-                    Status.Flags.Network_Addr = INVALID_ADDRESS;
-                    Status.Flags.System_Status = CATASTROPHIC_ERROR;
-                    Set_Error_Status_Bit(INOPERATIVE_NETWORK_ADDRESS_ERROR_NUM);
-                    }
-                    break;
-                case FDP_2C1E:
-                    if (DIP_Switch_Info.Address   >= (BYTE) FDP_UNIT_MIN_ADDRESS &&
-                        DIP_Switch_Info.Address   <= (BYTE) FDP_UNIT_MAX_ADDRESS)
-                    {
-                        if(DIP_Switch_Info.COM1_NW_Address >= (BYTE)FDP_UNIT_MIN_NW_ADDRESS &&
-                           DIP_Switch_Info.COM1_NW_Address <= (BYTE)FDP_UNIT_MAX_NW_ADDRESS)
-                        {
-                            if(DIP_Switch_Info.COM1_NW_Address == DIP_Switch_Info.COM2_NW_Address)
-                            {
-                            Status.Flags.Network_Addr = VALID_ADDRESS;
-                            }
-                        }
-                    }
-                    else
-                    {
-                    Status.Flags.Network_Addr = INVALID_ADDRESS;
-                    Status.Flags.System_Status = CATASTROPHIC_ERROR;
-                    Set_Error_Status_Bit(INOPERATIVE_NETWORK_ADDRESS_ERROR_NUM);
-                    }
-                    break;
-                case FDP_2C2E:
-                    if (DIP_Switch_Info.Address   >= (BYTE) FDP_UNIT_MIN_ADDRESS &&
-                        DIP_Switch_Info.Address   <= (BYTE) FDP_UNIT_MAX_ADDRESS)
-                    {
-                        if(DIP_Switch_Info.COM1_NW_Address >= (BYTE)FDP_UNIT_MIN_NW_ADDRESS &&
-                           DIP_Switch_Info.COM1_NW_Address <= (BYTE)FDP_UNIT_MAX_NW_ADDRESS)
-                        {
-                            if(DIP_Switch_Info.COM2_NW_Address >= (BYTE)FDP_UNIT_MIN_NW_ADDRESS &&
-                               DIP_Switch_Info.COM2_NW_Address <= (BYTE)FDP_UNIT_MAX_NW_ADDRESS)
-                            {
-                            Status.Flags.Network_Addr = VALID_ADDRESS;
-                            }
-                        }
-                    }
-                    else
-                    {
-                    Status.Flags.Network_Addr = INVALID_ADDRESS;
-                    Status.Flags.System_Status = CATASTROPHIC_ERROR;
-                    Set_Error_Status_Bit(INOPERATIVE_NETWORK_ADDRESS_ERROR_NUM);
-                    }
-                    break;
-                }
-            if (Status.Flags.Network_Addr == VALID_ADDRESS)
-            {
-                if (DIP_Switch_Info.Flags.Is_FDP_CPU1 == SET_HIGH)
-                {
-                 DIP_Switch_Info.FDP_CPU_ID = FDP_UNIT_CPU1_ID;
-                 DIP_Switch_Info.Peer_Address = FDP_UNIT_CPU2_ID;
-                }
-                else
-                {
-                 DIP_Switch_Info.FDP_CPU_ID = FDP_UNIT_CPU2_ID;
-                 DIP_Switch_Info.Peer_Address = FDP_UNIT_CPU1_ID;
-                }
-            }
-            return;
       default:
                 Status.Flags.Configuration = WRONG_CONFIGURATION;
                 Status.Flags.System_Status = CATASTROPHIC_ERROR;
@@ -644,23 +566,7 @@ void Check_DAC_Boards_Runtime(void)
      }
      return;
     }
-    if(DIP_Switch_Info.Configuration == G39_FDP)
-    {
-     BoardData.Byte = Get_Board_Details();
-     BoardData.Byte = BoardData.Byte | FDP_Board_data_List[DIP_Switch_Info.FDP_Unit_Type];
-     Status.Byte[5]  = BoardData.Byte;                       /* Save the Boards presence in Status */
-     if (BoardData.Byte != All_BOARD_PRESENT)
-     {
-        Status.Flags.Unit_Board_Status = BOARD_MISSING;
-        Set_Error_Status_Byte(BOARDS_MISSING_ID,BoardData.Byte);
-        Declare_FDP_Defective();
-     }
-     else
-     {
-        Status.Flags.Unit_Board_Status = BOARD_PRESENT;
-     }
 
-    }
 }
 /*********************************************************************
 Component name      :RESTORE

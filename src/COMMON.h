@@ -87,10 +87,10 @@ typedef enum
     /* Macro to define Message length for USART communication */
 #define COMM_MESSAGE_LENGTH         (22)
 
-/* Macro to define Message length for Comm1 port USART communication in FDP mode*/
+/* Macro to define Message length for Comm1 port USART communication*/
 #define COMM1_MESSAGE_LENGTH            (22)
 
-/* Macro to define Message length for Comm2 port USART communication in FDP mode */
+/* Macro to define Message length for Comm2 port USART communication*/
 #define COMM2_MESSAGE_LENGTH            (22)
 
     /* Macro define the number of Phase detector cards */
@@ -147,12 +147,7 @@ typedef enum
               DAC_UNIT_TYPE_D4_D, // 14
 
              }SSDAC_Unit_Type;
-typedef enum
-            {
-              FDP_1C1E = 1,
-              FDP_2C1E,
-              FDP_2C2E
-            }MSDAC_Unit_Type;
+
 typedef enum
             {
               SSDAC = 1,
@@ -168,7 +163,7 @@ typedef enum
             }comm_type;
 
 #define G39_DAC (1)
-#define G39_FDP (2)
+
     /* Minimum address for SF unit is defined to 1 */
 #define SF_UNIT_MIN_ADDRESS             (1)
 
@@ -210,21 +205,6 @@ typedef enum
             
             
             
-    /* In FDP configuration the cpu1 address should be consider as 1*/
-#define FDP_UNIT_CPU1_ID                (1)
-   /* In FDP configuration the cpu2 address should be consider as 2*/
-#define FDP_UNIT_CPU2_ID                (2)
-  /* In FDP configuration the minimum network address value should be 1*/
-#define FDP_UNIT_MIN_NW_ADDRESS             (1)
-  /* In FDP configuration the maximum network address value should be 15*/
-#define FDP_UNIT_MAX_NW_ADDRESS             (15)
-  /* In FDP configuration the minimum Detection point address value should be 1*/
-#define FDP_UNIT_MIN_ADDRESS                (1)
-  /* In FDP configuration the maximum Detection point address value should be 40*/
-#define FDP_UNIT_MAX_ADDRESS                (40)
-
-#define FDP_MIN_COMM_ID                     (1)
-#define FDP_MAX_COMM_ID                     (2)
 /************************ Unit Types and Address ranges ************************/
 
 /*************** COM1/COM2 Communication related definitions *****************/
@@ -250,35 +230,13 @@ typedef enum
 
 /*************** COM1/COM2 Communication related definitions *****************/
 
-/*************** COM1/COM2 FDP Communication related definitions *****************/
-#define FDP_ID_FIELD_OFFSET           (0)
-#define FDP_NW_ID_FIELD_OFFSET        (1)
-#define FDP_SEQUENCE_NUMNBER_OFFSET   (2)
-#define FDP_CAN_ID_OFFSET             (3)
-#define FDP_CPU1_COMMAND_ID_OFFSET    (4)
-#define FDP_CPU2_COMMAND_ID_OFFSET    (5)
-#define FDP_COMM_BOARD_ID_OFFSET      (6)
-#define FDP_CPU1_TOKEN_ID_OFFSET      (7)
-#define FDP_CPU2_TOKEN_ID_OFFSET      (8)
-
-
-
-
-#define FDP_FWD_AXLE_COUNT_LO_OFFSET  (7)
-#define FDP_FWD_AXLE_COUNT_HI_OFFSET  (8)
-#define FDP_REV_AXLE_COUNT_LO_OFFSET  (9)
-#define FDP_REV_AXLE_COUNT_HI_OFFSET  (10)
-
-#define FDP_FLAGS1_FIELD_OFFSET       (9)
-#define FDP_FLAGS2_FIELD_OFFSET       (5)
-#define FDP_FLAGS3_FIELD_OFFSET       (6)
 
 
 
 #define RESET_ID_OFFSET               (4)
 #define COUNITNG_ID_OFFSET            (5)
 #define CLEAR_COUNT_ID_OFFSET         (6)
-/*************** COM1/COM2 FDP Communication related definitions *****************/
+
 
 /* Maximum communication retries assigned to 3 means 3 times we should check
     for communication established between the units */
@@ -291,11 +249,6 @@ typedef enum
     /*  This is the command used for sending/recieving the axle counts */
 #define READ_AXLE_COUNT                 0x55
 #define ERROR_COUNT_THRESHOLD           0x00
-    /*  This is the command used for resetting the FDP unit */
-#define FDP_RESET_COMMAND               (1)
-#define FDP_NONRESPONSE_REPLY           0x80
-#define GET_FDP_STATUS                  0x20
-#define GET_FDP_STATUS_CLR_PREVIOUS     0x21
 
 #define VALID_ADDRESS                   (1)
 #define INVALID_ADDRESS                 (0)
@@ -581,13 +534,7 @@ typedef enum{
             DECRYPTION_COMPLETED
 }deciper_states;
 
-typedef enum{
 
-            WAITING_FOR_RESET = 1,
-            UNIT_RESETTED,
-            UNIT_NORMAL,
-            FDP_DEFECTIVE
-}fdp_unit_state;
 /****************Data Encryption states ***************************/
 
 #define LARGEST_CONVERTABLE_INTEGER     10000       //Not used
@@ -600,7 +547,7 @@ typedef enum{
 #define COMM_SCHEDULER_SCAN_RATE        (1200)
 
 /* Schedular scan rate for 1200bps */
-#define FDP_SCHEDULER_SCAN_RATE     (900)
+
 
 //  /* 186 for MSM6947, 206 for MSM6927 */
 //#define MODEM_TRC_ON_TIMEOUT          (186)
@@ -620,8 +567,7 @@ typedef enum{
     /* 2 Communication Cycle time (2 * 1600) */
 #define COMM_RE_SYNCHRONIZATION_TIME    (3400)
 
-/* 2 Communication Cycle time (2 * 750) */
-#define FDP_RE_SYNCHRONIZATION_TIME (1800)
+
 
 //#define COMM_RE_SYNCHRONIZATION_TIME  (4800)
 
@@ -753,7 +699,7 @@ typedef union {
 
 typedef struct {
 
-        /* Unit configuration can be either SSDAC or FDP*/
+        /* Unit configuration can be either SSDAC */
             Unit_Configuration   Configuration;
 
         /* Unit Address */
@@ -772,17 +718,13 @@ typedef struct {
         /* Address of Peer CPU */
             BYTE             Peer_Address;
 
-        /* FDP Unit Type*/
-            MSDAC_Unit_Type  FDP_Unit_Type;
-
         /* Network Address Comm 1*/
             BYTE COM1_NW_Address;
 
         /* Network Address Comm 2*/
             BYTE COM2_NW_Address;
 
-        /* FDP CPU Address Value*/
-            BYTE FDP_CPU_ID;
+        
 
             struct {
 
@@ -846,22 +788,7 @@ typedef struct {
 } msg_info_t;
 
 
-typedef struct{
 
-        fdp_unit_state State;
-        BYTE Response_Command;
-        BYTE Reply_Command;
-        BYTE Token_Id;
-        BYTE Previous_Token;
-        wordtype_t Fwd_Axle_Count;
-        wordtype_t Rev_Axle_Count;
-        UINT16 Xmit_Fwd_Count;
-        UINT16 Xmit_Rev_Count;
-        UINT16 Previous_Fwd_Count;
-        UINT16 Previous_Rev_Count;
-        UINT16 Current_Fwd_Count;
-        UINT16 Current_Rev_Count;
-}fdp_info;
 /************ Structure to hold message for transsmission/reception **********/
 
 /************ Structure to hold the communictaion schedular states *********/
@@ -1481,7 +1408,6 @@ extern void Decrement_Bootuplock_50msTmr(void);
 
 /* Declaration for functions defined in relaymgr.c */
 extern void Declare_DAC_Defective(void);
-extern void Declare_FDP_Defective(void);
 extern void Declare_DAC_Defective_US(void);
 extern void Declare_DAC_Defective_DS(void);
 extern void Process_Peer_Relay_A_AxleCount(UINT16,UINT16);
@@ -1494,7 +1420,6 @@ extern UINT16 LCWS_Section_TimeOut;
 
 /* Declaration for functions defined in rlya_mgr.c */
 extern BOOL Reset_Allowed_For_US(void);
-extern BOOL Reset_Allowed_For_FDP_US(void);
 extern void Set_Relay_A_DAC_Defective(void);
 extern BYTE Get_Relay_A_State(void);
 extern BYTE Get_Relay_A_ATC_State(void);
@@ -1560,13 +1485,13 @@ extern BYTE Get_US_AxleDirection(void);
 extern UINT16 Get_DS_AxleCount(void);
 extern BYTE Get_DS_AxleDirection(void);
 extern void Start_US_Axle_Counting(void);
-extern void Start_FDP_US_Axle_Counting(void);
+
 extern void Start_DS_Axle_Counting(void);
-extern void Start_FDP_DS_Axle_Counting(void);
+
 extern void Stop_US_Axle_Counting(void);
-extern void Stop_FDP_US_Axle_Counting(void);
+
 extern void Stop_DS_Axle_Counting(void);
-extern void Stop_FDP_DS_Axle_Counting(void);
+
 extern BOOL Get_DS_Local_Counts_Clearing_Status(void);
 extern BOOL Get_US_Local_Counts_Clearing_Status(void);
 extern void Initialise_AxleMon_1(void);
@@ -1598,18 +1523,18 @@ extern void Initialise_US_CommSch(void);
 extern void Start_US_CommSch(void);
 extern void Start_Comm1_Sch(void);
 extern void Update_US_Sch_State(void);
-extern void Update_FDP_COM1Sch_State(void);
+
 extern void Decrement_US_Sch_msTmr(void);
-extern void Decrement_FDP_Comm1_Sch_msTmr(void);
+
 extern void Configure_Modem_A(void);
-extern void Configure_FDP_Modem_A(void);
+
 extern BYTE Get_Modem_A_State(void);
-extern BYTE Get_FDP_Modem_A_State(void);
+
 extern void Initialise_Comm1_Sch(void);
 extern void Clear_US_Transmit_Buffer(void);
 extern void Update_MDP_Sequence_Number(const BYTE);
-extern void Update_FDP_Axle_Counts(BYTE);
-extern void Update_FDP_Previous_Axle_Counts(void);
+
+
 
 /* Declaration for functions defined in restore.c */
 extern void Check_DIP_Switches(void);
@@ -1624,10 +1549,6 @@ extern void Clear_DS_Checksum_Info(void);
 extern void Clear_US_Checksum_Info(void);
 
 /* Declaration for functions defined in lcd_drv.c */
-extern void Display_on_LCD(BYTE, BYTE, BYTE *);
-extern void Display_Character_on_LCD(BYTE,BYTE,BYTE);
-//extern void Clear_Line_on_LCD(BYTE);
-extern void Itoac(UINT16,BYTE *);
 
 extern void Start_Relay_A_Mgr(void);
 extern void Clear_ATC_Local_Relay_A_State(void);

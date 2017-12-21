@@ -1016,7 +1016,7 @@ void Receive_COM2_Message(void)
     }
     if (Com2RecvObject.State == COM_CHECK_CRC16)
     {
-        Crc16_Return_Value = Crc16(Com2RecvObject.Msg_Buffer,COMM_MESSAGE_LENGTH);
+        Crc16_Return_Value = Crc16(COM2_RX,COMM_MESSAGE_LENGTH);
         if (Crc16_Return_Value != 0)
         {
             /* Invalid CRC-16 Checksum */
@@ -1465,7 +1465,7 @@ void Build_DS_Reset_Info_Message(void)
     Com2XmitObject.Msg_Buffer[15] = 0;
     Com2XmitObject.Msg_Buffer[16] = 0;
     Com2XmitObject.Msg_Buffer[17] = 0;
-    CheckSum.Word = Crc16(Com2XmitObject.Msg_Buffer, 18);
+    CheckSum.Word = Crc16(COM2_TX, 18);
     Com2XmitObject.Msg_Buffer[18] = CheckSum.Byte.Lo;
     Com2XmitObject.Msg_Buffer[19] = CheckSum.Byte.Hi;
     Com2XmitObject.Msg_Length = (BYTE) COMM_MESSAGE_LENGTH;
@@ -1722,7 +1722,7 @@ void Build_DS_Axle_Count_Message(void)
         default:
             break;
     }
-    CheckSum.Word = Crc16(Com2XmitObject.Msg_Buffer, 20);
+    CheckSum.Word = Crc16(COM2_TX, 20);
     Com2XmitObject.Msg_Buffer[20] = CheckSum.Byte.Lo;
     Com2XmitObject.Msg_Buffer[21] = CheckSum.Byte.Hi;
     Com2XmitObject.Msg_Length = (BYTE) COMM_MESSAGE_LENGTH;

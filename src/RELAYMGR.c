@@ -53,7 +53,7 @@ extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
 extern us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
 extern relay_a_info_t Relay_A_Info;
-extern fdp_info FDP_Info;
+
 extern relay_b_info_t Relay_B_Info;
 extern relay_a_info_t Relay_A_Info;
 extern BYTE Relay_A_State;
@@ -222,16 +222,6 @@ void Update_3S_Relay_A_Counts(void)
 }
 //19_12_09
 
-void Update_FDP_Relay_A_Counts(void)
-{
-    UINT16 uiFwd_Count;
-    UINT16 uiRev_Count;
-
-    uiFwd_Count = Get_US_Fwd_AxleCount();                       /* from axlemon.c */
-    uiRev_Count = Get_US_Rev_AxleCount();                       /* from axlemon.c */
-    Process_Relay_A_Local_AxleCount(uiFwd_Count,uiRev_Count);   /* from rlya_mgr.c */
-
-}
 
 
 extern feedback_info_t FeedBack_Info[MAXIMUM_TYPES_OF_FEEDBACKS];
@@ -1961,33 +1951,7 @@ void Declare_DAC_Defective(void)
 
 }
 //01/09/10
-void Declare_FDP_Defective(void)
-{
-    Status.Flags.System_Status = CATASTROPHIC_ERROR;
-    Status.Flags.US_System_Status = CATASTROPHIC_ERROR;
-    Status.Flags.DS_System_Status = CATASTROPHIC_ERROR;
-    A_Sec_Led_drive(OFF);
-    B_Sec_Led_drive(OFF);
-    Clear_Local_Reset_Flag();
-    Clear_Local_Reset2_Flag();
-    Stop_FDP_US_Axle_Counting();
-    Stop_FDP_DS_Axle_Counting();
-    FDP_Info.State = FDP_DEFECTIVE;
 
-    switch (DIP_Switch_Info.FDP_Unit_Type)
-    {
-        case FDP_1C1E:
-            Relay_A_Info.State = DAC_DEFECTIVE;
-            break;
-        case FDP_2C2E:
-            break;
-        case FDP_2C1E:
-            break;
-        default:
-            break;
-    }
-
-}
 /************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Declare_DAC_Defective_US(void)
@@ -2088,8 +2052,7 @@ void Declare_DAC_Defective_US(void)
     Clear_US_Remote_Reset_Flag();
     Clear_ATC_Local_Relay_A_State();
     Stop_US_Axle_Counting();
-    if(DIP_Switch_Info.Configuration == G39_DAC)
-    {
+
     /* drop Prep relay in the failure condition */
     DeEnergise_Preparatory_Relay_A();           /* from relaydrv.c */
 
@@ -2184,35 +2147,7 @@ void Declare_DAC_Defective_US(void)
             default:
                  break;
         }
-     return;
-    }
-    else
-    {
-    switch (DIP_Switch_Info.FDP_Unit_Type)
-        {
-            case FDP_1C1E:
-                Relay_A_Info.State = DAC_DEFECTIVE;
-                Status.Flags.US_System_Status = CATASTROPHIC_ERROR;
-                Status.Flags.System_Status = CATASTROPHIC_ERROR;
-                break;
-            case FDP_2C2E:
-//              Set_Relay_A_DAC_Defective();            /* from rlya_mgr.c */
-//              Set_Relay_B_DAC_Defective();            /* from rlyb_mgr.c */
-//              /* drop Prep relay in the failure condition */
-//              DeEnergise_Preparatory_Relay_A();           /* from relaydrv.c */
-//              DeEnergise_Preparatory_Relay_B();           /* from relaydrv.c */
-//              DS_Section_Mode.Local_Unit = SYSTEM_ERROR_MODE;
-//              US_Section_Mode.Local_Unit = SYSTEM_ERROR_MODE;
-                break;
-            case FDP_2C1E:
-//              Set_Relay_D3_DAC_Defective();           /* from rlyd3_mgr.c */
-//              DS_Section_Mode.Local_Unit = SYSTEM_ERROR_MODE;
-//              DS_Section_Mode.Remote_Unit = DP3_MODE;
-                break;
-            default:
-                break;
-        }
-     }
+
 }
 
 /*****************************************************************************

@@ -929,7 +929,7 @@ void Receive_COM1_Message(void)
     if (Com1RecvObject.State == COM_CHECK_CRC16)
     {
 
-        Crc16_Return_Value = Crc16(Com1RecvObject.Msg_Buffer,COMM_MESSAGE_LENGTH);
+        Crc16_Return_Value = Crc16(COM1_RX,COMM_MESSAGE_LENGTH);
         if (Crc16_Return_Value != 0)
         {
             Com1RecvObject.State = COM_INVALID_MESSAGE;
@@ -1452,7 +1452,7 @@ void Build_US_Reset_Info_Message(void)
     Com1XmitObject.Msg_Buffer[15] = 0;
     Com1XmitObject.Msg_Buffer[16] = 0;
     Com1XmitObject.Msg_Buffer[17] = 0;
-    CheckSum.Word = Crc16(Com1XmitObject.Msg_Buffer, 18); 
+    CheckSum.Word = Crc16(COM1_TX, 18); 
     Com1XmitObject.Msg_Buffer[18] = CheckSum.Byte.Lo;
     Com1XmitObject.Msg_Buffer[19] = CheckSum.Byte.Hi;
     Com1XmitObject.Msg_Length = (BYTE) COMM_MESSAGE_LENGTH;
@@ -1703,7 +1703,7 @@ void Build_US_Axle_Count_Message(void)
         default:
             break;
     }
-    CheckSum.Word = Crc16(Com1XmitObject.Msg_Buffer, 20);
+    CheckSum.Word = Crc16(COM1_TX, 20);
     Com1XmitObject.Msg_Buffer[20] = CheckSum.Byte.Lo;
     Com1XmitObject.Msg_Buffer[21] = CheckSum.Byte.Hi;
     Com1XmitObject.Msg_Length = (BYTE) COMM_MESSAGE_LENGTH;

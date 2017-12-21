@@ -18,12 +18,21 @@
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-    Functions   :   UINT16 Crc16(BYTE *puchMsg, INT16 iMsgLen)
+    Functions   :   UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
 
 *****************************************************************************/
 #include <xc.h>
 #include "COMMON.h"
+#include "COMM_SM.h"
 #include "CRC16.h"
+
+
+extern msg_info_t   Com2XmitObject;    /* COM2: Message Transmission Buffer etc., */
+extern msg_info_t   Com2RecvObject;    /* COM2: Message Receiving Buffer etc., */
+extern spi_receive_object  SPI_Receive_Object;        /*Structure to hold the SPI receiving buffer*/
+extern spi_transmit_object SPI_Transmit_Object;       /*Structure to hold the SPI transmission buffer*/
+extern msg_info_t    Com1XmitObject;   /* COM1: Message Transmission Buffer etc., */
+extern msg_info_t    Com1RecvObject;   /* COM1: Message Receiving Buffer etc., */
 
 /* Table of CRC values for high-order byte */
 unsigned char uchCRC16TableHi[256] = {
@@ -69,7 +78,7 @@ unsigned char uchCRC16TableLo[256] = {
 
 /*********************************************************************
 Component name      :CRC16
-Module Name         :UINT16 Crc16(BYTE *puchMsg, INT16 iMsgLen)
+Module Name         :UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
 Created By          :
 Date Created        :
 Modification History:
@@ -127,7 +136,7 @@ Algorithm           :1.Initialize Low and  High byte of CRC to 0xFFFF
                      2.pass through message buffer and calculate the CRC
 
 ************************************************************************/
-UINT16 Crc16(BYTE *puchMsg, INT16 iMsgLen)
+UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
 {
     /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
      * Computes 16-bit cyclic redundancy check (CRC) value. Look-up table is   *
@@ -136,15 +145,36 @@ UINT16 Crc16(BYTE *puchMsg, INT16 iMsgLen)
 
     BYTE uchCRCHi = 0xFF ; /* high byte of CRC initialized */
     BYTE uchCRCLo = 0xFF ; /* low byte of CRC initialized */
-    BYTE uchIndex ; /* will index into CRC lookup table */
-
-
+    BYTE uchIndex,uchIndex2 ; /* will index into CRC lookup table */
 
     while (iMsgLen) /* pass through message buffer */
     {
         iMsgLen = iMsgLen - 1;
-        uchIndex = uchCRCHi ^ *puchMsg; /* calculate the CRC */
-        puchMsg = puchMsg + 1;
+        switch(Pack)
+        {
+            case COM2_RX:
+                uchIndex = uchCRCHi ^ Com2RecvObject.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            case COM2_TX:
+                uchIndex = uchCRCHi ^ Com2XmitObject.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            case SPI_RX:
+                uchIndex = uchCRCHi ^ SPI_Receive_Object.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            case SPI_TX:
+                uchIndex = uchCRCHi ^ SPI_Transmit_Object.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            case COM1_RX:
+                uchIndex = uchCRCHi ^ Com1RecvObject.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            case COM1_TX:
+                uchIndex = uchCRCHi ^ Com1XmitObject.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
+                break;
+            default:
+                break;
+        }
+
+        uchIndex2 = uchIndex2 + 1;
         uchCRCHi = uchCRCLo ^ uchCRC16TableHi[uchIndex];
         uchCRCLo = uchCRC16TableLo[uchIndex];
     }

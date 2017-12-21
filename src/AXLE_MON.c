@@ -58,7 +58,7 @@
 
 *****************************************************************************/
 #include <xc.h>
-#include <string.h>
+
 
 #include "COMMON.h"
 #include "AXLE_MON.h"
@@ -68,7 +68,7 @@
 extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
  /*near*/  track_info_t Track_Info;
-extern fdp_info FDP_Info;
+
 
 struct def_LU_Speed_Info LU_Speed_Info;
 
@@ -90,7 +90,7 @@ const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIO
 void Monitor_Supervisory_Pulse(void);
 void Monitor_Wheel_Pulse(bitadrb_t);
 void Determine_TrackState(BYTE);
-void Determine_FDP_TrackState(BYTE);
+
 void Analyse_Supervisory_Sequence(void);
 void Increment_DS_Forward_Count(void);
 void Decrement_DS_Forward_Count(void);
@@ -102,15 +102,14 @@ void Increment_US_Reverse_Count(void);
 void Decrement_US_Reverse_Count(void);
 void Register_PD1212_Transition(void);
 void Register_PD2121_Transition(void);
-void Register_FDP_PD1212_Transition(void);
-void Register_FDP_PD2121_Transition(void);
+
 void Clear_PD1_Supervisory_Count(void);
 void Clear_PD2_Supervisory_Count(void);
 void Clear_PD12_Main_Pulse_Count(void);
 BOOL Chk_For_Track_Occupancy(void);
 void Clear_Wheel_Type(void);
 void Detect_PD_Failures(void);
-void Detect_FDP_PD_Failures(void);
+
 BYTE Get_Shunting_State(void);
 void Convert_Timer_Value_To_Speed(void);
 
@@ -295,8 +294,6 @@ void Initialise_AxleMon(void)
     Track_Info.Flags.PD_Without_Overlapping = FALSE;
     Track_Info.Flags.DS_Local_Counts_Just_Cleared = FALSE;
     Track_Info.Flags.US_Local_Counts_Just_Cleared = FALSE;
-    Track_Info.Flags.FDP_US_Counting_Enable = SET_LOW;
-    Track_Info.Flags.FDP_DS_Counting_Enable = SET_LOW;
     Track_Info.PD_Last_Change_Timeout_50ms = 0;
     Track_Info.PD1S_Timeout_50ms = 0;
     Track_Info.PD2S_Timeout_50ms = 0;
@@ -445,56 +442,6 @@ void Validate_PD_Signals(void)
 }
 
 //01/09/10
-void Validate_FDP_PD_Signals(void)
-{
-    bitadrb_t Track0_IO;
-    bitadrb_t Temp_IO;
-
-    Monitor_Supervisory_Pulse();
-    if(Track_Info.Wheel_Type == WHEEL_TYPE_NOT_DETERMINED)
-      {
-        Analyse_Supervisory_Sequence();
-       }
-    Track0_IO.Byte = (BYTE) 0;
-    if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY &&
-       PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
-      {
-        Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
-        Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
-        Temp_IO.Bit.b2 = PD1_PULSE_MAIN;
-        Temp_IO.Bit.b3 = PD1_PULSE_SECONDARY;
-        Track0_IO.Bit.b0 = (Temp_IO.Bit.b0 & Temp_IO.Bit.b1);
-        Track0_IO.Bit.b1 = (Temp_IO.Bit.b2 & Temp_IO.Bit.b3);
-        Determine_FDP_TrackState(Track0_IO.Byte);
-        Monitor_Wheel_Pulse(Track0_IO);
-        Detect_FDP_PD_Failures();
-      }
-    else
-      {
-        /* Before declaring error, Main and secondary pulses are compared once again for equality
-           Because there may be some nano sec gap between main and secondary. By that time we should
-           not declare error. */
-        if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY &&
-           PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
-          {
-           Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
-           Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
-           Temp_IO.Bit.b2 = PD1_PULSE_MAIN;
-           Temp_IO.Bit.b3 = PD1_PULSE_SECONDARY;
-           Track0_IO.Bit.b0 = (Temp_IO.Bit.b0 & Temp_IO.Bit.b1);
-           Track0_IO.Bit.b1 = (Temp_IO.Bit.b2 & Temp_IO.Bit.b3);
-           Determine_FDP_TrackState(Track0_IO.Byte);
-           Monitor_Wheel_Pulse(Track0_IO);
-           Detect_FDP_PD_Failures();
-          }
-        else
-          {
-            Track_Info.State = OUT_OF_SYNC_OR_PD_ERROR;
-            Declare_FDP_Defective();
-            Set_Error_Status_Bit(AD_PULSE_MISMATCH_ERROR_NUM);
-          }
-      }
-}
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Monitor_Supervisory_Pulse(void)
@@ -1176,113 +1123,7 @@ void Determine_TrackState(BYTE uchPD_IO_Value)
 
 //01/09/10
 
-void Determine_FDP_TrackState(BYTE uchPD_IO_Value)
-{
-    BYTE uchNewState;
 
-    if (uchPD_IO_Value >= NO_OF_PD_TRANSITIONS)
-        return;
-    uchNewState = uchPD_Transition_Table[Track_Info.State][uchPD_IO_Value];
-
-    switch (Track_Info.State)
-    {
-        case PRE_SYNCHRONISATION_WAIT:
-        case WAITING_FOR_AXLE:
-             break;
-        case WAIT_FOR_AXLE_AT_TRAILING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
-                /* wheel is moving forward to middle of Both PD, So clear the sup errors */
-                    Clear_PD1_Supervisory_Count();
-                    Clear_PD2_Supervisory_Count();
-                }
-            if(uchNewState == WAITING_FOR_AXLE)
-              {
-                Track_Info.Flags.PD_Without_Overlapping = TRUE;
-              }
-            break;
-        case LET_AXLE_CLEAR_LEADING_PD_FIRST:
-            Track_Info.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
-                Register_FDP_PD1212_Transition();
-                }
-            break;
-        case LET_AXLE_CLEAR_TRAILING_PD_NEXT:
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
-                Register_FDP_PD1212_Transition();
-                break;
-                }
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
-                /* wheel is moving Backward to middle of Both PD,so clear the sup errors */
-                Clear_PD1_Supervisory_Count();
-                Clear_PD2_Supervisory_Count();
-                }
-            break;
-        case DIR_CHANGE_FROM_FWD_TO_REV:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
-                /* wheel is moving Backward to middle of Both PD */
-                Clear_PD1_Supervisory_Count();
-                Clear_PD2_Supervisory_Count();
-                }
-            break;
-        case WAIT_FOR_AXLE_AT_LEADING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
-                /* wheel is moving forward to middle of Both PD */
-
-                Clear_PD1_Supervisory_Count();
-                Clear_PD2_Supervisory_Count();
-                }
-            if(uchNewState == WAITING_FOR_AXLE)
-              {
-                Track_Info.Flags.PD_Without_Overlapping = TRUE;
-              }
-            break;
-        case LET_AXLE_CLEAR_TRAILING_PD_FIRST:
-            Track_Info.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
-                Register_FDP_PD2121_Transition();
-                }
-            break;
-        case LET_AXLE_CLEAR_LEADING_PD_NEXT:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
-                /* wheel is moving Backward to middle of Both PD */
-                Clear_PD1_Supervisory_Count();
-                Clear_PD2_Supervisory_Count();
-                }
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
-                Register_FDP_PD2121_Transition();
-                }
-            break;
-        case DIR_CHANGE_FROM_REV_TO_FWD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
-                /* wheel is moving Backward to middle of Both PD */
-                Clear_PD1_Supervisory_Count();
-                Clear_PD2_Supervisory_Count();
-                }
-            break;
-        case OUT_OF_SYNC_OR_PD_ERROR:
-            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-            Declare_FDP_Defective();
-            Set_Error_Status_Bit(AD_STATE_FAIL_ERROR_NUM);
-            break;
-     }
-
-       Track_Info.State = uchNewState;
-       if(Track_Info.State != WAITING_FOR_AXLE )
-        {
-         Track_Info.PD_Last_Change_Timeout_50ms  = PD_CLEARING_TIMEOUT;
-        }
-}
 
 /*********************************************************************
 Component name      :AXLE_MON
@@ -1710,217 +1551,7 @@ void Detect_PD_Failures(void)
     }
 }
 
-//01/09/10
-void Detect_FDP_PD_Failures(void)
-{
-   if(Track_Info.Flags.PD_State_Counted == TRUE)
-    {
-         /* Wheel counted .so, clear the PD state errors. Because of Trolley    */
-         Clear_PD1_Supervisory_Count();
-         Clear_PD2_Supervisory_Count();
-         Clear_PD12_Main_Pulse_Count();
-         Clear_Wheel_Type();
-         Track_Info.Flags.PD_State_Counted =FALSE;
-         Track_Info.Flags.PD_Non_Overlapping = FALSE;
-     return;
-    }
-    if(Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms == TIMEOUT_EVENT)
-     {
-      Track_Info.Flags.US_Local_Counts_Just_Cleared = SET_LOW;
-     }
-    if(Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms == TIMEOUT_EVENT)
-     {
-      Track_Info.Flags.DS_Local_Counts_Just_Cleared = SET_LOW;
-     }
-    if(Track_Info.PD_Last_Change_Timeout_50ms == TIMEOUT_EVENT )
-    {
-         /*  Wheel state not changed for last 6 sec.
-            so, clear the PD state errors. Because of Trolley   */
-         Clear_PD1_Supervisory_Count();
-         Clear_PD2_Supervisory_Count();
-         Clear_PD12_Main_Pulse_Count();
-         Clear_Wheel_Type();
-         Track_Info.Flags.PD_State_Counted =FALSE;
-         Track_Info.Flags.PD_Non_Overlapping = FALSE;
-    }
 
-    if (Track_Info.Flags.PD1S_Timer_On == TRUE && Track_Info.PD1S_Timeout_50ms == TIMEOUT_EVENT)
-      {
-        Set_Error_Status_Bit (AD1_SUP_LOW_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-      }
-     if (Track_Info.Flags.PD2S_Timer_On == TRUE && Track_Info.PD2S_Timeout_50ms == TIMEOUT_EVENT)
-     {
-        Set_Error_Status_Bit (AD2_SUP_LOW_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-
-     if(Track_Info.PD1M_Count >=2 && Track_Info.PD2M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >2 && Track_Info.PD2M_Count == 0 &&
-        PD2_PULSE_MAIN == SET_LOW)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >=2 &&
-       Track_Info.PD1S_Count > 2 && Track_Info.PD2S_Count == 0)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >=2 && Track_Info.PD1M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >2 && Track_Info.PD1M_Count == 0 &&
-        PD1_PULSE_MAIN == SET_LOW)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >=2  &&
-       Track_Info.PD2S_Count > 2 && Track_Info.PD1S_Count == 0)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >=4 && Track_Info.PD2M_Count >=4)
-     {
-        Set_Error_Status_Bit(DOUBLE_COIL_INFLUENCE_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-
-    if(Track_Info.PD1M_Count >=4 && Track_Info.PD2M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-      }
-    if(Track_Info.PD2M_Count >=4 && Track_Info.PD1M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-        return;
-     }
-    if(Track_Info.PD1M_Count == 1 && Track_Info.PD2M_Count == 1 &&
-       Track_Info.PD1S_Count == 0 && Track_Info.PD2S_Count == 0 &&
-       Track_Info.Flags.PD_Without_Overlapping == TRUE)
-    {
-        Set_Error_Status_Bit(AD_SUP_MISSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-    }
-    if(Track_Info.PD1M_Count >= 1 && Track_Info.PD2M_Count >= 1 &&
-       Track_Info.Flags.PD_Without_Overlapping == TRUE &&
-       Track_Info.Trolley_Timeout_50ms != TIMEOUT_EVENT )
-    {
-        Set_Error_Status_Bit(DECEPTIVE_AXLE_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_FDP_Defective();
-    }
-  switch(Track_Info.Wheel_Type)
-    {
-        case TRAIN_WHEEL_WITH_SINGLE_SUP:
-            if(Track_Info.PD1S_Count >= 2 && Track_Info.PD2S_Count >= 2)
-            {
-              /* Two wheels went off, But it was not Counted */
-              Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-            if(Track_Info.PD1S_Count > 1 && Track_Info.PD2S_Count > 1 &&
-               Track_Info.PD1M_Count ==0  && Track_Info.PD2M_Count == 0)
-            {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-            break;
-        case TRAIN_WHEEL_WITH_DOUBLE_SUP:
-            if(Track_Info.PD1S_Count >= 4 && Track_Info.PD2S_Count >= 4)
-            {
-              /* One wheel went off, But it was not counted */
-              Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-            if(Track_Info.PD1S_Count > 2 &&  Track_Info.PD2S_Count > 2 &&
-               Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
-            {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-           break;
-        default:
-          if(Track_Info.PD1M_Count > 2 && Track_Info.PD2M_Count > 2)
-            {
-              /* Two trolley wheels went off,hence further nonoverlapping pulse is not alowed */
-              Set_Error_Status_Bit (AD_STATE_MISSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-          if(Track_Info.PD1S_Count > 1 && Track_Info.PD2S_Count > 1 &&
-             Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
-            {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_FDP_Defective();
-            }
-          if(Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
-            {
-             if(Track_Info.PD1S_Count > 4 || Track_Info.PD2S_Count > 4)
-              {
-               Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-               Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-               Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-               Declare_FDP_Defective();
-              }
-            }
-        break;
-    }
-}
 
 /*********************************************************************
 Component name      :AXLE_MON
@@ -2546,20 +2177,6 @@ void Register_PD1212_Transition(void)
 }
 
 //01/09/10
-void Register_FDP_PD1212_Transition(void)
-{
-
-   Track_Info.Flags.PD_State_Counted = TRUE;
-   Track_Info.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
-    if(Track_Info.Flags.FDP_US_Counting_Enable == SET_HIGH)
-    {
-    Increment_US_Forward_Count();
-    }
-    if(Track_Info.Flags.FDP_DS_Counting_Enable == SET_HIGH)
-    {
-    Increment_DS_Forward_Count();
-    }
-}
 /**************************************************************************
 Component name      :AXLE_MON
 Module Name         :void Register_PD2121_Transition(void)
@@ -2667,22 +2284,7 @@ void Register_PD2121_Transition(void)
 }
 
 //01/09/10
-void Register_FDP_PD2121_Transition(void)
-{
 
-
-    Track_Info.Flags.PD_State_Counted = TRUE;
-    Track_Info.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
-    if(Track_Info.Flags.FDP_US_Counting_Enable == SET_HIGH)
-    {
-    Increment_US_Reverse_Count();
-    }
-    if(Track_Info.Flags.FDP_DS_Counting_Enable == SET_HIGH)
-    {
-    Increment_DS_Reverse_Count();
-    }
-
-}
 
 /*********************************************************************
 Component name      :AXLE_MON
@@ -3824,10 +3426,7 @@ void Start_US_Axle_Counting(void)
 }
 
 //01/09/10
-void Start_FDP_US_Axle_Counting(void)
-{
- Track_Info.Flags.FDP_US_Counting_Enable = SET_HIGH;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_DS_Axle_Counting(void)
@@ -3883,10 +3482,7 @@ void Start_DS_Axle_Counting(void)
  Track_Info.Flags.DS_Counting_Enable = SET_HIGH;
 }
 //01/09/10
-void Start_FDP_DS_Axle_Counting(void)
-{
- Track_Info.Flags.FDP_DS_Counting_Enable = SET_HIGH;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_US_Axle_Counting(void)
@@ -3939,10 +3535,7 @@ void Stop_US_Axle_Counting(void)
  Track_Info.Flags.US_Counting_Enable = SET_LOW;
 }
 //01/09/10
-void Stop_FDP_US_Axle_Counting(void)
-{
- Track_Info.Flags.FDP_US_Counting_Enable = SET_LOW;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_DS_Axle_Counting(void)
@@ -3998,10 +3591,7 @@ void Stop_DS_Axle_Counting(void)
 }
 //01/09/10
 
-void Stop_FDP_DS_Axle_Counting(void)
-{
- Track_Info.Flags.FDP_DS_Counting_Enable = SET_LOW;
-}
+
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_DS_Local_Counts_Clearing_Status(void)
@@ -4180,22 +3770,4 @@ BOOL Chk_For_Track_Occupancy(void)
 
 }
 
-void Update_FDP_Axle_Counts(BYTE previous_tk)
-{
-
-
-    if(previous_tk == FDP_Info.Token_Id)
-    {
-    FDP_Info.Xmit_Fwd_Count = (UINT16)(Track_Info.US_Fwd_Axle_Count - FDP_Info.Previous_Fwd_Count);
-    Track_Info.US_Fwd_Axle_Count = FDP_Info.Xmit_Fwd_Count;
-
-    FDP_Info.Xmit_Rev_Count = (UINT16)(Track_Info.US_Rev_Axle_Count - FDP_Info.Previous_Rev_Count);
-    Track_Info.US_Rev_Axle_Count = FDP_Info.Xmit_Rev_Count;
-    }
-    else
-    {
-    FDP_Info.Xmit_Fwd_Count = Track_Info.US_Fwd_Axle_Count;
-    FDP_Info.Xmit_Rev_Count = Track_Info.US_Rev_Axle_Count;
-    }
-}
 

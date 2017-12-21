@@ -292,7 +292,7 @@ typedef union
 
 extern void Initialise_Sys_Mon(void);                    //Defined in SYS_MON.c
 extern void Update_Sys_Mon_State(void);                  //Defined in SYS_MON.c
-extern void Update_FDP_Mon_State(void);                  //Defined in SYS_MON.c
+
 extern void Start_Sys_Mon_Decrement_50msTmr(void);       //Defined in SYS_MON.c
 extern void Start_FeedBack_Check(feedBack_ID);           //Defined in SYS_MON.c
 extern void Stop_FeedBack_Check(feedBack_ID);            //Defined in SYS_MON.c

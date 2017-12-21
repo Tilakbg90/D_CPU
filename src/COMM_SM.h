@@ -114,6 +114,5 @@ typedef struct {
 
 extern void Initialise_SPI(void);           //defined in COMM_SM.c
 extern void Update_SPI_State(void);         //defined in COMM_SM.c
-extern void Update_FDP_SPI_State(void);     //defined in COMM_SM.c
 extern void Decrement_SPI_50msTmr(void);    //defined in COMM_SM.c
 #endif
