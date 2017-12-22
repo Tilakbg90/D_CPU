@@ -95,10 +95,10 @@ section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x200               0x17c           0x23a  (570)
 .const                       0x37c               0x5b2           0x88b  (2187)
-.text                        0x92e             0x112c4         0x19c26  (105510)
-.dinit                     0x11bf2               0x23e           0x35d  (861)
-.text                      0x11e30               0x16e           0x225  (549)
-FILLED                     0x11f9e             0x18c5a         0x25287  (152199)
+.text                        0x92e             0x112bc         0x19c1a  (105498)
+.dinit                     0x11bea               0x23e           0x35d  (861)
+.text                      0x11e28               0x172           0x22b  (555)
+FILLED                     0x11f9a             0x18c5e         0x2528d  (152205)
 
                  Total program memory used (bytes):        0x3fef4  (261876) 100%
 
@@ -643,371 +643,371 @@ External Symbols in Program Memory (by address):
                   0x009c42                  _Check_DAC_Boards_Runtime
                   0x009c90                  _Get_Board_Details
                   0x009d70                  _Check_Flash
-                  0x009e00                  _Check_RAM
-                  0x009e6c                  _Get_Calculated_Checksum
-                  0x009e7a                  _Get_Compared_Checksum
-                  0x00a018                  _Compare_DS_Checksum
-                  0x00a314                  _Compare_US_Checksum
-                  0x00a610                  _Clear_DS_Checksum_Info
-                  0x00a66c                  _Clear_US_Checksum_Info
-                  0x00a6c6                  _Initialise_SPI
-                  0x00a74e                  _re_init_spi
-                  0x00a768                  _de_init_spi
-                  0x00a774                  _process_spi_tx_fifo
-                  0x00a7ae                  _process_spi_rx_fifo
-                  0x00a7e2                  _Update_SPI_State
-                  0x00a868                  _Decrement_SPI_50msTmr
-                  0x00a87a                  _Clear_SPI_Receive_Buffer
-                  0x00a89a                  _Clear_SPI_Transmit_Buffer
-                  0x00a8ba                  _Build_Interprocess_Message
-                  0x00a8da                  _Build_Interprocess_Post_Reset_Message
-                  0x00ada4                  _Build_Interprocess_Reset_Info_Message
-                  0x00b020                  _Process_Interprocess_Message
-                  0x00b042                  _Process_Interprocess_Reset_Info_Message
-                  0x00b1ee                  _Process_Interprocess_Post_Reset_Message
-                  0x00b44a                  _Update_SM_DS_Remote_Axle_Counts
-                  0x00b460                  _Update_SM_US_Remote_Axle_Counts
-                  0x00b476                  _Get_DS_Remote_AxleCount
-                  0x00b486                  _Get_US_Remote_AxleCount
-                  0x00b496                  _Initialise_AxleMon_1
-                  0x00b602                  _Validate_PD_Signals_1
-                  0x00b82c                  _Monitor_Supervisory_Pulse_1
-                  0x00b942                  _Monitor_Wheel_Pulse_1
-                  0x00b9a8                  _Determine_TrackState_1
-                  0x00baca                  _Analyse_Supervisory_Sequence_1
-                  0x00bb12                  _Detect_PD_Failures_1
-                  0x00bf82                  _Register_PD1212_Transition_1
-                  0x00bfb4                  _Register_PD2121_Transition_1
-                  0x00bfe6                  _Chk_for_AxleCount_Completion_1
-                  0x00c022                  _Decrement_TrackMon_50msTmr_1
-                  0x00c088                  _Clear_US_AxleCount_1
-                  0x00c0aa                  _Clear_DS_AxleCount_1
-                  0x00c0cc                  _Get_US_AxleCount_1
-                  0x00c0d4                  _Get_DS_AxleCount_1
-                  0x00c0dc                  _Get_US_AxleDirection_1
-                  0x00c0e6                  _Get_DS_AxleDirection_1
-                  0x00c0f0                  _Get_US_Fwd_AxleCount_1
-                  0x00c0f8                  _Get_US_Rev_AxleCount_1
-                  0x00c100                  _Get_DS_Fwd_AxleCount_1
-                  0x00c108                  _Get_DS_Rev_AxleCount_1
-                  0x00c110                  _Clear_DS_Local_Counts_1
-                  0x00c11e                  _Clear_US_Local_Counts_1
-                  0x00c12c                  _Clear_PD1_Supervisory_Count_1
-                  0x00c14a                  _Clear_PD2_Supervisory_Count_1
-                  0x00c162                  _Clear_PD12_Main_Pulse_Count_1
-                  0x00c174                  _Clear_Wheel_Type_1
-                  0x00c1a2                  _Start_US_Axle_Counting_1
-                  0x00c1ae                  _Start_DS_Axle_Counting_1
-                  0x00c1ba                  _Stop_US_Axle_Counting_1
-                  0x00c1c6                  _Stop_DS_Axle_Counting_1
-                  0x00c1d2                  _Get_DS_Local_Counts_Clearing_Status_1
-                  0x00c1ec                  _Get_US_Local_Counts_Clearing_Status_1
-                  0x00c206                  _Chk_For_Track_Occupancy_1
-                  0x00c25c                  _Initialise_Relay_D3_Mgr
-                  0x00c26c                  _Start_Relay_D3_Mgr
-                  0x00c2ca                  _Update_Relay_D3_State
-                  0x00c540                  _Check_For_D3_Direct_Out_Count
-                  0x00c67e                  _Reset_Allowed_For_D3
-                  0x00c778                  _Update_D3_A1_OUT_Count
-                  0x00c784                  _Update_D3_A2_OUT_Count
-                  0x00c790                  _Update_D3_A1_IN_Count
-                  0x00c79c                  _Update_D3_A2_IN_Count
-                  0x00c7a8                  _Update_D3_B1_OUT_Count
-                  0x00c7b4                  _Update_D3_B2_OUT_Count
-                  0x00c7c0                  _Update_D3_B1_IN_Count
-                  0x00c7cc                  _Update_D3_B2_IN_Count
-                  0x00c7d8                  _Update_D3_C1_OUT_Count
-                  0x00c7e4                  _Update_D3_C2_OUT_Count
-                  0x00c7f0                  _Update_D3_C1_IN_Count
-                  0x00c7fc                  _Update_D3_C2_IN_Count
-                  0x00c808                  _Update_D3_Local_Count
-                  0x00c814                  _Update_D3_A1_IN_AxleCount
-                  0x00c820                  _Update_D3_A1_OUT_AxleCount
-                  0x00c82c                  _Update_D3_A2_IN_AxleCount
-                  0x00c838                  _Update_D3_A2_OUT_AxleCount
-                  0x00c844                  _Update_D3_B1_IN_AxleCount
-                  0x00c850                  _Update_D3_B1_OUT_AxleCount
-                  0x00c85c                  _Update_D3_B2_IN_AxleCount
-                  0x00c868                  _Update_D3_B2_OUT_AxleCount
-                  0x00c874                  _Update_D3_C1_IN_AxleCount
-                  0x00c880                  _Update_D3_C1_OUT_AxleCount
-                  0x00c88c                  _Update_D3_C2_IN_AxleCount
-                  0x00c898                  _Update_D3_C2_OUT_AxleCount
-                  0x00c8a4                  _Update_D3_A1_Direction
-                  0x00c8b0                  _Update_D3_A2_Direction
-                  0x00c8bc                  _Update_D3_B1_Direction
-                  0x00c8c8                  _Update_D3_B2_Direction
-                  0x00c8d4                  _Update_D3_C1_Direction
-                  0x00c8e0                  _Update_D3_C2_Direction
-                  0x00c8ec                  _Update_D3_Local_Direction
-                  0x00c8f8                  _Set_Relay_D3_DAC_Defective
-                  0x00c906                  _Process_D3_Local_AxleCount
-                  0x00c97c                  _Process_D3_Peer_AxleCount
-                  0x00c9f2                  _Process_D3_Remote_AxleCount
-                  0x00ca6c                  _Process_D3_Local_Direction
-                  0x00cbda                  _Process_D3_Peer_Direction
-                  0x00cd40                  _Process_D3_Remote_Direction
-                  0x00ceaa                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
-                  0x00cec2                  _Get_Relay_D3_ATC_State
-                  0x00cecc                  _Get_Relay_D3_State
-                  0x00ced6                  _Update_ATC_Remote1_Relay_D3_State
-                  0x00cee2                  _Update_ATC_Remote2_Relay_D3_State
-                  0x00ceee                  _Update_ATC_Remote3_Relay_D3_State
-                  0x00cefa                  _Update_ATC_Remote4_Relay_D3_State
-                  0x00cf06                  _Initialise_AxleMon_3
-                  0x00d028                  _Validate_PD_Signals_3
-                  0x00d0d0                  _Monitor_Supervisory_Pulse_3
-                  0x00d1b8                  _Monitor_Wheel_Pulse_3
-                  0x00d21e                  _Determine_TrackState_3
-                  0x00d340                  _Analyse_Supervisory_Sequence_3
-                  0x00d388                  _Detect_PD_Failures_3
-                  0x00d79c                  _Register_PD1212_Transition_3
-                  0x00d7ce                  _Register_PD2121_Transition_3
-                  0x00d800                  _Chk_for_AxleCount_Completion_3
-                  0x00d83c                  _Decrement_TrackMon_50msTmr_3
-                  0x00d8a2                  _Clear_US_AxleCount_3
-                  0x00d8c4                  _Clear_DS_AxleCount_3
-                  0x00d8e6                  _Get_US_AxleCount_3
-                  0x00d8ee                  _Get_DS_AxleCount_3
-                  0x00d8f6                  _Get_US_AxleDirection_3
-                  0x00d900                  _Get_DS_AxleDirection_3
-                  0x00d90a                  _Get_US_Fwd_AxleCount_3
-                  0x00d912                  _Get_US_Rev_AxleCount_3
-                  0x00d91a                  _Get_DS_Fwd_AxleCount_3
-                  0x00d922                  _Get_DS_Rev_AxleCount_3
-                  0x00d92a                  _Clear_DS_Local_Counts_3
-                  0x00d938                  _Clear_US_Local_Counts_3
-                  0x00d946                  _Clear_PD1_Supervisory_Count_3
-                  0x00d964                  _Clear_PD2_Supervisory_Count_3
-                  0x00d97c                  _Clear_PD12_Main_Pulse_Count_3
-                  0x00d98e                  _Clear_Wheel_Type_3
-                  0x00d9bc                  _Start_US_Axle_Counting_3
-                  0x00d9c8                  _Start_DS_Axle_Counting_3
-                  0x00d9d4                  _Stop_US_Axle_Counting_3
-                  0x00d9e0                  _Stop_DS_Axle_Counting_3
-                  0x00d9ec                  _Get_DS_Local_Counts_Clearing_Status_3
-                  0x00da06                  _Get_US_Local_Counts_Clearing_Status_3
-                  0x00da20                  _Chk_For_Track_Occupancy_3
-                  0x00da5c                  _Initialise_AxleMon_4
-                  0x00db7e                  _Validate_PD_Signals_4
-                  0x00dc26                  _Monitor_Supervisory_Pulse_4
-                  0x00dd0e                  _Monitor_Wheel_Pulse_4
-                  0x00dd74                  _Determine_TrackState_4
-                  0x00de96                  _Analyse_Supervisory_Sequence_4
-                  0x00dede                  _Detect_PD_Failures_4
-                  0x00e2f2                  _Register_PD1212_Transition_4
-                  0x00e324                  _Register_PD2121_Transition_4
-                  0x00e356                  _Chk_for_AxleCount_Completion_4
-                  0x00e392                  _Decrement_TrackMon_50msTmr_4
-                  0x00e3f8                  _Clear_US_AxleCount_4
-                  0x00e41a                  _Clear_DS_AxleCount_4
-                  0x00e43c                  _Get_US_AxleCount_4
-                  0x00e444                  _Get_DS_AxleCount_4
-                  0x00e44c                  _Get_US_AxleDirection_4
-                  0x00e456                  _Get_DS_AxleDirection_4
-                  0x00e460                  _Get_US_Fwd_AxleCount_4
-                  0x00e468                  _Get_US_Rev_AxleCount_4
-                  0x00e470                  _Get_DS_Fwd_AxleCount_4
-                  0x00e478                  _Get_DS_Rev_AxleCount_4
-                  0x00e480                  _Clear_DS_Local_Counts_4
-                  0x00e48e                  _Clear_US_Local_Counts_4
-                  0x00e49c                  _Clear_PD1_Supervisory_Count_4
-                  0x00e4ba                  _Clear_PD2_Supervisory_Count_4
-                  0x00e4d2                  _Clear_PD12_Main_Pulse_Count_4
-                  0x00e4e4                  _Clear_Wheel_Type_4
-                  0x00e512                  _Start_US_Axle_Counting_4
-                  0x00e51e                  _Start_DS_Axle_Counting_4
-                  0x00e52a                  _Stop_US_Axle_Counting_4
-                  0x00e536                  _Stop_DS_Axle_Counting_4
-                  0x00e542                  _Get_DS_Local_Counts_Clearing_Status_4
-                  0x00e55c                  _Get_US_Local_Counts_Clearing_Status_4
-                  0x00e576                  _Chk_For_Track_Occupancy_4
-                  0x00e5b2                  _Initialise_AxleMon_2
-                  0x00e6d0                  _Validate_PD_Signals_2
-                  0x00e778                  _Monitor_Supervisory_Pulse_2
-                  0x00e860                  _Monitor_Wheel_Pulse_2
-                  0x00e8c6                  _Determine_TrackState_2
-                  0x00e9e8                  _Analyse_Supervisory_Sequence_2
-                  0x00ea30                  _Detect_PD_Failures_2
-                  0x00ee40                  _Register_PD1212_Transition_2
-                  0x00ee72                  _Register_PD2121_Transition_2
-                  0x00eea4                  _Chk_for_AxleCount_Completion_2
-                  0x00eee0                  _Decrement_TrackMon_50msTmr_2
-                  0x00ef46                  _Clear_US_AxleCount_2
-                  0x00ef68                  _Clear_DS_AxleCount_2
-                  0x00ef8a                  _Get_US_AxleCount_2
-                  0x00ef92                  _Get_DS_AxleCount_2
-                  0x00ef9a                  _Get_US_AxleDirection_2
-                  0x00efa4                  _Get_DS_AxleDirection_2
-                  0x00efae                  _Get_US_Fwd_AxleCount_2
-                  0x00efb6                  _Get_US_Rev_AxleCount_2
-                  0x00efbe                  _Get_DS_Fwd_AxleCount_2
-                  0x00efc6                  _Get_DS_Rev_AxleCount_2
-                  0x00efce                  _Clear_DS_Local_Counts_2
-                  0x00efdc                  _Clear_US_Local_Counts_2
-                  0x00efea                  _Clear_PD1_Supervisory_Count_2
-                  0x00f008                  _Clear_PD2_Supervisory_Count_2
-                  0x00f020                  _Clear_PD12_Main_Pulse_Count_2
-                  0x00f032                  _Clear_Wheel_Type_2
-                  0x00f060                  _Start_US_Axle_Counting_2
-                  0x00f06c                  _Start_DS_Axle_Counting_2
-                  0x00f078                  _Stop_US_Axle_Counting_2
-                  0x00f084                  _Stop_DS_Axle_Counting_2
-                  0x00f090                  _Get_DS_Local_Counts_Clearing_Status_2
-                  0x00f0aa                  _Get_US_Local_Counts_Clearing_Status_2
-                  0x00f0c4                  _Chk_For_Track_Occupancy_2
-                  0x00f100                  _Initialise_DS_Crypto_State
-                  0x00f10e                  _Update_DS_Data_Encode
-                  0x00f15e                  _Load_DS_Encrypt_Key
-                  0x00f180                  _DS_Encode_Key_Addition
-                  0x00f1b8                  _DS_Encode_Data
-                  0x00f380                  _DS_EncodeShiftRow
-                  0x00f3e6                  _DS_EncKeySchedule
-                  0x00f508                  _Update_DS_Data_Decode
-                  0x00f558                  _Load_DS_Decrypt_Key
-                  0x00f57a                  _DS_Decode_Key_Addition
-                  0x00f5b8                  _DS_Decode_Data
-                  0x00f8a2                  _DS_DecodeShiftRow
-                  0x00f908                  _DS_DecKeySchedule
-                  0x00fa2e                  _Decrement_DS_Crypto_msTmr
-                  0x00fa4c                  _Start_DS_Data_Encryption
-                  0x00fa56                  _Set_DS_Encryption_Idle
-                  0x00fa5e                  _Get_DS_Encryption_State
-                  0x00fa6a                  _Start_DS_Data_Decryption
-                  0x00fa74                  _Set_DS_Decryption_Idle
-                  0x00fa7c                  _Get_DS_Decryption_State
-                  0x00fa88                  _Initialise_US_Crypto_State
-                  0x00fa96                  _Update_US_Data_Encode
-                  0x00fade                  _Load_Encrypt_Key
-                  0x00fb00                  _US_Encode_Key_Addition
-                  0x00fb38                  _US_Encode_Data
-                  0x00fd00                  _US_EncodeShiftRow
-                  0x00fd66                  _US_EncKeySchedule
-                  0x00fe88                  _Update_US_Data_Decode
-                  0x00fed0                  _Load_Decrypt_Key
-                  0x00fef2                  _US_Decode_Key_Addition
-                  0x00ff30                  _US_Decode_Data
-                  0x01021a                  _US_DecodeShiftRow
-                  0x010280                  _US_DecKeySchedule
-                  0x0103a6                  _Decrement_US_Crypto_msTmr
-                  0x0103c4                  _Start_US_Data_Encryption
-                  0x0103ce                  _Set_US_Encryption_Idle
-                  0x0103d6                  _Get_US_Encryption_State
-                  0x0103e2                  _Start_US_Data_Decryption
-                  0x0103ec                  _Set_US_Decryption_Idle
-                  0x0103f4                  _Get_US_Decryption_State
-                  0x010400                  _Initialise_Relay_B_Mgr
-                  0x01040a                  _Start_Relay_B_Mgr
-                  0x010458                  _Set_Relay_B_Reset_State
-                  0x010480                  _Update_Relay_B_State
-                  0x0107cc                  _Update_3S_Relay_B_State
-                  0x010b18                  _Reset_Allowed_For_DS
-                  0x010b82                  _Reset_Allowed_For_LCWS
-                  0x010ba6                  _Reset_Allowed_For_DE
-                  0x010bca                  _Process_Relay_B_Local_Direction
-                  0x010bea                  _Process_Relay_B_Local_AxleCount
-                  0x010c0e                  _Process_Peer_Relay_B_AxleCount
-                  0x010c32                  _Process_Peer_Relay_B_Direction
-                  0x010c4c                  _Update_B_DS1_OUT_Count
-                  0x010c58                  _Update_B_DS2_OUT_Count
-                  0x010c64                  _Update_B_LU1_Fwd_Count
-                  0x010c70                  _Update_B_LU2_Fwd_Count
-                  0x010c7c                  _Update_B_LU1_Rev_Count
-                  0x010c88                  _Update_B_LU2_Rev_Count
-                  0x010c94                  _Update_B_Local_AxleCount
-                  0x010ca0                  _Update_B_DS1_IN_Count
-                  0x010cac                  _Update_B_DS2_IN_Count
-                  0x010cb8                  _Update_B_DS1_AxleCount
-                  0x010cc4                  _Update_B_DS2_AxleCount
-                  0x010cd0                  _Update_B_DS1_Direction
-                  0x010cdc                  _Update_B_DS2_Direction
-                  0x010ce8                  _Update_B_LU1_Direction
-                  0x010cf4                  _Update_B_LU2_Direction
-                  0x010d00                  _Update_ATC_Remote1_Relay_B_State
-                  0x010d0c                  _Update_ATC_Remote2_Relay_B_State
-                  0x010d18                  _Set_Relay_B_DAC_Defective
-                  0x010d26                  _Get_Relay_B_State
-                  0x010d30                  _Get_Relay_B_ATC_State
-                  0x010d3a                  _Clear_ATC_Local_Relay_B_State
-                  0x010d52                  _Clear_Relay_B_Counts
-                  0x010d78                  _Initialise_Relay_A_Mgr
-                  0x010d82                  _Start_Relay_A_Mgr
-                  0x010dd6                  _Set_Relay_A_Reset_State
-                  0x010dfe                  _Update_Relay_A_State
-                  0x01114a                  _Update_3S_Relay_A_State
-                  0x011496                  _Reset_Allowed_For_US
-                  0x011500                  _Process_Relay_A_Local_Direction
-                  0x011520                  _Process_Relay_A_Local_AxleCount
-                  0x011544                  _Process_Peer_Relay_A_Direction
-                  0x01155e                  _Process_Peer_Relay_A_AxleCount
-                  0x011582                  _Update_Next_Block_State
-                  0x0115a2                  _Update_A_US1_OUT_Count
-                  0x0115ae                  _Update_A_US2_OUT_Count
-                  0x0115ba                  _Update_A_US1_IN_Count
-                  0x0115c6                  _Update_A_US2_IN_Count
-                  0x0115d2                  _Update_A_LU1_Fwd_Count
-                  0x0115de                  _Update_A_LU2_Fwd_Count
-                  0x0115ea                  _Update_A_LU1_Rev_Count
-                  0x0115f6                  _Update_A_LU2_Rev_Count
-                  0x011602                  _Update_A_Local_AxleCount
-                  0x01160e                  _Update_A_US1_AxleCount
-                  0x01161a                  _Update_A_US2_AxleCount
-                  0x011626                  _Update_A_US1_Direction
-                  0x011632                  _Update_A_US2_Direction
-                  0x01163e                  _Update_A_LU1_Direction
-                  0x01164a                  _Update_A_LU2_Direction
-                  0x011656                  _Update_ATC_Remote1_Relay_A_State
-                  0x011662                  _Update_ATC_Remote2_Relay_A_State
-                  0x01166e                  _Set_Relay_A_DAC_Defective
-                  0x01167c                  _Get_Relay_A_State
-                  0x011686                  _Get_Relay_A_ATC_State
-                  0x011690                  _Clear_ATC_Local_Relay_A_State
-                  0x0116a8                  _Clear_Relay_A_Counts
-                  0x0116d4                  _Initialise_Error
-                  0x01170a                  _Update_Display_Error
-                  0x0117ea                  _Set_Error_Status_Byte
-                  0x01180e                  _Set_Error_Status_Bit
-                  0x011854                  _Clear_Error_Display
-                  0x011894                  _Decrement_Err_display_50msTmr
-                  0x0118ac                  _Decrement_LCWS_Health_Relay_Timer
-                  0x0118be                  _Update_Error_Code
-                  0x01195e                  _Get_DS_Error_Code
-                  0x011978                  _Get_US_Error_Code
-                  0x011992                  _Clear_DS_Error_Code
-                  0x01199c                  _Clear_US_Error_Code
-                  0x0119a6                  _Get_Relay_Energising_Key
-                  0x0119ae                  _Energise_Preparatory_Relay_A
-                  0x0119fa                  _Energise_Preparatory_Relay_B
-                  0x011a36                  _Energise_Vital_Relay_A
-                  0x011a58                  _Energise_Vital_Relay_B
-                  0x011a7a                  _DeEnergise_Preparatory_Relay_A
-                  0x011ac2                  _DeEnergise_Preparatory_Relay_B
-                  0x011af8                  _DeEnergise_Vital_Relay_A
-                  0x011b0c                  _DeEnergise_Vital_Relay_B
-                  0x011b20                  _Energise_Relay_B
-                  0x011b52                  _DeEnergise_Relay_B
-                  0x011b8a                  _Energise_Relay_A
-                  0x011bba                  _DeEnergise_Relay_A
-                  0x011e30                  _Crc16
-                  0x011f00                  _crc32
+                  0x009df8                  _Check_RAM
+                  0x009e64                  _Get_Calculated_Checksum
+                  0x009e72                  _Get_Compared_Checksum
+                  0x00a010                  _Compare_DS_Checksum
+                  0x00a30c                  _Compare_US_Checksum
+                  0x00a608                  _Clear_DS_Checksum_Info
+                  0x00a664                  _Clear_US_Checksum_Info
+                  0x00a6be                  _Initialise_SPI
+                  0x00a746                  _re_init_spi
+                  0x00a760                  _de_init_spi
+                  0x00a76c                  _process_spi_tx_fifo
+                  0x00a7a6                  _process_spi_rx_fifo
+                  0x00a7da                  _Update_SPI_State
+                  0x00a860                  _Decrement_SPI_50msTmr
+                  0x00a872                  _Clear_SPI_Receive_Buffer
+                  0x00a892                  _Clear_SPI_Transmit_Buffer
+                  0x00a8b2                  _Build_Interprocess_Message
+                  0x00a8d2                  _Build_Interprocess_Post_Reset_Message
+                  0x00ad9c                  _Build_Interprocess_Reset_Info_Message
+                  0x00b018                  _Process_Interprocess_Message
+                  0x00b03a                  _Process_Interprocess_Reset_Info_Message
+                  0x00b1e6                  _Process_Interprocess_Post_Reset_Message
+                  0x00b442                  _Update_SM_DS_Remote_Axle_Counts
+                  0x00b458                  _Update_SM_US_Remote_Axle_Counts
+                  0x00b46e                  _Get_DS_Remote_AxleCount
+                  0x00b47e                  _Get_US_Remote_AxleCount
+                  0x00b48e                  _Initialise_AxleMon_1
+                  0x00b5fa                  _Validate_PD_Signals_1
+                  0x00b824                  _Monitor_Supervisory_Pulse_1
+                  0x00b93a                  _Monitor_Wheel_Pulse_1
+                  0x00b9a0                  _Determine_TrackState_1
+                  0x00bac2                  _Analyse_Supervisory_Sequence_1
+                  0x00bb0a                  _Detect_PD_Failures_1
+                  0x00bf7a                  _Register_PD1212_Transition_1
+                  0x00bfac                  _Register_PD2121_Transition_1
+                  0x00bfde                  _Chk_for_AxleCount_Completion_1
+                  0x00c01a                  _Decrement_TrackMon_50msTmr_1
+                  0x00c080                  _Clear_US_AxleCount_1
+                  0x00c0a2                  _Clear_DS_AxleCount_1
+                  0x00c0c4                  _Get_US_AxleCount_1
+                  0x00c0cc                  _Get_DS_AxleCount_1
+                  0x00c0d4                  _Get_US_AxleDirection_1
+                  0x00c0de                  _Get_DS_AxleDirection_1
+                  0x00c0e8                  _Get_US_Fwd_AxleCount_1
+                  0x00c0f0                  _Get_US_Rev_AxleCount_1
+                  0x00c0f8                  _Get_DS_Fwd_AxleCount_1
+                  0x00c100                  _Get_DS_Rev_AxleCount_1
+                  0x00c108                  _Clear_DS_Local_Counts_1
+                  0x00c116                  _Clear_US_Local_Counts_1
+                  0x00c124                  _Clear_PD1_Supervisory_Count_1
+                  0x00c142                  _Clear_PD2_Supervisory_Count_1
+                  0x00c15a                  _Clear_PD12_Main_Pulse_Count_1
+                  0x00c16c                  _Clear_Wheel_Type_1
+                  0x00c19a                  _Start_US_Axle_Counting_1
+                  0x00c1a6                  _Start_DS_Axle_Counting_1
+                  0x00c1b2                  _Stop_US_Axle_Counting_1
+                  0x00c1be                  _Stop_DS_Axle_Counting_1
+                  0x00c1ca                  _Get_DS_Local_Counts_Clearing_Status_1
+                  0x00c1e4                  _Get_US_Local_Counts_Clearing_Status_1
+                  0x00c1fe                  _Chk_For_Track_Occupancy_1
+                  0x00c254                  _Initialise_Relay_D3_Mgr
+                  0x00c264                  _Start_Relay_D3_Mgr
+                  0x00c2c2                  _Update_Relay_D3_State
+                  0x00c538                  _Check_For_D3_Direct_Out_Count
+                  0x00c676                  _Reset_Allowed_For_D3
+                  0x00c770                  _Update_D3_A1_OUT_Count
+                  0x00c77c                  _Update_D3_A2_OUT_Count
+                  0x00c788                  _Update_D3_A1_IN_Count
+                  0x00c794                  _Update_D3_A2_IN_Count
+                  0x00c7a0                  _Update_D3_B1_OUT_Count
+                  0x00c7ac                  _Update_D3_B2_OUT_Count
+                  0x00c7b8                  _Update_D3_B1_IN_Count
+                  0x00c7c4                  _Update_D3_B2_IN_Count
+                  0x00c7d0                  _Update_D3_C1_OUT_Count
+                  0x00c7dc                  _Update_D3_C2_OUT_Count
+                  0x00c7e8                  _Update_D3_C1_IN_Count
+                  0x00c7f4                  _Update_D3_C2_IN_Count
+                  0x00c800                  _Update_D3_Local_Count
+                  0x00c80c                  _Update_D3_A1_IN_AxleCount
+                  0x00c818                  _Update_D3_A1_OUT_AxleCount
+                  0x00c824                  _Update_D3_A2_IN_AxleCount
+                  0x00c830                  _Update_D3_A2_OUT_AxleCount
+                  0x00c83c                  _Update_D3_B1_IN_AxleCount
+                  0x00c848                  _Update_D3_B1_OUT_AxleCount
+                  0x00c854                  _Update_D3_B2_IN_AxleCount
+                  0x00c860                  _Update_D3_B2_OUT_AxleCount
+                  0x00c86c                  _Update_D3_C1_IN_AxleCount
+                  0x00c878                  _Update_D3_C1_OUT_AxleCount
+                  0x00c884                  _Update_D3_C2_IN_AxleCount
+                  0x00c890                  _Update_D3_C2_OUT_AxleCount
+                  0x00c89c                  _Update_D3_A1_Direction
+                  0x00c8a8                  _Update_D3_A2_Direction
+                  0x00c8b4                  _Update_D3_B1_Direction
+                  0x00c8c0                  _Update_D3_B2_Direction
+                  0x00c8cc                  _Update_D3_C1_Direction
+                  0x00c8d8                  _Update_D3_C2_Direction
+                  0x00c8e4                  _Update_D3_Local_Direction
+                  0x00c8f0                  _Set_Relay_D3_DAC_Defective
+                  0x00c8fe                  _Process_D3_Local_AxleCount
+                  0x00c974                  _Process_D3_Peer_AxleCount
+                  0x00c9ea                  _Process_D3_Remote_AxleCount
+                  0x00ca64                  _Process_D3_Local_Direction
+                  0x00cbd2                  _Process_D3_Peer_Direction
+                  0x00cd38                  _Process_D3_Remote_Direction
+                  0x00cea2                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
+                  0x00ceba                  _Get_Relay_D3_ATC_State
+                  0x00cec4                  _Get_Relay_D3_State
+                  0x00cece                  _Update_ATC_Remote1_Relay_D3_State
+                  0x00ceda                  _Update_ATC_Remote2_Relay_D3_State
+                  0x00cee6                  _Update_ATC_Remote3_Relay_D3_State
+                  0x00cef2                  _Update_ATC_Remote4_Relay_D3_State
+                  0x00cefe                  _Initialise_AxleMon_3
+                  0x00d020                  _Validate_PD_Signals_3
+                  0x00d0c8                  _Monitor_Supervisory_Pulse_3
+                  0x00d1b0                  _Monitor_Wheel_Pulse_3
+                  0x00d216                  _Determine_TrackState_3
+                  0x00d338                  _Analyse_Supervisory_Sequence_3
+                  0x00d380                  _Detect_PD_Failures_3
+                  0x00d794                  _Register_PD1212_Transition_3
+                  0x00d7c6                  _Register_PD2121_Transition_3
+                  0x00d7f8                  _Chk_for_AxleCount_Completion_3
+                  0x00d834                  _Decrement_TrackMon_50msTmr_3
+                  0x00d89a                  _Clear_US_AxleCount_3
+                  0x00d8bc                  _Clear_DS_AxleCount_3
+                  0x00d8de                  _Get_US_AxleCount_3
+                  0x00d8e6                  _Get_DS_AxleCount_3
+                  0x00d8ee                  _Get_US_AxleDirection_3
+                  0x00d8f8                  _Get_DS_AxleDirection_3
+                  0x00d902                  _Get_US_Fwd_AxleCount_3
+                  0x00d90a                  _Get_US_Rev_AxleCount_3
+                  0x00d912                  _Get_DS_Fwd_AxleCount_3
+                  0x00d91a                  _Get_DS_Rev_AxleCount_3
+                  0x00d922                  _Clear_DS_Local_Counts_3
+                  0x00d930                  _Clear_US_Local_Counts_3
+                  0x00d93e                  _Clear_PD1_Supervisory_Count_3
+                  0x00d95c                  _Clear_PD2_Supervisory_Count_3
+                  0x00d974                  _Clear_PD12_Main_Pulse_Count_3
+                  0x00d986                  _Clear_Wheel_Type_3
+                  0x00d9b4                  _Start_US_Axle_Counting_3
+                  0x00d9c0                  _Start_DS_Axle_Counting_3
+                  0x00d9cc                  _Stop_US_Axle_Counting_3
+                  0x00d9d8                  _Stop_DS_Axle_Counting_3
+                  0x00d9e4                  _Get_DS_Local_Counts_Clearing_Status_3
+                  0x00d9fe                  _Get_US_Local_Counts_Clearing_Status_3
+                  0x00da18                  _Chk_For_Track_Occupancy_3
+                  0x00da54                  _Initialise_AxleMon_4
+                  0x00db76                  _Validate_PD_Signals_4
+                  0x00dc1e                  _Monitor_Supervisory_Pulse_4
+                  0x00dd06                  _Monitor_Wheel_Pulse_4
+                  0x00dd6c                  _Determine_TrackState_4
+                  0x00de8e                  _Analyse_Supervisory_Sequence_4
+                  0x00ded6                  _Detect_PD_Failures_4
+                  0x00e2ea                  _Register_PD1212_Transition_4
+                  0x00e31c                  _Register_PD2121_Transition_4
+                  0x00e34e                  _Chk_for_AxleCount_Completion_4
+                  0x00e38a                  _Decrement_TrackMon_50msTmr_4
+                  0x00e3f0                  _Clear_US_AxleCount_4
+                  0x00e412                  _Clear_DS_AxleCount_4
+                  0x00e434                  _Get_US_AxleCount_4
+                  0x00e43c                  _Get_DS_AxleCount_4
+                  0x00e444                  _Get_US_AxleDirection_4
+                  0x00e44e                  _Get_DS_AxleDirection_4
+                  0x00e458                  _Get_US_Fwd_AxleCount_4
+                  0x00e460                  _Get_US_Rev_AxleCount_4
+                  0x00e468                  _Get_DS_Fwd_AxleCount_4
+                  0x00e470                  _Get_DS_Rev_AxleCount_4
+                  0x00e478                  _Clear_DS_Local_Counts_4
+                  0x00e486                  _Clear_US_Local_Counts_4
+                  0x00e494                  _Clear_PD1_Supervisory_Count_4
+                  0x00e4b2                  _Clear_PD2_Supervisory_Count_4
+                  0x00e4ca                  _Clear_PD12_Main_Pulse_Count_4
+                  0x00e4dc                  _Clear_Wheel_Type_4
+                  0x00e50a                  _Start_US_Axle_Counting_4
+                  0x00e516                  _Start_DS_Axle_Counting_4
+                  0x00e522                  _Stop_US_Axle_Counting_4
+                  0x00e52e                  _Stop_DS_Axle_Counting_4
+                  0x00e53a                  _Get_DS_Local_Counts_Clearing_Status_4
+                  0x00e554                  _Get_US_Local_Counts_Clearing_Status_4
+                  0x00e56e                  _Chk_For_Track_Occupancy_4
+                  0x00e5aa                  _Initialise_AxleMon_2
+                  0x00e6c8                  _Validate_PD_Signals_2
+                  0x00e770                  _Monitor_Supervisory_Pulse_2
+                  0x00e858                  _Monitor_Wheel_Pulse_2
+                  0x00e8be                  _Determine_TrackState_2
+                  0x00e9e0                  _Analyse_Supervisory_Sequence_2
+                  0x00ea28                  _Detect_PD_Failures_2
+                  0x00ee38                  _Register_PD1212_Transition_2
+                  0x00ee6a                  _Register_PD2121_Transition_2
+                  0x00ee9c                  _Chk_for_AxleCount_Completion_2
+                  0x00eed8                  _Decrement_TrackMon_50msTmr_2
+                  0x00ef3e                  _Clear_US_AxleCount_2
+                  0x00ef60                  _Clear_DS_AxleCount_2
+                  0x00ef82                  _Get_US_AxleCount_2
+                  0x00ef8a                  _Get_DS_AxleCount_2
+                  0x00ef92                  _Get_US_AxleDirection_2
+                  0x00ef9c                  _Get_DS_AxleDirection_2
+                  0x00efa6                  _Get_US_Fwd_AxleCount_2
+                  0x00efae                  _Get_US_Rev_AxleCount_2
+                  0x00efb6                  _Get_DS_Fwd_AxleCount_2
+                  0x00efbe                  _Get_DS_Rev_AxleCount_2
+                  0x00efc6                  _Clear_DS_Local_Counts_2
+                  0x00efd4                  _Clear_US_Local_Counts_2
+                  0x00efe2                  _Clear_PD1_Supervisory_Count_2
+                  0x00f000                  _Clear_PD2_Supervisory_Count_2
+                  0x00f018                  _Clear_PD12_Main_Pulse_Count_2
+                  0x00f02a                  _Clear_Wheel_Type_2
+                  0x00f058                  _Start_US_Axle_Counting_2
+                  0x00f064                  _Start_DS_Axle_Counting_2
+                  0x00f070                  _Stop_US_Axle_Counting_2
+                  0x00f07c                  _Stop_DS_Axle_Counting_2
+                  0x00f088                  _Get_DS_Local_Counts_Clearing_Status_2
+                  0x00f0a2                  _Get_US_Local_Counts_Clearing_Status_2
+                  0x00f0bc                  _Chk_For_Track_Occupancy_2
+                  0x00f0f8                  _Initialise_DS_Crypto_State
+                  0x00f106                  _Update_DS_Data_Encode
+                  0x00f156                  _Load_DS_Encrypt_Key
+                  0x00f178                  _DS_Encode_Key_Addition
+                  0x00f1b0                  _DS_Encode_Data
+                  0x00f378                  _DS_EncodeShiftRow
+                  0x00f3de                  _DS_EncKeySchedule
+                  0x00f500                  _Update_DS_Data_Decode
+                  0x00f550                  _Load_DS_Decrypt_Key
+                  0x00f572                  _DS_Decode_Key_Addition
+                  0x00f5b0                  _DS_Decode_Data
+                  0x00f89a                  _DS_DecodeShiftRow
+                  0x00f900                  _DS_DecKeySchedule
+                  0x00fa26                  _Decrement_DS_Crypto_msTmr
+                  0x00fa44                  _Start_DS_Data_Encryption
+                  0x00fa4e                  _Set_DS_Encryption_Idle
+                  0x00fa56                  _Get_DS_Encryption_State
+                  0x00fa62                  _Start_DS_Data_Decryption
+                  0x00fa6c                  _Set_DS_Decryption_Idle
+                  0x00fa74                  _Get_DS_Decryption_State
+                  0x00fa80                  _Initialise_US_Crypto_State
+                  0x00fa8e                  _Update_US_Data_Encode
+                  0x00fad6                  _Load_Encrypt_Key
+                  0x00faf8                  _US_Encode_Key_Addition
+                  0x00fb30                  _US_Encode_Data
+                  0x00fcf8                  _US_EncodeShiftRow
+                  0x00fd5e                  _US_EncKeySchedule
+                  0x00fe80                  _Update_US_Data_Decode
+                  0x00fec8                  _Load_Decrypt_Key
+                  0x00feea                  _US_Decode_Key_Addition
+                  0x00ff28                  _US_Decode_Data
+                  0x010212                  _US_DecodeShiftRow
+                  0x010278                  _US_DecKeySchedule
+                  0x01039e                  _Decrement_US_Crypto_msTmr
+                  0x0103bc                  _Start_US_Data_Encryption
+                  0x0103c6                  _Set_US_Encryption_Idle
+                  0x0103ce                  _Get_US_Encryption_State
+                  0x0103da                  _Start_US_Data_Decryption
+                  0x0103e4                  _Set_US_Decryption_Idle
+                  0x0103ec                  _Get_US_Decryption_State
+                  0x0103f8                  _Initialise_Relay_B_Mgr
+                  0x010402                  _Start_Relay_B_Mgr
+                  0x010450                  _Set_Relay_B_Reset_State
+                  0x010478                  _Update_Relay_B_State
+                  0x0107c4                  _Update_3S_Relay_B_State
+                  0x010b10                  _Reset_Allowed_For_DS
+                  0x010b7a                  _Reset_Allowed_For_LCWS
+                  0x010b9e                  _Reset_Allowed_For_DE
+                  0x010bc2                  _Process_Relay_B_Local_Direction
+                  0x010be2                  _Process_Relay_B_Local_AxleCount
+                  0x010c06                  _Process_Peer_Relay_B_AxleCount
+                  0x010c2a                  _Process_Peer_Relay_B_Direction
+                  0x010c44                  _Update_B_DS1_OUT_Count
+                  0x010c50                  _Update_B_DS2_OUT_Count
+                  0x010c5c                  _Update_B_LU1_Fwd_Count
+                  0x010c68                  _Update_B_LU2_Fwd_Count
+                  0x010c74                  _Update_B_LU1_Rev_Count
+                  0x010c80                  _Update_B_LU2_Rev_Count
+                  0x010c8c                  _Update_B_Local_AxleCount
+                  0x010c98                  _Update_B_DS1_IN_Count
+                  0x010ca4                  _Update_B_DS2_IN_Count
+                  0x010cb0                  _Update_B_DS1_AxleCount
+                  0x010cbc                  _Update_B_DS2_AxleCount
+                  0x010cc8                  _Update_B_DS1_Direction
+                  0x010cd4                  _Update_B_DS2_Direction
+                  0x010ce0                  _Update_B_LU1_Direction
+                  0x010cec                  _Update_B_LU2_Direction
+                  0x010cf8                  _Update_ATC_Remote1_Relay_B_State
+                  0x010d04                  _Update_ATC_Remote2_Relay_B_State
+                  0x010d10                  _Set_Relay_B_DAC_Defective
+                  0x010d1e                  _Get_Relay_B_State
+                  0x010d28                  _Get_Relay_B_ATC_State
+                  0x010d32                  _Clear_ATC_Local_Relay_B_State
+                  0x010d4a                  _Clear_Relay_B_Counts
+                  0x010d70                  _Initialise_Relay_A_Mgr
+                  0x010d7a                  _Start_Relay_A_Mgr
+                  0x010dce                  _Set_Relay_A_Reset_State
+                  0x010df6                  _Update_Relay_A_State
+                  0x011142                  _Update_3S_Relay_A_State
+                  0x01148e                  _Reset_Allowed_For_US
+                  0x0114f8                  _Process_Relay_A_Local_Direction
+                  0x011518                  _Process_Relay_A_Local_AxleCount
+                  0x01153c                  _Process_Peer_Relay_A_Direction
+                  0x011556                  _Process_Peer_Relay_A_AxleCount
+                  0x01157a                  _Update_Next_Block_State
+                  0x01159a                  _Update_A_US1_OUT_Count
+                  0x0115a6                  _Update_A_US2_OUT_Count
+                  0x0115b2                  _Update_A_US1_IN_Count
+                  0x0115be                  _Update_A_US2_IN_Count
+                  0x0115ca                  _Update_A_LU1_Fwd_Count
+                  0x0115d6                  _Update_A_LU2_Fwd_Count
+                  0x0115e2                  _Update_A_LU1_Rev_Count
+                  0x0115ee                  _Update_A_LU2_Rev_Count
+                  0x0115fa                  _Update_A_Local_AxleCount
+                  0x011606                  _Update_A_US1_AxleCount
+                  0x011612                  _Update_A_US2_AxleCount
+                  0x01161e                  _Update_A_US1_Direction
+                  0x01162a                  _Update_A_US2_Direction
+                  0x011636                  _Update_A_LU1_Direction
+                  0x011642                  _Update_A_LU2_Direction
+                  0x01164e                  _Update_ATC_Remote1_Relay_A_State
+                  0x01165a                  _Update_ATC_Remote2_Relay_A_State
+                  0x011666                  _Set_Relay_A_DAC_Defective
+                  0x011674                  _Get_Relay_A_State
+                  0x01167e                  _Get_Relay_A_ATC_State
+                  0x011688                  _Clear_ATC_Local_Relay_A_State
+                  0x0116a0                  _Clear_Relay_A_Counts
+                  0x0116cc                  _Initialise_Error
+                  0x011702                  _Update_Display_Error
+                  0x0117e2                  _Set_Error_Status_Byte
+                  0x011806                  _Set_Error_Status_Bit
+                  0x01184c                  _Clear_Error_Display
+                  0x01188c                  _Decrement_Err_display_50msTmr
+                  0x0118a4                  _Decrement_LCWS_Health_Relay_Timer
+                  0x0118b6                  _Update_Error_Code
+                  0x011956                  _Get_DS_Error_Code
+                  0x011970                  _Get_US_Error_Code
+                  0x01198a                  _Clear_DS_Error_Code
+                  0x011994                  _Clear_US_Error_Code
+                  0x01199e                  _Get_Relay_Energising_Key
+                  0x0119a6                  _Energise_Preparatory_Relay_A
+                  0x0119f2                  _Energise_Preparatory_Relay_B
+                  0x011a2e                  _Energise_Vital_Relay_A
+                  0x011a50                  _Energise_Vital_Relay_B
+                  0x011a72                  _DeEnergise_Preparatory_Relay_A
+                  0x011aba                  _DeEnergise_Preparatory_Relay_B
+                  0x011af0                  _DeEnergise_Vital_Relay_A
+                  0x011b04                  _DeEnergise_Vital_Relay_B
+                  0x011b18                  _Energise_Relay_B
+                  0x011b4a                  _DeEnergise_Relay_B
+                  0x011b82                  _Energise_Relay_A
+                  0x011bb2                  _DeEnergise_Relay_A
+                  0x011e28                  _Crc16
+                  0x011efc                  _crc32
 
 External Symbols in Program Memory (by name):
 
                   0x00939e                  _A_Sec_Led_drive
                   0x00706a                  _Analyse_Supervisory_Sequence
-                  0x00baca                  _Analyse_Supervisory_Sequence_1
-                  0x00e9e8                  _Analyse_Supervisory_Sequence_2
-                  0x00d340                  _Analyse_Supervisory_Sequence_3
-                  0x00de96                  _Analyse_Supervisory_Sequence_4
+                  0x00bac2                  _Analyse_Supervisory_Sequence_1
+                  0x00e9e0                  _Analyse_Supervisory_Sequence_2
+                  0x00d338                  _Analyse_Supervisory_Sequence_3
+                  0x00de8e                  _Analyse_Supervisory_Sequence_4
                   0x009366                  _B_Sec_Led_drive
                   0x000915                  _BitMask_List
                   0x000900                  _Board_data_List
                   0x00113a                  _Build_DS_Axle_Count_Message
                   0x000f2e                  _Build_DS_Message
                   0x000f74                  _Build_DS_Reset_Info_Message
-                  0x00a8ba                  _Build_Interprocess_Message
-                  0x00a8da                  _Build_Interprocess_Post_Reset_Message
-                  0x00ada4                  _Build_Interprocess_Reset_Info_Message
+                  0x00a8b2                  _Build_Interprocess_Message
+                  0x00a8d2                  _Build_Interprocess_Post_Reset_Message
+                  0x00ad9c                  _Build_Interprocess_Reset_Info_Message
                   0x002818                  _Build_US_Axle_Count_Message
                   0x002610                  _Build_US_Message
                   0x002656                  _Build_US_Reset_Info_Message
@@ -1028,90 +1028,90 @@ External Symbols in Program Memory (by name):
                   0x006732                  _Check_DS_Power_Status
                   0x001f1c                  _Check_DS_Unit_Status
                   0x009d70                  _Check_Flash
-                  0x00c540                  _Check_For_D3_Direct_Out_Count
+                  0x00c538                  _Check_For_D3_Direct_Out_Count
                   0x007c1e                  _Check_For_D4_Direct_Out_Count
                   0x0065e6                  _Check_Inter_Processor_Link
                   0x0066e6                  _Check_Power_Status
-                  0x009e00                  _Check_RAM
+                  0x009df8                  _Check_RAM
                   0x00679c                  _Check_US_Power_Status
                   0x0035dc                  _Check_US_Unit_Status
                   0x0078a4                  _Chk_For_Track_Occupancy
-                  0x00c206                  _Chk_For_Track_Occupancy_1
-                  0x00f0c4                  _Chk_For_Track_Occupancy_2
-                  0x00da20                  _Chk_For_Track_Occupancy_3
-                  0x00e576                  _Chk_For_Track_Occupancy_4
+                  0x00c1fe                  _Chk_For_Track_Occupancy_1
+                  0x00f0bc                  _Chk_For_Track_Occupancy_2
+                  0x00da18                  _Chk_For_Track_Occupancy_3
+                  0x00e56e                  _Chk_For_Track_Occupancy_4
                   0x007676                  _Chk_for_AxleCount_Completion
-                  0x00bfe6                  _Chk_for_AxleCount_Completion_1
-                  0x00eea4                  _Chk_for_AxleCount_Completion_2
-                  0x00d800                  _Chk_for_AxleCount_Completion_3
-                  0x00e356                  _Chk_for_AxleCount_Completion_4
-                  0x011690                  _Clear_ATC_Local_Relay_A_State
-                  0x010d3a                  _Clear_ATC_Local_Relay_B_State
+                  0x00bfde                  _Chk_for_AxleCount_Completion_1
+                  0x00ee9c                  _Chk_for_AxleCount_Completion_2
+                  0x00d7f8                  _Chk_for_AxleCount_Completion_3
+                  0x00e34e                  _Chk_for_AxleCount_Completion_4
+                  0x011688                  _Clear_ATC_Local_Relay_A_State
+                  0x010d32                  _Clear_ATC_Local_Relay_B_State
                   0x0023a4                  _Clear_COM1_Errors
                   0x000d0c                  _Clear_COM2_Errors
                   0x0068d4                  _Clear_Comm_DS_Failures
                   0x0068b6                  _Clear_Comm_US_Failures
                   0x007744                  _Clear_DS_AxleCount
-                  0x00c0aa                  _Clear_DS_AxleCount_1
-                  0x00ef68                  _Clear_DS_AxleCount_2
-                  0x00d8c4                  _Clear_DS_AxleCount_3
-                  0x00e41a                  _Clear_DS_AxleCount_4
-                  0x00a610                  _Clear_DS_Checksum_Info
-                  0x011992                  _Clear_DS_Error_Code
+                  0x00c0a2                  _Clear_DS_AxleCount_1
+                  0x00ef60                  _Clear_DS_AxleCount_2
+                  0x00d8bc                  _Clear_DS_AxleCount_3
+                  0x00e412                  _Clear_DS_AxleCount_4
+                  0x00a608                  _Clear_DS_Checksum_Info
+                  0x01198a                  _Clear_DS_Error_Code
                   0x0077ae                  _Clear_DS_Local_Counts
-                  0x00c110                  _Clear_DS_Local_Counts_1
-                  0x00efce                  _Clear_DS_Local_Counts_2
-                  0x00d92a                  _Clear_DS_Local_Counts_3
-                  0x00e480                  _Clear_DS_Local_Counts_4
+                  0x00c108                  _Clear_DS_Local_Counts_1
+                  0x00efc6                  _Clear_DS_Local_Counts_2
+                  0x00d922                  _Clear_DS_Local_Counts_3
+                  0x00e478                  _Clear_DS_Local_Counts_4
                   0x00689c                  _Clear_DS_Power_Status
                   0x005822                  _Clear_DS_Remote_Reset_Flag
                   0x001fea                  _Clear_DS_Transmit_Buffer
-                  0x011854                  _Clear_Error_Display
+                  0x01184c                  _Clear_Error_Display
                   0x005506                  _Clear_Local_Reset2_Flag
                   0x0054fa                  _Clear_Local_Reset_Flag
                   0x007800                  _Clear_PD12_Main_Pulse_Count
-                  0x00c162                  _Clear_PD12_Main_Pulse_Count_1
-                  0x00f020                  _Clear_PD12_Main_Pulse_Count_2
-                  0x00d97c                  _Clear_PD12_Main_Pulse_Count_3
-                  0x00e4d2                  _Clear_PD12_Main_Pulse_Count_4
+                  0x00c15a                  _Clear_PD12_Main_Pulse_Count_1
+                  0x00f018                  _Clear_PD12_Main_Pulse_Count_2
+                  0x00d974                  _Clear_PD12_Main_Pulse_Count_3
+                  0x00e4ca                  _Clear_PD12_Main_Pulse_Count_4
                   0x0077ca                  _Clear_PD1_Supervisory_Count
-                  0x00c12c                  _Clear_PD1_Supervisory_Count_1
-                  0x00efea                  _Clear_PD1_Supervisory_Count_2
-                  0x00d946                  _Clear_PD1_Supervisory_Count_3
-                  0x00e49c                  _Clear_PD1_Supervisory_Count_4
+                  0x00c124                  _Clear_PD1_Supervisory_Count_1
+                  0x00efe2                  _Clear_PD1_Supervisory_Count_2
+                  0x00d93e                  _Clear_PD1_Supervisory_Count_3
+                  0x00e494                  _Clear_PD1_Supervisory_Count_4
                   0x0077e8                  _Clear_PD2_Supervisory_Count
-                  0x00c14a                  _Clear_PD2_Supervisory_Count_1
-                  0x00f008                  _Clear_PD2_Supervisory_Count_2
-                  0x00d964                  _Clear_PD2_Supervisory_Count_3
-                  0x00e4ba                  _Clear_PD2_Supervisory_Count_4
-                  0x0116a8                  _Clear_Relay_A_Counts
-                  0x010d52                  _Clear_Relay_B_Counts
+                  0x00c142                  _Clear_PD2_Supervisory_Count_1
+                  0x00f000                  _Clear_PD2_Supervisory_Count_2
+                  0x00d95c                  _Clear_PD2_Supervisory_Count_3
+                  0x00e4b2                  _Clear_PD2_Supervisory_Count_4
+                  0x0116a0                  _Clear_Relay_A_Counts
+                  0x010d4a                  _Clear_Relay_B_Counts
                   0x0053c0                  _Clear_Reset_Info
                   0x00583a                  _Clear_Reset_State
-                  0x00a87a                  _Clear_SPI_Receive_Buffer
-                  0x00a89a                  _Clear_SPI_Transmit_Buffer
+                  0x00a872                  _Clear_SPI_Receive_Buffer
+                  0x00a892                  _Clear_SPI_Transmit_Buffer
                   0x00771e                  _Clear_US_AxleCount
-                  0x00c088                  _Clear_US_AxleCount_1
-                  0x00ef46                  _Clear_US_AxleCount_2
-                  0x00d8a2                  _Clear_US_AxleCount_3
-                  0x00e3f8                  _Clear_US_AxleCount_4
-                  0x00a66c                  _Clear_US_Checksum_Info
-                  0x01199c                  _Clear_US_Error_Code
+                  0x00c080                  _Clear_US_AxleCount_1
+                  0x00ef3e                  _Clear_US_AxleCount_2
+                  0x00d89a                  _Clear_US_AxleCount_3
+                  0x00e3f0                  _Clear_US_AxleCount_4
+                  0x00a664                  _Clear_US_Checksum_Info
+                  0x011994                  _Clear_US_Error_Code
                   0x0077bc                  _Clear_US_Local_Counts
-                  0x00c11e                  _Clear_US_Local_Counts_1
-                  0x00efdc                  _Clear_US_Local_Counts_2
-                  0x00d938                  _Clear_US_Local_Counts_3
-                  0x00e48e                  _Clear_US_Local_Counts_4
+                  0x00c116                  _Clear_US_Local_Counts_1
+                  0x00efd4                  _Clear_US_Local_Counts_2
+                  0x00d930                  _Clear_US_Local_Counts_3
+                  0x00e486                  _Clear_US_Local_Counts_4
                   0x006882                  _Clear_US_Power_Status
                   0x00582e                  _Clear_US_Remote_Reset_Flag
                   0x0036b6                  _Clear_US_Transmit_Buffer
                   0x007812                  _Clear_Wheel_Type
-                  0x00c174                  _Clear_Wheel_Type_1
-                  0x00f032                  _Clear_Wheel_Type_2
-                  0x00d98e                  _Clear_Wheel_Type_3
-                  0x00e4e4                  _Clear_Wheel_Type_4
-                  0x00a018                  _Compare_DS_Checksum
-                  0x00a314                  _Compare_US_Checksum
+                  0x00c16c                  _Clear_Wheel_Type_1
+                  0x00f02a                  _Clear_Wheel_Type_2
+                  0x00d986                  _Clear_Wheel_Type_3
+                  0x00e4dc                  _Clear_Wheel_Type_4
+                  0x00a010                  _Compare_DS_Checksum
+                  0x00a30c                  _Compare_US_Checksum
                   0x0035fe                  _Configure_Modem_A
                   0x001f3e                  _Configure_Modem_B
                   0x0046dc                  _Control_DAC_Type_3S
@@ -1123,72 +1123,72 @@ External Symbols in Program Memory (by name):
                   0x00438c                  _Control_DAC_Type_LCWS
                   0x0041ea                  _Control_DAC_Type_SF
                   0x006c9a                  _Convert_Timer_Value_To_Speed
-                  0x011e30                  _Crc16
+                  0x011e28                  _Crc16
                   0x004c1e                  _DE_Wait_for_Local_Reset
-                  0x00f908                  _DS_DecKeySchedule
-                  0x00f8a2                  _DS_DecodeShiftRow
-                  0x00f5b8                  _DS_Decode_Data
-                  0x00f57a                  _DS_Decode_Key_Addition
-                  0x00f3e6                  _DS_EncKeySchedule
-                  0x00f380                  _DS_EncodeShiftRow
-                  0x00f1b8                  _DS_Encode_Data
-                  0x00f180                  _DS_Encode_Key_Addition
+                  0x00f900                  _DS_DecKeySchedule
+                  0x00f89a                  _DS_DecodeShiftRow
+                  0x00f5b0                  _DS_Decode_Data
+                  0x00f572                  _DS_Decode_Key_Addition
+                  0x00f3de                  _DS_EncKeySchedule
+                  0x00f378                  _DS_EncodeShiftRow
+                  0x00f1b0                  _DS_Encode_Data
+                  0x00f178                  _DS_Encode_Key_Addition
                   0x000ac8                  _DS_LED_Error_Service_1mS
                   0x000b04                  _DS_Packet_error_timmer
                   0x00038c                  _D_Key
-                  0x011a7a                  _DeEnergise_Preparatory_Relay_A
-                  0x011ac2                  _DeEnergise_Preparatory_Relay_B
-                  0x011bba                  _DeEnergise_Relay_A
-                  0x011b52                  _DeEnergise_Relay_B
-                  0x011af8                  _DeEnergise_Vital_Relay_A
-                  0x011b0c                  _DeEnergise_Vital_Relay_B
+                  0x011a72                  _DeEnergise_Preparatory_Relay_A
+                  0x011aba                  _DeEnergise_Preparatory_Relay_B
+                  0x011bb2                  _DeEnergise_Relay_A
+                  0x011b4a                  _DeEnergise_Relay_B
+                  0x011af0                  _DeEnergise_Vital_Relay_A
+                  0x011b04                  _DeEnergise_Vital_Relay_B
                   0x0093d6                  _Declare_DAC_Defective
                   0x00966a                  _Declare_DAC_Defective_DS
                   0x0094ea                  _Declare_DAC_Defective_US
                   0x0047de                  _Decrement_Bootuplock_50msTmr
                   0x000ed6                  _Decrement_Comm_DS_CountDown
                   0x0025b8                  _Decrement_Comm_US_CountDown
-                  0x00ceaa                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
+                  0x00cea2                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
                   0x008828                  _Decrement_D4_Track_Clearing_Timeout_50msTmr
-                  0x00fa2e                  _Decrement_DS_Crypto_msTmr
+                  0x00fa26                  _Decrement_DS_Crypto_msTmr
                   0x0074e2                  _Decrement_DS_Forward_Count
                   0x007520                  _Decrement_DS_Reverse_Count
                   0x000e88                  _Decrement_DS_Sch_msTmr
-                  0x011894                  _Decrement_Err_display_50msTmr
-                  0x0118ac                  _Decrement_LCWS_Health_Relay_Timer
+                  0x01188c                  _Decrement_Err_display_50msTmr
+                  0x0118a4                  _Decrement_LCWS_Health_Relay_Timer
                   0x005530                  _Decrement_Reset_300sTmr
                   0x005542                  _Decrement_Reset_300sTmr2
                   0x005512                  _Decrement_Reset_msTmr
-                  0x00a868                  _Decrement_SPI_50msTmr
+                  0x00a860                  _Decrement_SPI_50msTmr
                   0x0059be                  _Decrement_Sys_Mon_50msTmr
                   0x0076b8                  _Decrement_TrackMon_50msTmr
-                  0x00c022                  _Decrement_TrackMon_50msTmr_1
-                  0x00eee0                  _Decrement_TrackMon_50msTmr_2
-                  0x00d83c                  _Decrement_TrackMon_50msTmr_3
-                  0x00e392                  _Decrement_TrackMon_50msTmr_4
-                  0x0103a6                  _Decrement_US_Crypto_msTmr
+                  0x00c01a                  _Decrement_TrackMon_50msTmr_1
+                  0x00eed8                  _Decrement_TrackMon_50msTmr_2
+                  0x00d834                  _Decrement_TrackMon_50msTmr_3
+                  0x00e38a                  _Decrement_TrackMon_50msTmr_4
+                  0x01039e                  _Decrement_US_Crypto_msTmr
                   0x00755e                  _Decrement_US_Forward_Count
                   0x00759c                  _Decrement_US_Reverse_Count
                   0x00256a                  _Decrement_US_Sch_msTmr
                   0x0070b2                  _Detect_PD_Failures
-                  0x00bb12                  _Detect_PD_Failures_1
-                  0x00ea30                  _Detect_PD_Failures_2
-                  0x00d388                  _Detect_PD_Failures_3
-                  0x00dede                  _Detect_PD_Failures_4
+                  0x00bb0a                  _Detect_PD_Failures_1
+                  0x00ea28                  _Detect_PD_Failures_2
+                  0x00d380                  _Detect_PD_Failures_3
+                  0x00ded6                  _Detect_PD_Failures_4
                   0x006f48                  _Determine_TrackState
-                  0x00b9a8                  _Determine_TrackState_1
-                  0x00e8c6                  _Determine_TrackState_2
-                  0x00d21e                  _Determine_TrackState_3
-                  0x00dd74                  _Determine_TrackState_4
+                  0x00b9a0                  _Determine_TrackState_1
+                  0x00e8be                  _Determine_TrackState_2
+                  0x00d216                  _Determine_TrackState_3
+                  0x00dd6c                  _Determine_TrackState_4
                   0x0051ac                  _EF_Reset_Sequence_Complete
                   0x0051b6                  _EF_Wait_for_Local_Reset
                   0x00037c                  _E_Key
-                  0x0119ae                  _Energise_Preparatory_Relay_A
-                  0x0119fa                  _Energise_Preparatory_Relay_B
-                  0x011b8a                  _Energise_Relay_A
-                  0x011b20                  _Energise_Relay_B
-                  0x011a36                  _Energise_Vital_Relay_A
-                  0x011a58                  _Energise_Vital_Relay_B
+                  0x0119a6                  _Energise_Preparatory_Relay_A
+                  0x0119f2                  _Energise_Preparatory_Relay_B
+                  0x011b82                  _Energise_Relay_A
+                  0x011b18                  _Energise_Relay_B
+                  0x011a2e                  _Energise_Vital_Relay_A
+                  0x011a50                  _Energise_Vital_Relay_B
                   0x009c90                  _Get_Board_Details
                   0x0055b6                  _Get_CF_DS1_Reset_State
                   0x0055c4                  _Get_CF_DS2_Reset_State
@@ -1196,126 +1196,126 @@ External Symbols in Program Memory (by name):
                   0x00558a                  _Get_CF_US1_Reset_State
                   0x00559a                  _Get_CF_US2_Reset_State
                   0x00557e                  _Get_CF_US_Reset_State
-                  0x009e6c                  _Get_Calculated_Checksum
-                  0x009e7a                  _Get_Compared_Checksum
+                  0x009e64                  _Get_Calculated_Checksum
+                  0x009e72                  _Get_Compared_Checksum
                   0x007772                  _Get_DS_AxleCount
-                  0x00c0d4                  _Get_DS_AxleCount_1
-                  0x00ef92                  _Get_DS_AxleCount_2
-                  0x00d8ee                  _Get_DS_AxleCount_3
-                  0x00e444                  _Get_DS_AxleCount_4
+                  0x00c0cc                  _Get_DS_AxleCount_1
+                  0x00ef8a                  _Get_DS_AxleCount_2
+                  0x00d8e6                  _Get_DS_AxleCount_3
+                  0x00e43c                  _Get_DS_AxleCount_4
                   0x007784                  _Get_DS_AxleDirection
-                  0x00c0e6                  _Get_DS_AxleDirection_1
-                  0x00efa4                  _Get_DS_AxleDirection_2
-                  0x00d900                  _Get_DS_AxleDirection_3
-                  0x00e456                  _Get_DS_AxleDirection_4
-                  0x00fa7c                  _Get_DS_Decryption_State
-                  0x00fa5e                  _Get_DS_Encryption_State
-                  0x01195e                  _Get_DS_Error_Code
+                  0x00c0de                  _Get_DS_AxleDirection_1
+                  0x00ef9c                  _Get_DS_AxleDirection_2
+                  0x00d8f8                  _Get_DS_AxleDirection_3
+                  0x00e44e                  _Get_DS_AxleDirection_4
+                  0x00fa74                  _Get_DS_Decryption_State
+                  0x00fa56                  _Get_DS_Encryption_State
+                  0x011956                  _Get_DS_Error_Code
                   0x00779e                  _Get_DS_Fwd_AxleCount
-                  0x00c100                  _Get_DS_Fwd_AxleCount_1
-                  0x00efbe                  _Get_DS_Fwd_AxleCount_2
-                  0x00d91a                  _Get_DS_Fwd_AxleCount_3
-                  0x00e470                  _Get_DS_Fwd_AxleCount_4
+                  0x00c0f8                  _Get_DS_Fwd_AxleCount_1
+                  0x00efb6                  _Get_DS_Fwd_AxleCount_2
+                  0x00d912                  _Get_DS_Fwd_AxleCount_3
+                  0x00e468                  _Get_DS_Fwd_AxleCount_4
                   0x007870                  _Get_DS_Local_Counts_Clearing_Status
-                  0x00c1d2                  _Get_DS_Local_Counts_Clearing_Status_1
-                  0x00f090                  _Get_DS_Local_Counts_Clearing_Status_2
-                  0x00d9ec                  _Get_DS_Local_Counts_Clearing_Status_3
-                  0x00e542                  _Get_DS_Local_Counts_Clearing_Status_4
-                  0x00b476                  _Get_DS_Remote_AxleCount
+                  0x00c1ca                  _Get_DS_Local_Counts_Clearing_Status_1
+                  0x00f088                  _Get_DS_Local_Counts_Clearing_Status_2
+                  0x00d9e4                  _Get_DS_Local_Counts_Clearing_Status_3
+                  0x00e53a                  _Get_DS_Local_Counts_Clearing_Status_4
+                  0x00b46e                  _Get_DS_Remote_AxleCount
                   0x0077a6                  _Get_DS_Rev_AxleCount
-                  0x00c108                  _Get_DS_Rev_AxleCount_1
-                  0x00efc6                  _Get_DS_Rev_AxleCount_2
-                  0x00d922                  _Get_DS_Rev_AxleCount_3
-                  0x00e478                  _Get_DS_Rev_AxleCount_4
+                  0x00c100                  _Get_DS_Rev_AxleCount_1
+                  0x00efbe                  _Get_DS_Rev_AxleCount_2
+                  0x00d91a                  _Get_DS_Rev_AxleCount_3
+                  0x00e470                  _Get_DS_Rev_AxleCount_4
                   0x0055d4                  _Get_EF_Reset_State
                   0x0055e0                  _Get_EF_US1_Reset_State
                   0x0055f0                  _Get_EF_US2_Reset_State
                   0x0036aa                  _Get_Modem_A_State
                   0x001fde                  _Get_Modem_B_State
-                  0x011686                  _Get_Relay_A_ATC_State
-                  0x01167c                  _Get_Relay_A_State
-                  0x010d30                  _Get_Relay_B_ATC_State
-                  0x010d26                  _Get_Relay_B_State
-                  0x00cec2                  _Get_Relay_D3_ATC_State
-                  0x00cecc                  _Get_Relay_D3_State
+                  0x01167e                  _Get_Relay_A_ATC_State
+                  0x011674                  _Get_Relay_A_State
+                  0x010d28                  _Get_Relay_B_ATC_State
+                  0x010d1e                  _Get_Relay_B_State
+                  0x00ceba                  _Get_Relay_D3_ATC_State
+                  0x00cec4                  _Get_Relay_D3_State
                   0x008840                  _Get_Relay_D4_ATC_State
                   0x00884a                  _Get_Relay_D4_State
-                  0x0119a6                  _Get_Relay_Energising_Key
+                  0x01199e                  _Get_Relay_Energising_Key
                   0x005560                  _Get_SF_DS1_Reset_State
                   0x00556e                  _Get_SF_DS2_Reset_State
                   0x005554                  _Get_SF_Reset_State
                   0x00776a                  _Get_US_AxleCount
-                  0x00c0cc                  _Get_US_AxleCount_1
-                  0x00ef8a                  _Get_US_AxleCount_2
-                  0x00d8e6                  _Get_US_AxleCount_3
-                  0x00e43c                  _Get_US_AxleCount_4
+                  0x00c0c4                  _Get_US_AxleCount_1
+                  0x00ef82                  _Get_US_AxleCount_2
+                  0x00d8de                  _Get_US_AxleCount_3
+                  0x00e434                  _Get_US_AxleCount_4
                   0x00777a                  _Get_US_AxleDirection
-                  0x00c0dc                  _Get_US_AxleDirection_1
-                  0x00ef9a                  _Get_US_AxleDirection_2
-                  0x00d8f6                  _Get_US_AxleDirection_3
-                  0x00e44c                  _Get_US_AxleDirection_4
-                  0x0103f4                  _Get_US_Decryption_State
-                  0x0103d6                  _Get_US_Encryption_State
-                  0x011978                  _Get_US_Error_Code
+                  0x00c0d4                  _Get_US_AxleDirection_1
+                  0x00ef92                  _Get_US_AxleDirection_2
+                  0x00d8ee                  _Get_US_AxleDirection_3
+                  0x00e444                  _Get_US_AxleDirection_4
+                  0x0103ec                  _Get_US_Decryption_State
+                  0x0103ce                  _Get_US_Encryption_State
+                  0x011970                  _Get_US_Error_Code
                   0x00778e                  _Get_US_Fwd_AxleCount
-                  0x00c0f0                  _Get_US_Fwd_AxleCount_1
-                  0x00efae                  _Get_US_Fwd_AxleCount_2
-                  0x00d90a                  _Get_US_Fwd_AxleCount_3
-                  0x00e460                  _Get_US_Fwd_AxleCount_4
+                  0x00c0e8                  _Get_US_Fwd_AxleCount_1
+                  0x00efa6                  _Get_US_Fwd_AxleCount_2
+                  0x00d902                  _Get_US_Fwd_AxleCount_3
+                  0x00e458                  _Get_US_Fwd_AxleCount_4
                   0x00788a                  _Get_US_Local_Counts_Clearing_Status
-                  0x00c1ec                  _Get_US_Local_Counts_Clearing_Status_1
-                  0x00f0aa                  _Get_US_Local_Counts_Clearing_Status_2
-                  0x00da06                  _Get_US_Local_Counts_Clearing_Status_3
-                  0x00e55c                  _Get_US_Local_Counts_Clearing_Status_4
-                  0x00b486                  _Get_US_Remote_AxleCount
+                  0x00c1e4                  _Get_US_Local_Counts_Clearing_Status_1
+                  0x00f0a2                  _Get_US_Local_Counts_Clearing_Status_2
+                  0x00d9fe                  _Get_US_Local_Counts_Clearing_Status_3
+                  0x00e554                  _Get_US_Local_Counts_Clearing_Status_4
+                  0x00b47e                  _Get_US_Remote_AxleCount
                   0x007796                  _Get_US_Rev_AxleCount
-                  0x00c0f8                  _Get_US_Rev_AxleCount_1
-                  0x00efb6                  _Get_US_Rev_AxleCount_2
-                  0x00d912                  _Get_US_Rev_AxleCount_3
-                  0x00e468                  _Get_US_Rev_AxleCount_4
+                  0x00c0f0                  _Get_US_Rev_AxleCount_1
+                  0x00efae                  _Get_US_Rev_AxleCount_2
+                  0x00d90a                  _Get_US_Rev_AxleCount_3
+                  0x00e460                  _Get_US_Rev_AxleCount_4
                   0x0074c2                  _Increment_DS_Forward_Count
                   0x007500                  _Increment_DS_Reverse_Count
                   0x00753e                  _Increment_US_Forward_Count
                   0x00757c                  _Increment_US_Reverse_Count
                   0x0068f4                  _Initialise_AxleMon
-                  0x00b496                  _Initialise_AxleMon_1
-                  0x00e5b2                  _Initialise_AxleMon_2
-                  0x00cf06                  _Initialise_AxleMon_3
-                  0x00da5c                  _Initialise_AxleMon_4
+                  0x00b48e                  _Initialise_AxleMon_1
+                  0x00e5aa                  _Initialise_AxleMon_2
+                  0x00cefe                  _Initialise_AxleMon_3
+                  0x00da54                  _Initialise_AxleMon_4
                   0x004932                  _Initialise_CF_Reset_Monitor
                   0x0048fe                  _Initialise_DE_Reset_Monitor
                   0x0009c2                  _Initialise_DS_CommSch
-                  0x00f100                  _Initialise_DS_Crypto_State
+                  0x00f0f8                  _Initialise_DS_Crypto_State
                   0x0049ca                  _Initialise_EF_Reset_Monitor
-                  0x0116d4                  _Initialise_Error
+                  0x0116cc                  _Initialise_Error
                   0x0048ca                  _Initialise_LCWS_Reset_Monitor
-                  0x010d78                  _Initialise_Relay_A_Mgr
-                  0x010400                  _Initialise_Relay_B_Mgr
-                  0x00c25c                  _Initialise_Relay_D3_Mgr
+                  0x010d70                  _Initialise_Relay_A_Mgr
+                  0x0103f8                  _Initialise_Relay_B_Mgr
+                  0x00c254                  _Initialise_Relay_D3_Mgr
                   0x0078d4                  _Initialise_Relay_D4_Mgr
                   0x008884                  _Initialise_Relay_Mgr
                   0x004896                  _Initialise_SF_Reset_Monitor
-                  0x00a6c6                  _Initialise_SPI
+                  0x00a6be                  _Initialise_SPI
                   0x005904                  _Initialise_Sys_Mon
                   0x003890                  _Initialise_System
                   0x002098                  _Initialise_US_CommSch
-                  0x00fa88                  _Initialise_US_Crypto_State
+                  0x00fa80                  _Initialise_US_Crypto_State
                   0x0047f0                  _Initialize_Reset
                   0x004be4                  _LCWS_Wait_for_Local_Reset
-                  0x00f558                  _Load_DS_Decrypt_Key
-                  0x00f15e                  _Load_DS_Encrypt_Key
-                  0x00fed0                  _Load_Decrypt_Key
-                  0x00fade                  _Load_Encrypt_Key
+                  0x00f550                  _Load_DS_Decrypt_Key
+                  0x00f156                  _Load_DS_Encrypt_Key
+                  0x00fec8                  _Load_Decrypt_Key
+                  0x00fad6                  _Load_Encrypt_Key
                   0x006b98                  _Monitor_Supervisory_Pulse
-                  0x00b82c                  _Monitor_Supervisory_Pulse_1
-                  0x00e778                  _Monitor_Supervisory_Pulse_2
-                  0x00d0d0                  _Monitor_Supervisory_Pulse_3
-                  0x00dc26                  _Monitor_Supervisory_Pulse_4
+                  0x00b824                  _Monitor_Supervisory_Pulse_1
+                  0x00e770                  _Monitor_Supervisory_Pulse_2
+                  0x00d0c8                  _Monitor_Supervisory_Pulse_3
+                  0x00dc1e                  _Monitor_Supervisory_Pulse_4
                   0x006e1c                  _Monitor_Wheel_Pulse
-                  0x00b942                  _Monitor_Wheel_Pulse_1
-                  0x00e860                  _Monitor_Wheel_Pulse_2
-                  0x00d1b8                  _Monitor_Wheel_Pulse_3
-                  0x00dd0e                  _Monitor_Wheel_Pulse_4
+                  0x00b93a                  _Monitor_Wheel_Pulse_1
+                  0x00e858                  _Monitor_Wheel_Pulse_2
+                  0x00d1b0                  _Monitor_Wheel_Pulse_3
+                  0x00dd06                  _Monitor_Wheel_Pulse_4
                   0x005600                  _Post_DS1_has_been_Reset
                   0x005618                  _Post_DS2_has_been_Reset
                   0x005666                  _Post_Peer_CPU_Reset
@@ -1326,12 +1326,12 @@ External Symbols in Program Memory (by name):
                   0x0033f4                  _Process_3S_US_AxleCount
                   0x004fc4                  _Process_CF_DS_Reset_Command
                   0x00505a                  _Process_CF_US_Reset_Command
-                  0x00c906                  _Process_D3_Local_AxleCount
-                  0x00ca6c                  _Process_D3_Local_Direction
-                  0x00c97c                  _Process_D3_Peer_AxleCount
-                  0x00cbda                  _Process_D3_Peer_Direction
-                  0x00c9f2                  _Process_D3_Remote_AxleCount
-                  0x00cd40                  _Process_D3_Remote_Direction
+                  0x00c8fe                  _Process_D3_Local_AxleCount
+                  0x00ca64                  _Process_D3_Local_Direction
+                  0x00c974                  _Process_D3_Peer_AxleCount
+                  0x00cbd2                  _Process_D3_Peer_Direction
+                  0x00c9ea                  _Process_D3_Remote_AxleCount
+                  0x00cd38                  _Process_D3_Remote_Direction
                   0x004ef8                  _Process_D3_Reset_Command
                   0x0080e0                  _Process_D4_Local_AxleCount
                   0x0082a0                  _Process_D4_Local_Direction
@@ -1345,17 +1345,17 @@ External Symbols in Program Memory (by name):
                   0x001d26                  _Process_DS_Direction
                   0x001460                  _Process_DS_Message
                   0x001482                  _Process_DS_Reset_Info_Message
-                  0x00b020                  _Process_Interprocess_Message
-                  0x00b1ee                  _Process_Interprocess_Post_Reset_Message
-                  0x00b042                  _Process_Interprocess_Reset_Info_Message
-                  0x01155e                  _Process_Peer_Relay_A_AxleCount
-                  0x011544                  _Process_Peer_Relay_A_Direction
-                  0x010c0e                  _Process_Peer_Relay_B_AxleCount
-                  0x010c32                  _Process_Peer_Relay_B_Direction
-                  0x011520                  _Process_Relay_A_Local_AxleCount
-                  0x011500                  _Process_Relay_A_Local_Direction
-                  0x010bea                  _Process_Relay_B_Local_AxleCount
-                  0x010bca                  _Process_Relay_B_Local_Direction
+                  0x00b018                  _Process_Interprocess_Message
+                  0x00b1e6                  _Process_Interprocess_Post_Reset_Message
+                  0x00b03a                  _Process_Interprocess_Reset_Info_Message
+                  0x011556                  _Process_Peer_Relay_A_AxleCount
+                  0x01153c                  _Process_Peer_Relay_A_Direction
+                  0x010c06                  _Process_Peer_Relay_B_AxleCount
+                  0x010c2a                  _Process_Peer_Relay_B_Direction
+                  0x011518                  _Process_Relay_A_Local_AxleCount
+                  0x0114f8                  _Process_Relay_A_Local_Direction
+                  0x010be2                  _Process_Relay_B_Local_AxleCount
+                  0x010bc2                  _Process_Relay_B_Local_Direction
                   0x0033c6                  _Process_US_AxleCount
                   0x002ca0                  _Process_US_Axle_Count_Message
                   0x00346c                  _Process_US_Direction
@@ -1365,40 +1365,40 @@ External Symbols in Program Memory (by name):
                   0x0023c8                  _Receive_COM1_Message
                   0x000d30                  _Receive_COM2_Message
                   0x0075ba                  _Register_PD1212_Transition
-                  0x00bf82                  _Register_PD1212_Transition_1
-                  0x00ee40                  _Register_PD1212_Transition_2
-                  0x00d79c                  _Register_PD1212_Transition_3
-                  0x00e2f2                  _Register_PD1212_Transition_4
+                  0x00bf7a                  _Register_PD1212_Transition_1
+                  0x00ee38                  _Register_PD1212_Transition_2
+                  0x00d794                  _Register_PD1212_Transition_3
+                  0x00e2ea                  _Register_PD1212_Transition_4
                   0x007618                  _Register_PD2121_Transition
-                  0x00bfb4                  _Register_PD2121_Transition_1
-                  0x00ee72                  _Register_PD2121_Transition_2
-                  0x00d7ce                  _Register_PD2121_Transition_3
-                  0x00e324                  _Register_PD2121_Transition_4
-                  0x00c67e                  _Reset_Allowed_For_D3
+                  0x00bfac                  _Register_PD2121_Transition_1
+                  0x00ee6a                  _Register_PD2121_Transition_2
+                  0x00d7c6                  _Register_PD2121_Transition_3
+                  0x00e31c                  _Register_PD2121_Transition_4
+                  0x00c676                  _Reset_Allowed_For_D3
                   0x007de0                  _Reset_Allowed_For_D4
-                  0x010ba6                  _Reset_Allowed_For_DE
-                  0x010b18                  _Reset_Allowed_For_DS
-                  0x010b82                  _Reset_Allowed_For_LCWS
-                  0x011496                  _Reset_Allowed_For_US
+                  0x010b9e                  _Reset_Allowed_For_DE
+                  0x010b10                  _Reset_Allowed_For_DS
+                  0x010b7a                  _Reset_Allowed_For_LCWS
+                  0x01148e                  _Reset_Allowed_For_US
                   0x001e22                  _Reset_DS_CountDown
                   0x0034e8                  _Reset_US_CountDown
                   0x004bda                  _SF_Reset_Sequence_Complete
                   0x004c58                  _SF_Wait_for_Local_Reset
                   0x00039c                  _STable
                   0x000914                  _SW_Version_No
-                  0x00fa74                  _Set_DS_Decryption_Idle
-                  0x00fa56                  _Set_DS_Encryption_Idle
+                  0x00fa6c                  _Set_DS_Decryption_Idle
+                  0x00fa4e                  _Set_DS_Encryption_Idle
                   0x000cc2                  _Set_DS_Sch_Idle
-                  0x01180e                  _Set_Error_Status_Bit
-                  0x0117ea                  _Set_Error_Status_Byte
-                  0x01166e                  _Set_Relay_A_DAC_Defective
-                  0x010dd6                  _Set_Relay_A_Reset_State
-                  0x010d18                  _Set_Relay_B_DAC_Defective
-                  0x010458                  _Set_Relay_B_Reset_State
-                  0x00c8f8                  _Set_Relay_D3_DAC_Defective
+                  0x011806                  _Set_Error_Status_Bit
+                  0x0117e2                  _Set_Error_Status_Byte
+                  0x011666                  _Set_Relay_A_DAC_Defective
+                  0x010dce                  _Set_Relay_A_Reset_State
+                  0x010d10                  _Set_Relay_B_DAC_Defective
+                  0x010450                  _Set_Relay_B_Reset_State
+                  0x00c8f0                  _Set_Relay_D3_DAC_Defective
                   0x0080d2                  _Set_Relay_D4_DAC_Defective
-                  0x0103ec                  _Set_US_Decryption_Idle
-                  0x0103ce                  _Set_US_Encryption_Idle
+                  0x0103e4                  _Set_US_Decryption_Idle
+                  0x0103c6                  _Set_US_Encryption_Idle
                   0x002520                  _Set_US_Sch_Idle
                   0x002008                  _SetupCOM1BaudRate
                   0x00092e                  _SetupCOM2BaudRate
@@ -1410,137 +1410,137 @@ External Symbols in Program Memory (by name):
                   0x004a2e                  _Start_DE_Reset_Monitor
                   0x004138                  _Start_DE_Reset_Sequence
                   0x00784c                  _Start_DS_Axle_Counting
-                  0x00c1ae                  _Start_DS_Axle_Counting_1
-                  0x00f06c                  _Start_DS_Axle_Counting_2
-                  0x00d9c8                  _Start_DS_Axle_Counting_3
-                  0x00e51e                  _Start_DS_Axle_Counting_4
+                  0x00c1a6                  _Start_DS_Axle_Counting_1
+                  0x00f064                  _Start_DS_Axle_Counting_2
+                  0x00d9c0                  _Start_DS_Axle_Counting_3
+                  0x00e516                  _Start_DS_Axle_Counting_4
                   0x000a9e                  _Start_DS_CommSch
-                  0x00fa6a                  _Start_DS_Data_Decryption
-                  0x00fa4c                  _Start_DS_Data_Encryption
+                  0x00fa62                  _Start_DS_Data_Decryption
+                  0x00fa44                  _Start_DS_Data_Encryption
                   0x004a6e                  _Start_EF_Reset_Monitor
                   0x004046                  _Start_EF_Reset_Sequence
                   0x005ade                  _Start_FeedBack_Check
                   0x004a16                  _Start_LCWS_Reset_Monitor
                   0x003d88                  _Start_LCWS_Reset_Sequence
-                  0x010d82                  _Start_Relay_A_Mgr
-                  0x01040a                  _Start_Relay_B_Mgr
-                  0x00c26c                  _Start_Relay_D3_Mgr
+                  0x010d7a                  _Start_Relay_A_Mgr
+                  0x010402                  _Start_Relay_B_Mgr
+                  0x00c264                  _Start_Relay_D3_Mgr
                   0x0078e4                  _Start_Relay_D4_Mgr
                   0x0049fe                  _Start_SF_Reset_Monitor
                   0x003b2e                  _Start_SF_Reset_Sequence
                   0x0059b4                  _Start_Sys_Mon_Decrement_50msTmr
                   0x007840                  _Start_US_Axle_Counting
-                  0x00c1a2                  _Start_US_Axle_Counting_1
-                  0x00f060                  _Start_US_Axle_Counting_2
-                  0x00d9bc                  _Start_US_Axle_Counting_3
-                  0x00e512                  _Start_US_Axle_Counting_4
+                  0x00c19a                  _Start_US_Axle_Counting_1
+                  0x00f058                  _Start_US_Axle_Counting_2
+                  0x00d9b4                  _Start_US_Axle_Counting_3
+                  0x00e50a                  _Start_US_Axle_Counting_4
                   0x002174                  _Start_US_CommSch
-                  0x0103e2                  _Start_US_Data_Decryption
-                  0x0103c4                  _Start_US_Data_Encryption
+                  0x0103da                  _Start_US_Data_Decryption
+                  0x0103bc                  _Start_US_Data_Encryption
                   0x007864                  _Stop_DS_Axle_Counting
-                  0x00c1c6                  _Stop_DS_Axle_Counting_1
-                  0x00f084                  _Stop_DS_Axle_Counting_2
-                  0x00d9e0                  _Stop_DS_Axle_Counting_3
-                  0x00e536                  _Stop_DS_Axle_Counting_4
+                  0x00c1be                  _Stop_DS_Axle_Counting_1
+                  0x00f07c                  _Stop_DS_Axle_Counting_2
+                  0x00d9d8                  _Stop_DS_Axle_Counting_3
+                  0x00e52e                  _Stop_DS_Axle_Counting_4
                   0x005be6                  _Stop_FeedBack_Check
                   0x007858                  _Stop_US_Axle_Counting
-                  0x00c1ba                  _Stop_US_Axle_Counting_1
-                  0x00f078                  _Stop_US_Axle_Counting_2
-                  0x00d9d4                  _Stop_US_Axle_Counting_3
-                  0x00e52a                  _Stop_US_Axle_Counting_4
+                  0x00c1b2                  _Stop_US_Axle_Counting_1
+                  0x00f070                  _Stop_US_Axle_Counting_2
+                  0x00d9cc                  _Stop_US_Axle_Counting_3
+                  0x00e522                  _Stop_US_Axle_Counting_4
                   0x001dcc                  _Synchronise_DS_Sch
                   0x00349a                  _Synchronise_US_Sch
-                  0x010280                  _US_DecKeySchedule
-                  0x01021a                  _US_DecodeShiftRow
-                  0x00ff30                  _US_Decode_Data
-                  0x00fef2                  _US_Decode_Key_Addition
-                  0x00fd66                  _US_EncKeySchedule
-                  0x00fd00                  _US_EncodeShiftRow
-                  0x00fb38                  _US_Encode_Data
-                  0x00fb00                  _US_Encode_Key_Addition
+                  0x010278                  _US_DecKeySchedule
+                  0x010212                  _US_DecodeShiftRow
+                  0x00ff28                  _US_Decode_Data
+                  0x00feea                  _US_Decode_Key_Addition
+                  0x00fd5e                  _US_EncKeySchedule
+                  0x00fcf8                  _US_EncodeShiftRow
+                  0x00fb30                  _US_Encode_Data
+                  0x00faf8                  _US_Encode_Key_Addition
                   0x00219e                  _US_LED_Error_Service_1mS
                   0x0021da                  _US_Packet_error_timmer
                   0x0088d0                  _Update_3S_Relay_A_Counts
-                  0x01114a                  _Update_3S_Relay_A_State
+                  0x011142                  _Update_3S_Relay_A_State
                   0x00921a                  _Update_3S_Relay_B_Counts
-                  0x0107cc                  _Update_3S_Relay_B_State
+                  0x0107c4                  _Update_3S_Relay_B_State
                   0x0092b0                  _Update_3S_Relay_Counts
-                  0x011656                  _Update_ATC_Remote1_Relay_A_State
-                  0x010d00                  _Update_ATC_Remote1_Relay_B_State
-                  0x00ced6                  _Update_ATC_Remote1_Relay_D3_State
+                  0x01164e                  _Update_ATC_Remote1_Relay_A_State
+                  0x010cf8                  _Update_ATC_Remote1_Relay_B_State
+                  0x00cece                  _Update_ATC_Remote1_Relay_D3_State
                   0x008854                  _Update_ATC_Remote1_Relay_D4_State
-                  0x011662                  _Update_ATC_Remote2_Relay_A_State
-                  0x010d0c                  _Update_ATC_Remote2_Relay_B_State
-                  0x00cee2                  _Update_ATC_Remote2_Relay_D3_State
+                  0x01165a                  _Update_ATC_Remote2_Relay_A_State
+                  0x010d04                  _Update_ATC_Remote2_Relay_B_State
+                  0x00ceda                  _Update_ATC_Remote2_Relay_D3_State
                   0x008860                  _Update_ATC_Remote2_Relay_D4_State
-                  0x00ceee                  _Update_ATC_Remote3_Relay_D3_State
+                  0x00cee6                  _Update_ATC_Remote3_Relay_D3_State
                   0x00886c                  _Update_ATC_Remote3_Relay_D4_State
-                  0x00cefa                  _Update_ATC_Remote4_Relay_D3_State
+                  0x00cef2                  _Update_ATC_Remote4_Relay_D3_State
                   0x008878                  _Update_ATC_Remote4_Relay_D4_State
-                  0x01163e                  _Update_A_LU1_Direction
-                  0x0115d2                  _Update_A_LU1_Fwd_Count
-                  0x0115ea                  _Update_A_LU1_Rev_Count
-                  0x01164a                  _Update_A_LU2_Direction
-                  0x0115de                  _Update_A_LU2_Fwd_Count
-                  0x0115f6                  _Update_A_LU2_Rev_Count
-                  0x011602                  _Update_A_Local_AxleCount
-                  0x01160e                  _Update_A_US1_AxleCount
-                  0x011626                  _Update_A_US1_Direction
-                  0x0115ba                  _Update_A_US1_IN_Count
-                  0x0115a2                  _Update_A_US1_OUT_Count
-                  0x01161a                  _Update_A_US2_AxleCount
-                  0x011632                  _Update_A_US2_Direction
-                  0x0115c6                  _Update_A_US2_IN_Count
-                  0x0115ae                  _Update_A_US2_OUT_Count
-                  0x010cb8                  _Update_B_DS1_AxleCount
-                  0x010cd0                  _Update_B_DS1_Direction
-                  0x010ca0                  _Update_B_DS1_IN_Count
-                  0x010c4c                  _Update_B_DS1_OUT_Count
-                  0x010cc4                  _Update_B_DS2_AxleCount
-                  0x010cdc                  _Update_B_DS2_Direction
-                  0x010cac                  _Update_B_DS2_IN_Count
-                  0x010c58                  _Update_B_DS2_OUT_Count
-                  0x010ce8                  _Update_B_LU1_Direction
-                  0x010c64                  _Update_B_LU1_Fwd_Count
-                  0x010c7c                  _Update_B_LU1_Rev_Count
-                  0x010cf4                  _Update_B_LU2_Direction
-                  0x010c70                  _Update_B_LU2_Fwd_Count
-                  0x010c88                  _Update_B_LU2_Rev_Count
-                  0x010c94                  _Update_B_Local_AxleCount
+                  0x011636                  _Update_A_LU1_Direction
+                  0x0115ca                  _Update_A_LU1_Fwd_Count
+                  0x0115e2                  _Update_A_LU1_Rev_Count
+                  0x011642                  _Update_A_LU2_Direction
+                  0x0115d6                  _Update_A_LU2_Fwd_Count
+                  0x0115ee                  _Update_A_LU2_Rev_Count
+                  0x0115fa                  _Update_A_Local_AxleCount
+                  0x011606                  _Update_A_US1_AxleCount
+                  0x01161e                  _Update_A_US1_Direction
+                  0x0115b2                  _Update_A_US1_IN_Count
+                  0x01159a                  _Update_A_US1_OUT_Count
+                  0x011612                  _Update_A_US2_AxleCount
+                  0x01162a                  _Update_A_US2_Direction
+                  0x0115be                  _Update_A_US2_IN_Count
+                  0x0115a6                  _Update_A_US2_OUT_Count
+                  0x010cb0                  _Update_B_DS1_AxleCount
+                  0x010cc8                  _Update_B_DS1_Direction
+                  0x010c98                  _Update_B_DS1_IN_Count
+                  0x010c44                  _Update_B_DS1_OUT_Count
+                  0x010cbc                  _Update_B_DS2_AxleCount
+                  0x010cd4                  _Update_B_DS2_Direction
+                  0x010ca4                  _Update_B_DS2_IN_Count
+                  0x010c50                  _Update_B_DS2_OUT_Count
+                  0x010ce0                  _Update_B_LU1_Direction
+                  0x010c5c                  _Update_B_LU1_Fwd_Count
+                  0x010c74                  _Update_B_LU1_Rev_Count
+                  0x010cec                  _Update_B_LU2_Direction
+                  0x010c68                  _Update_B_LU2_Fwd_Count
+                  0x010c80                  _Update_B_LU2_Rev_Count
+                  0x010c8c                  _Update_B_Local_AxleCount
                   0x004c9e                  _Update_CF_Reset_Monitor_State
                   0x00930e                  _Update_CF_Track_Status
-                  0x00c8a4                  _Update_D3_A1_Direction
-                  0x00c814                  _Update_D3_A1_IN_AxleCount
-                  0x00c790                  _Update_D3_A1_IN_Count
-                  0x00c820                  _Update_D3_A1_OUT_AxleCount
-                  0x00c778                  _Update_D3_A1_OUT_Count
-                  0x00c8b0                  _Update_D3_A2_Direction
-                  0x00c82c                  _Update_D3_A2_IN_AxleCount
-                  0x00c79c                  _Update_D3_A2_IN_Count
-                  0x00c838                  _Update_D3_A2_OUT_AxleCount
-                  0x00c784                  _Update_D3_A2_OUT_Count
-                  0x00c8bc                  _Update_D3_B1_Direction
-                  0x00c844                  _Update_D3_B1_IN_AxleCount
-                  0x00c7c0                  _Update_D3_B1_IN_Count
-                  0x00c850                  _Update_D3_B1_OUT_AxleCount
-                  0x00c7a8                  _Update_D3_B1_OUT_Count
-                  0x00c8c8                  _Update_D3_B2_Direction
-                  0x00c85c                  _Update_D3_B2_IN_AxleCount
-                  0x00c7cc                  _Update_D3_B2_IN_Count
-                  0x00c868                  _Update_D3_B2_OUT_AxleCount
-                  0x00c7b4                  _Update_D3_B2_OUT_Count
-                  0x00c8d4                  _Update_D3_C1_Direction
-                  0x00c874                  _Update_D3_C1_IN_AxleCount
-                  0x00c7f0                  _Update_D3_C1_IN_Count
-                  0x00c880                  _Update_D3_C1_OUT_AxleCount
-                  0x00c7d8                  _Update_D3_C1_OUT_Count
-                  0x00c8e0                  _Update_D3_C2_Direction
-                  0x00c88c                  _Update_D3_C2_IN_AxleCount
-                  0x00c7fc                  _Update_D3_C2_IN_Count
-                  0x00c898                  _Update_D3_C2_OUT_AxleCount
-                  0x00c7e4                  _Update_D3_C2_OUT_Count
-                  0x00c808                  _Update_D3_Local_Count
-                  0x00c8ec                  _Update_D3_Local_Direction
+                  0x00c89c                  _Update_D3_A1_Direction
+                  0x00c80c                  _Update_D3_A1_IN_AxleCount
+                  0x00c788                  _Update_D3_A1_IN_Count
+                  0x00c818                  _Update_D3_A1_OUT_AxleCount
+                  0x00c770                  _Update_D3_A1_OUT_Count
+                  0x00c8a8                  _Update_D3_A2_Direction
+                  0x00c824                  _Update_D3_A2_IN_AxleCount
+                  0x00c794                  _Update_D3_A2_IN_Count
+                  0x00c830                  _Update_D3_A2_OUT_AxleCount
+                  0x00c77c                  _Update_D3_A2_OUT_Count
+                  0x00c8b4                  _Update_D3_B1_Direction
+                  0x00c83c                  _Update_D3_B1_IN_AxleCount
+                  0x00c7b8                  _Update_D3_B1_IN_Count
+                  0x00c848                  _Update_D3_B1_OUT_AxleCount
+                  0x00c7a0                  _Update_D3_B1_OUT_Count
+                  0x00c8c0                  _Update_D3_B2_Direction
+                  0x00c854                  _Update_D3_B2_IN_AxleCount
+                  0x00c7c4                  _Update_D3_B2_IN_Count
+                  0x00c860                  _Update_D3_B2_OUT_AxleCount
+                  0x00c7ac                  _Update_D3_B2_OUT_Count
+                  0x00c8cc                  _Update_D3_C1_Direction
+                  0x00c86c                  _Update_D3_C1_IN_AxleCount
+                  0x00c7e8                  _Update_D3_C1_IN_Count
+                  0x00c878                  _Update_D3_C1_OUT_AxleCount
+                  0x00c7d0                  _Update_D3_C1_OUT_Count
+                  0x00c8d8                  _Update_D3_C2_Direction
+                  0x00c884                  _Update_D3_C2_IN_AxleCount
+                  0x00c7f4                  _Update_D3_C2_IN_Count
+                  0x00c890                  _Update_D3_C2_OUT_AxleCount
+                  0x00c7dc                  _Update_D3_C2_OUT_Count
+                  0x00c800                  _Update_D3_Local_Count
+                  0x00c8e4                  _Update_D3_Local_Direction
                   0x008066                  _Update_D4_A1_Direction
                   0x007fa6                  _Update_D4_A1_IN_AxleCount
                   0x007ef2                  _Update_D4_A1_IN_Count
@@ -1585,43 +1585,43 @@ External Symbols in Program Memory (by name):
                   0x0080c6                  _Update_D4_Local_Direction
                   0x00915e                  _Update_DE_Relay_State
                   0x004ad0                  _Update_DE_Reset_Monitor_State
-                  0x00f508                  _Update_DS_Data_Decode
-                  0x00f10e                  _Update_DS_Data_Encode
+                  0x00f500                  _Update_DS_Data_Decode
+                  0x00f106                  _Update_DS_Data_Encode
                   0x00684a                  _Update_DS_Power_Status
                   0x000b28                  _Update_DS_Sch_State
                   0x0057c6                  _Update_DS_Section_Mode
                   0x0056b8                  _Update_DS_Section_Remote_Preparatory
                   0x00569a                  _Update_DS_Section_Remote_Reset
                   0x006602                  _Update_DS_Track_Status
-                  0x01170a                  _Update_Display_Error
+                  0x011702                  _Update_Display_Error
                   0x0050f0                  _Update_EF_Reset_Monitor_State
                   0x009340                  _Update_EF_Track_Status
-                  0x0118be                  _Update_Error_Code
+                  0x0118b6                  _Update_Error_Code
                   0x005c06                  _Update_FeedBack_State
                   0x008d00                  _Update_LCWS_DL_Relay_State
                   0x008902                  _Update_LCWS_Relay_State
                   0x004a84                  _Update_LCWS_Reset_Monitor_State
-                  0x011582                  _Update_Next_Block_State
+                  0x01157a                  _Update_Next_Block_State
                   0x00889e                  _Update_Relay_A_Counts
-                  0x010dfe                  _Update_Relay_A_State
+                  0x010df6                  _Update_Relay_A_State
                   0x0091e8                  _Update_Relay_B_Counts
-                  0x010480                  _Update_Relay_B_State
+                  0x010478                  _Update_Relay_B_State
                   0x00924c                  _Update_Relay_D3_Counts
-                  0x00c2ca                  _Update_Relay_D3_State
+                  0x00c2c2                  _Update_Relay_D3_State
                   0x00927e                  _Update_Relay_D4_Counts
                   0x007942                  _Update_Relay_D4_State
                   0x0052de                  _Update_Reset_Button2_State
                   0x0051fc                  _Update_Reset_Button_State
                   0x004b1c                  _Update_SF_Reset_Monitor_State
                   0x0092e8                  _Update_SF_Track_Status
-                  0x00b44a                  _Update_SM_DS_Remote_Axle_Counts
-                  0x00b460                  _Update_SM_US_Remote_Axle_Counts
+                  0x00b442                  _Update_SM_DS_Remote_Axle_Counts
+                  0x00b458                  _Update_SM_US_Remote_Axle_Counts
                   0x004870                  _Update_SPI_Error
-                  0x00a7e2                  _Update_SPI_State
+                  0x00a7da                  _Update_SPI_State
                   0x00594c                  _Update_Sys_Mon_State
                   0x005706                  _Update_System_Mode
-                  0x00fe88                  _Update_US_Data_Decode
-                  0x00fa96                  _Update_US_Data_Encode
+                  0x00fe80                  _Update_US_Data_Decode
+                  0x00fa8e                  _Update_US_Data_Encode
                   0x006812                  _Update_US_Power_Status
                   0x0021fe                  _Update_US_Sch_State
                   0x0057f4                  _Update_US_Section_Mode
@@ -1629,10 +1629,10 @@ External Symbols in Program Memory (by name):
                   0x0056d0                  _Update_US_Section_Remote_Reset
                   0x006674                  _Update_US_Track_Status
                   0x006a0a                  _Validate_PD_Signals
-                  0x00b602                  _Validate_PD_Signals_1
-                  0x00e6d0                  _Validate_PD_Signals_2
-                  0x00d028                  _Validate_PD_Signals_3
-                  0x00db7e                  _Validate_PD_Signals_4
+                  0x00b5fa                  _Validate_PD_Signals_1
+                  0x00e6c8                  _Validate_PD_Signals_2
+                  0x00d020                  _Validate_PD_Signals_3
+                  0x00db76                  _Validate_PD_Signals_4
                   0x000370                  ___mulp32eds3
                   0x000370                  ___mulp32peds3
                   0x000370                  ___mulsi3
@@ -1641,13 +1641,13 @@ External Symbols in Program Memory (by name):
                   0x000306                  __memcpy_helper
                   0x00023c                  __psv_init
                   0x000200                  __resetPRI
-                  0x011f00                  _crc32
-                  0x00a768                  _de_init_spi
+                  0x011efc                  _crc32
+                  0x00a760                  _de_init_spi
                   0x0036d4                  _main
-                  0x00a7ae                  _process_spi_rx_fifo
-                  0x00a774                  _process_spi_tx_fifo
+                  0x00a7a6                  _process_spi_rx_fifo
+                  0x00a76c                  _process_spi_tx_fifo
                   0x00034a                  _rand
-                  0x00a74e                  _re_init_spi
+                  0x00a746                  _re_init_spi
                   0x00033c                  _srand
                   0x00089c                  _uchDAC_Status_Table
                   0x0008d4                  _uchPD_Transition_Table
@@ -1775,7 +1775,7 @@ __CONFIG1
 .comment
  *(.comment)
 
-.debug_info       0x000000      0x2cef2
+.debug_info       0x000000      0x2cc78
  *(.debug_info)
  .debug_info      0x000000        0xa4c build/cpu/production/_ext/1360937237/AES_DS.o
  .debug_info      0x000a4c        0xa45 build/cpu/production/_ext/1360937237/AES_US.o
@@ -1790,17 +1790,17 @@ __CONFIG1
  .debug_info      0x01472a       0x1009 build/cpu/production/_ext/1360937237/RELAYDRV.o
  .debug_info      0x015733       0x25b4 build/cpu/production/_ext/1360937237/RELAYMGR.o
  .debug_info      0x017ce7       0x2539 build/cpu/production/_ext/1360937237/RESET.o
- .debug_info      0x01a220       0x1c4d build/cpu/production/_ext/1360937237/RESTORE.o
- .debug_info      0x01be6d       0x1977 build/cpu/production/_ext/1360937237/RLYA_MGR.o
- .debug_info      0x01d7e4       0x1a65 build/cpu/production/_ext/1360937237/RLYB_MGR.o
- .debug_info      0x01f249       0x214f build/cpu/production/_ext/1360937237/RLYD3_MGR.o
- .debug_info      0x021398       0x203a build/cpu/production/_ext/1360937237/SYS_MON.o
- .debug_info      0x0233d2        0x1d2 build/cpu/production/_ext/1360937237/AES.o
- .debug_info      0x0235a4       0x1fbc build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
- .debug_info      0x025560       0x1d89 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
- .debug_info      0x0272e9       0x1bb5 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
- .debug_info      0x028e9e       0x1bb5 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
- .debug_info      0x02aa53       0x249f build/cpu/production/_ext/1360937237/RLYD4_MGR.o
+ .debug_info      0x01a220       0x19d3 build/cpu/production/_ext/1360937237/RESTORE.o
+ .debug_info      0x01bbf3       0x1977 build/cpu/production/_ext/1360937237/RLYA_MGR.o
+ .debug_info      0x01d56a       0x1a65 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+ .debug_info      0x01efcf       0x214f build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+ .debug_info      0x02111e       0x203a build/cpu/production/_ext/1360937237/SYS_MON.o
+ .debug_info      0x023158        0x1d2 build/cpu/production/_ext/1360937237/AES.o
+ .debug_info      0x02332a       0x1fbc build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+ .debug_info      0x0252e6       0x1d89 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+ .debug_info      0x02706f       0x1bb5 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+ .debug_info      0x028c24       0x1bb5 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+ .debug_info      0x02a7d9       0x249f build/cpu/production/_ext/1360937237/RLYD4_MGR.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000       0x2b2c
@@ -1830,7 +1830,7 @@ __CONFIG1
  .debug_abbrev    0x002786        0x1c7 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
  .debug_abbrev    0x00294d        0x1df build/cpu/production/_ext/1360937237/RLYD4_MGR.o
 
-.debug_line       0x000000       0x46d2
+.debug_line       0x000000       0x46ca
  *(.debug_line)
  .debug_line      0x000000        0x185 build/cpu/production/_ext/1360937237/AES_DS.o
  .debug_line      0x000185        0x177 build/cpu/production/_ext/1360937237/AES_US.o
@@ -1838,24 +1838,24 @@ __CONFIG1
  .debug_line      0x0006e9        0x4cb build/cpu/production/_ext/1360937237/COMM_DS.o
  .debug_line      0x000bb4        0x382 build/cpu/production/_ext/1360937237/COMM_SM.o
  .debug_line      0x000f36        0x4c7 build/cpu/production/_ext/1360937237/COMM_US.o
- .debug_line      0x0013fd         0x88 build/cpu/production/_ext/1360937237/CRC16.o
- .debug_line      0x001485         0xa3 build/cpu/production/_ext/1360937237/CRC32.o
- .debug_line      0x001528        0x4a9 build/cpu/production/_ext/1360937237/DAC_MAIN.o
- .debug_line      0x0019d1         0xff build/cpu/production/_ext/1360937237/ERROR.o
- .debug_line      0x001ad0        0x160 build/cpu/production/_ext/1360937237/RELAYDRV.o
- .debug_line      0x001c30        0x3e0 build/cpu/production/_ext/1360937237/RELAYMGR.o
- .debug_line      0x002010        0x4c9 build/cpu/production/_ext/1360937237/RESET.o
- .debug_line      0x0024d9        0x3b7 build/cpu/production/_ext/1360937237/RESTORE.o
- .debug_line      0x002890        0x2b4 build/cpu/production/_ext/1360937237/RLYA_MGR.o
- .debug_line      0x002b44        0x2b9 build/cpu/production/_ext/1360937237/RLYB_MGR.o
- .debug_line      0x002dfd        0x397 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
- .debug_line      0x003194        0x3e6 build/cpu/production/_ext/1360937237/SYS_MON.o
- .debug_line      0x00357a         0x2a build/cpu/production/_ext/1360937237/AES.o
- .debug_line      0x0035a4        0x36a build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
- .debug_line      0x00390e        0x31d build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
- .debug_line      0x003c2b        0x31e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
- .debug_line      0x003f49        0x31e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
- .debug_line      0x004267        0x46b build/cpu/production/_ext/1360937237/RLYD4_MGR.o
+ .debug_line      0x0013fd         0x89 build/cpu/production/_ext/1360937237/CRC16.o
+ .debug_line      0x001486         0xa3 build/cpu/production/_ext/1360937237/CRC32.o
+ .debug_line      0x001529        0x4a9 build/cpu/production/_ext/1360937237/DAC_MAIN.o
+ .debug_line      0x0019d2         0xff build/cpu/production/_ext/1360937237/ERROR.o
+ .debug_line      0x001ad1        0x160 build/cpu/production/_ext/1360937237/RELAYDRV.o
+ .debug_line      0x001c31        0x3e0 build/cpu/production/_ext/1360937237/RELAYMGR.o
+ .debug_line      0x002011        0x4c9 build/cpu/production/_ext/1360937237/RESET.o
+ .debug_line      0x0024da        0x3ae build/cpu/production/_ext/1360937237/RESTORE.o
+ .debug_line      0x002888        0x2b4 build/cpu/production/_ext/1360937237/RLYA_MGR.o
+ .debug_line      0x002b3c        0x2b9 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+ .debug_line      0x002df5        0x397 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+ .debug_line      0x00318c        0x3e6 build/cpu/production/_ext/1360937237/SYS_MON.o
+ .debug_line      0x003572         0x2a build/cpu/production/_ext/1360937237/AES.o
+ .debug_line      0x00359c        0x36a build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+ .debug_line      0x003906        0x31d build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+ .debug_line      0x003c23        0x31e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+ .debug_line      0x003f41        0x31e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+ .debug_line      0x00425f        0x46b build/cpu/production/_ext/1360937237/RLYD4_MGR.o
 
 .debug_frame      0x000000       0x47b0
  *(.debug_frame)
@@ -1883,7 +1883,7 @@ __CONFIG1
  .debug_frame     0x003d24        0x3cc build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
  .debug_frame     0x0040f0        0x6c0 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
 
-.debug_str        0x000000       0x1f61
+.debug_str        0x000000       0x1f4f
  *(.debug_str)
  .debug_str       0x000000         0x68 build/cpu/production/_ext/1360937237/AES_DS.o
  .debug_str       0x000068         0x68 build/cpu/production/_ext/1360937237/AES_US.o
@@ -1898,16 +1898,16 @@ __CONFIG1
  .debug_str       0x001357         0x9b build/cpu/production/_ext/1360937237/RELAYDRV.o
  .debug_str       0x0013f2        0x267 build/cpu/production/_ext/1360937237/RELAYMGR.o
  .debug_str       0x001659        0x18f build/cpu/production/_ext/1360937237/RESET.o
- .debug_str       0x0017e8        0x18f build/cpu/production/_ext/1360937237/RESTORE.o
- .debug_str       0x001977         0x98 build/cpu/production/_ext/1360937237/RLYA_MGR.o
- .debug_str       0x001a0f        0x139 build/cpu/production/_ext/1360937237/RLYB_MGR.o
- .debug_str       0x001b48         0xa0 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
- .debug_str       0x001be8         0xf1 build/cpu/production/_ext/1360937237/SYS_MON.o
- .debug_str       0x001cd9         0x93 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
- .debug_str       0x001d6c         0x7f build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
- .debug_str       0x001deb         0x6b build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
- .debug_str       0x001e56         0x6b build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
- .debug_str       0x001ec1         0xa0 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
+ .debug_str       0x0017e8        0x17d build/cpu/production/_ext/1360937237/RESTORE.o
+ .debug_str       0x001965         0x98 build/cpu/production/_ext/1360937237/RLYA_MGR.o
+ .debug_str       0x0019fd        0x139 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+ .debug_str       0x001b36         0xa0 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+ .debug_str       0x001bd6         0xf1 build/cpu/production/_ext/1360937237/SYS_MON.o
+ .debug_str       0x001cc7         0x93 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+ .debug_str       0x001d5a         0x7f build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+ .debug_str       0x001dd9         0x6b build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+ .debug_str       0x001e44         0x6b build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+ .debug_str       0x001eaf         0xa0 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
 
 .debug_loc
  *(.debug_loc)
@@ -3474,7 +3474,7 @@ OUTPUT(dist/cpu/production/cpu.X.production.elf elf32-pic30)
 LOAD data_init
 
 .debug_pubtypes
-                  0x000228       0x223a
+                  0x000228       0x2200
  .debug_pubtypes
                   0x000228         0x94 build/cpu/production/_ext/1360937237/AES_DS.o
  .debug_pubtypes
@@ -3502,88 +3502,88 @@ LOAD data_init
  .debug_pubtypes
                   0x0016ea        0x193 build/cpu/production/_ext/1360937237/RESET.o
  .debug_pubtypes
-                  0x00187d        0x1ca build/cpu/production/_ext/1360937237/RESTORE.o
+                  0x00187d        0x190 build/cpu/production/_ext/1360937237/RESTORE.o
  .debug_pubtypes
-                  0x001a47        0x104 build/cpu/production/_ext/1360937237/RLYA_MGR.o
+                  0x001a0d        0x104 build/cpu/production/_ext/1360937237/RLYA_MGR.o
  .debug_pubtypes
-                  0x001b4b        0x109 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+                  0x001b11        0x109 build/cpu/production/_ext/1360937237/RLYB_MGR.o
  .debug_pubtypes
-                  0x001c54        0x105 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+                  0x001c1a        0x105 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
  .debug_pubtypes
-                  0x001d59        0x1f9 build/cpu/production/_ext/1360937237/SYS_MON.o
+                  0x001d1f        0x1f9 build/cpu/production/_ext/1360937237/SYS_MON.o
  .debug_pubtypes
-                  0x001f52         0x12 build/cpu/production/_ext/1360937237/AES.o
+                  0x001f18         0x12 build/cpu/production/_ext/1360937237/AES.o
  .debug_pubtypes
-                  0x001f64        0x151 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+                  0x001f2a        0x151 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
  .debug_pubtypes
-                  0x0020b5        0x10c build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+                  0x00207b        0x10c build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
  .debug_pubtypes
-                  0x0021c1         0xce build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+                  0x002187         0xce build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
  .debug_pubtypes
-                  0x00228f         0xce build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+                  0x002255         0xce build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
  .debug_pubtypes
-                  0x00235d        0x105 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
+                  0x002323        0x105 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
 
 __c30_signature
-                  0x002462         0xae
+                  0x002428         0xae
  __c30_signature
-                  0x002462          0x6 build/cpu/production/_ext/1360937237/AES_DS.o
+                  0x002428          0x6 build/cpu/production/_ext/1360937237/AES_DS.o
  __c30_signature
-                  0x002468          0x6 build/cpu/production/_ext/1360937237/AES_US.o
+                  0x00242e          0x6 build/cpu/production/_ext/1360937237/AES_US.o
  __c30_signature
-                  0x00246e          0x6 build/cpu/production/_ext/1360937237/AXLE_MON.o
+                  0x002434          0x6 build/cpu/production/_ext/1360937237/AXLE_MON.o
  __c30_signature
-                  0x002474          0x6 build/cpu/production/_ext/1360937237/COMM_DS.o
+                  0x00243a          0x6 build/cpu/production/_ext/1360937237/COMM_DS.o
  __c30_signature
-                  0x00247a          0x6 build/cpu/production/_ext/1360937237/COMM_SM.o
+                  0x002440          0x6 build/cpu/production/_ext/1360937237/COMM_SM.o
  __c30_signature
-                  0x002480          0x6 build/cpu/production/_ext/1360937237/COMM_US.o
+                  0x002446          0x6 build/cpu/production/_ext/1360937237/COMM_US.o
  __c30_signature
-                  0x002486          0x6 build/cpu/production/_ext/1360937237/CRC16.o
+                  0x00244c          0x6 build/cpu/production/_ext/1360937237/CRC16.o
  __c30_signature
-                  0x00248c          0x6 build/cpu/production/_ext/1360937237/CRC32.o
+                  0x002452          0x6 build/cpu/production/_ext/1360937237/CRC32.o
  __c30_signature
-                  0x002492          0x6 build/cpu/production/_ext/1360937237/DAC_MAIN.o
+                  0x002458          0x6 build/cpu/production/_ext/1360937237/DAC_MAIN.o
  __c30_signature
-                  0x002498          0x6 build/cpu/production/_ext/1360937237/ERROR.o
+                  0x00245e          0x6 build/cpu/production/_ext/1360937237/ERROR.o
  __c30_signature
-                  0x00249e          0x6 build/cpu/production/_ext/1360937237/RELAYDRV.o
+                  0x002464          0x6 build/cpu/production/_ext/1360937237/RELAYDRV.o
  __c30_signature
-                  0x0024a4          0x6 build/cpu/production/_ext/1360937237/RELAYMGR.o
+                  0x00246a          0x6 build/cpu/production/_ext/1360937237/RELAYMGR.o
  __c30_signature
-                  0x0024aa          0x6 build/cpu/production/_ext/1360937237/RESET.o
+                  0x002470          0x6 build/cpu/production/_ext/1360937237/RESET.o
  __c30_signature
-                  0x0024b0          0x6 build/cpu/production/_ext/1360937237/RESTORE.o
+                  0x002476          0x6 build/cpu/production/_ext/1360937237/RESTORE.o
  __c30_signature
-                  0x0024b6          0x6 build/cpu/production/_ext/1360937237/RLYA_MGR.o
+                  0x00247c          0x6 build/cpu/production/_ext/1360937237/RLYA_MGR.o
  __c30_signature
-                  0x0024bc          0x6 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+                  0x002482          0x6 build/cpu/production/_ext/1360937237/RLYB_MGR.o
  __c30_signature
-                  0x0024c2          0x6 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+                  0x002488          0x6 build/cpu/production/_ext/1360937237/RLYD3_MGR.o
  __c30_signature
-                  0x0024c8          0x6 build/cpu/production/_ext/1360937237/SYS_MON.o
+                  0x00248e          0x6 build/cpu/production/_ext/1360937237/SYS_MON.o
  __c30_signature
-                  0x0024ce          0x6 build/cpu/production/_ext/1360937237/AES.o
+                  0x002494          0x6 build/cpu/production/_ext/1360937237/AES.o
  __c30_signature
-                  0x0024d4          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+                  0x00249a          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
  __c30_signature
-                  0x0024da          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+                  0x0024a0          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
  __c30_signature
-                  0x0024e0          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+                  0x0024a6          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
  __c30_signature
-                  0x0024e6          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+                  0x0024ac          0x6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
  __c30_signature
-                  0x0024ec          0x6 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
+                  0x0024b2          0x6 build/cpu/production/_ext/1360937237/RLYD4_MGR.o
  __c30_signature
-                  0x0024f2          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(crt0_extended24.o)
+                  0x0024b8          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(crt0_extended24.o)
  __c30_signature
-                  0x0024f8          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(data_init_24.o)
+                  0x0024be          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(data_init_24.o)
  __c30_signature
-                  0x0024fe          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(memcpy_helperda.eo)
+                  0x0024c4          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libpic30-elf.a(memcpy_helperda.eo)
  __c30_signature
-                  0x002504          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libc-elf.a(rand.daeo)
+                  0x0024ca          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libc-elf.a(rand.daeo)
  __c30_signature
-                  0x00250a          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libm-elf.a(mulsi3.daeo)
+                  0x0024d0          0x6 e:/microchip/xc16/v1.31_r/bin/bin/../../lib\libm-elf.a(mulsi3.daeo)
 
 .nbss               0x0800         0x80
  .nbss              0x0800         0x16 build/cpu/production/_ext/1360937237/COMM_DS.o
@@ -3759,7 +3759,7 @@ __c30_signature
  .const             0x8926          0x8 build/cpu/production/_ext/1360937237/COMM_US.o
                     0x8926                  _uiCOM1_BalanceTicks_Table
 
-.text             0x00092e      0x112c4
+.text             0x00092e      0x112bc
  .text            0x00092e       0x16da build/cpu/production/_ext/1360937237/COMM_DS.o
                   0x00092e                  _SetupCOM2BaudRate
                   0x0009c2                  _Initialise_DS_CommSch
@@ -4056,378 +4056,378 @@ __c30_signature
                   0x0093d6                  _Declare_DAC_Defective
                   0x0094ea                  _Declare_DAC_Defective_US
                   0x00966a                  _Declare_DAC_Defective_DS
- .text            0x0097da        0xeec build/cpu/production/_ext/1360937237/RESTORE.o
+ .text            0x0097da        0xee4 build/cpu/production/_ext/1360937237/RESTORE.o
                   0x0097da                  _Check_DIP_Switches
                   0x009c42                  _Check_DAC_Boards_Runtime
                   0x009c90                  _Get_Board_Details
                   0x009d70                  _Check_Flash
-                  0x009e00                  _Check_RAM
-                  0x009e6c                  _Get_Calculated_Checksum
-                  0x009e7a                  _Get_Compared_Checksum
-                  0x00a018                  _Compare_DS_Checksum
-                  0x00a314                  _Compare_US_Checksum
-                  0x00a610                  _Clear_DS_Checksum_Info
-                  0x00a66c                  _Clear_US_Checksum_Info
- .text            0x00a6c6        0xdd0 build/cpu/production/_ext/1360937237/COMM_SM.o
-                  0x00a6c6                  _Initialise_SPI
-                  0x00a74e                  _re_init_spi
-                  0x00a768                  _de_init_spi
-                  0x00a774                  _process_spi_tx_fifo
-                  0x00a7ae                  _process_spi_rx_fifo
-                  0x00a7e2                  _Update_SPI_State
-                  0x00a868                  _Decrement_SPI_50msTmr
-                  0x00a87a                  _Clear_SPI_Receive_Buffer
-                  0x00a89a                  _Clear_SPI_Transmit_Buffer
-                  0x00a8ba                  _Build_Interprocess_Message
-                  0x00a8da                  _Build_Interprocess_Post_Reset_Message
-                  0x00ada4                  _Build_Interprocess_Reset_Info_Message
-                  0x00b020                  _Process_Interprocess_Message
-                  0x00b042                  _Process_Interprocess_Reset_Info_Message
-                  0x00b1ee                  _Process_Interprocess_Post_Reset_Message
-                  0x00b44a                  _Update_SM_DS_Remote_Axle_Counts
-                  0x00b460                  _Update_SM_US_Remote_Axle_Counts
-                  0x00b476                  _Get_DS_Remote_AxleCount
-                  0x00b486                  _Get_US_Remote_AxleCount
- .text            0x00b496        0xdc6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
-                  0x00b496                  _Initialise_AxleMon_1
-                  0x00b602                  _Validate_PD_Signals_1
-                  0x00b82c                  _Monitor_Supervisory_Pulse_1
-                  0x00b942                  _Monitor_Wheel_Pulse_1
-                  0x00b9a8                  _Determine_TrackState_1
-                  0x00baca                  _Analyse_Supervisory_Sequence_1
-                  0x00bb12                  _Detect_PD_Failures_1
-                  0x00bf82                  _Register_PD1212_Transition_1
-                  0x00bfb4                  _Register_PD2121_Transition_1
-                  0x00bfe6                  _Chk_for_AxleCount_Completion_1
-                  0x00c022                  _Decrement_TrackMon_50msTmr_1
-                  0x00c088                  _Clear_US_AxleCount_1
-                  0x00c0aa                  _Clear_DS_AxleCount_1
-                  0x00c0cc                  _Get_US_AxleCount_1
-                  0x00c0d4                  _Get_DS_AxleCount_1
-                  0x00c0dc                  _Get_US_AxleDirection_1
-                  0x00c0e6                  _Get_DS_AxleDirection_1
-                  0x00c0f0                  _Get_US_Fwd_AxleCount_1
-                  0x00c0f8                  _Get_US_Rev_AxleCount_1
-                  0x00c100                  _Get_DS_Fwd_AxleCount_1
-                  0x00c108                  _Get_DS_Rev_AxleCount_1
-                  0x00c110                  _Clear_DS_Local_Counts_1
-                  0x00c11e                  _Clear_US_Local_Counts_1
-                  0x00c12c                  _Clear_PD1_Supervisory_Count_1
-                  0x00c14a                  _Clear_PD2_Supervisory_Count_1
-                  0x00c162                  _Clear_PD12_Main_Pulse_Count_1
-                  0x00c174                  _Clear_Wheel_Type_1
-                  0x00c1a2                  _Start_US_Axle_Counting_1
-                  0x00c1ae                  _Start_DS_Axle_Counting_1
-                  0x00c1ba                  _Stop_US_Axle_Counting_1
-                  0x00c1c6                  _Stop_DS_Axle_Counting_1
-                  0x00c1d2                  _Get_DS_Local_Counts_Clearing_Status_1
-                  0x00c1ec                  _Get_US_Local_Counts_Clearing_Status_1
-                  0x00c206                  _Chk_For_Track_Occupancy_1
- .text            0x00c25c        0xcaa build/cpu/production/_ext/1360937237/RLYD3_MGR.o
-                  0x00c25c                  _Initialise_Relay_D3_Mgr
-                  0x00c26c                  _Start_Relay_D3_Mgr
-                  0x00c2ca                  _Update_Relay_D3_State
-                  0x00c540                  _Check_For_D3_Direct_Out_Count
-                  0x00c67e                  _Reset_Allowed_For_D3
-                  0x00c778                  _Update_D3_A1_OUT_Count
-                  0x00c784                  _Update_D3_A2_OUT_Count
-                  0x00c790                  _Update_D3_A1_IN_Count
-                  0x00c79c                  _Update_D3_A2_IN_Count
-                  0x00c7a8                  _Update_D3_B1_OUT_Count
-                  0x00c7b4                  _Update_D3_B2_OUT_Count
-                  0x00c7c0                  _Update_D3_B1_IN_Count
-                  0x00c7cc                  _Update_D3_B2_IN_Count
-                  0x00c7d8                  _Update_D3_C1_OUT_Count
-                  0x00c7e4                  _Update_D3_C2_OUT_Count
-                  0x00c7f0                  _Update_D3_C1_IN_Count
-                  0x00c7fc                  _Update_D3_C2_IN_Count
-                  0x00c808                  _Update_D3_Local_Count
-                  0x00c814                  _Update_D3_A1_IN_AxleCount
-                  0x00c820                  _Update_D3_A1_OUT_AxleCount
-                  0x00c82c                  _Update_D3_A2_IN_AxleCount
-                  0x00c838                  _Update_D3_A2_OUT_AxleCount
-                  0x00c844                  _Update_D3_B1_IN_AxleCount
-                  0x00c850                  _Update_D3_B1_OUT_AxleCount
-                  0x00c85c                  _Update_D3_B2_IN_AxleCount
-                  0x00c868                  _Update_D3_B2_OUT_AxleCount
-                  0x00c874                  _Update_D3_C1_IN_AxleCount
-                  0x00c880                  _Update_D3_C1_OUT_AxleCount
-                  0x00c88c                  _Update_D3_C2_IN_AxleCount
-                  0x00c898                  _Update_D3_C2_OUT_AxleCount
-                  0x00c8a4                  _Update_D3_A1_Direction
-                  0x00c8b0                  _Update_D3_A2_Direction
-                  0x00c8bc                  _Update_D3_B1_Direction
-                  0x00c8c8                  _Update_D3_B2_Direction
-                  0x00c8d4                  _Update_D3_C1_Direction
-                  0x00c8e0                  _Update_D3_C2_Direction
-                  0x00c8ec                  _Update_D3_Local_Direction
-                  0x00c8f8                  _Set_Relay_D3_DAC_Defective
-                  0x00c906                  _Process_D3_Local_AxleCount
-                  0x00c97c                  _Process_D3_Peer_AxleCount
-                  0x00c9f2                  _Process_D3_Remote_AxleCount
-                  0x00ca6c                  _Process_D3_Local_Direction
-                  0x00cbda                  _Process_D3_Peer_Direction
-                  0x00cd40                  _Process_D3_Remote_Direction
-                  0x00ceaa                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
-                  0x00cec2                  _Get_Relay_D3_ATC_State
-                  0x00cecc                  _Get_Relay_D3_State
-                  0x00ced6                  _Update_ATC_Remote1_Relay_D3_State
-                  0x00cee2                  _Update_ATC_Remote2_Relay_D3_State
-                  0x00ceee                  _Update_ATC_Remote3_Relay_D3_State
-                  0x00cefa                  _Update_ATC_Remote4_Relay_D3_State
- .text            0x00cf06        0xb56 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
-                  0x00cf06                  _Initialise_AxleMon_3
-                  0x00d028                  _Validate_PD_Signals_3
-                  0x00d0d0                  _Monitor_Supervisory_Pulse_3
-                  0x00d1b8                  _Monitor_Wheel_Pulse_3
-                  0x00d21e                  _Determine_TrackState_3
-                  0x00d340                  _Analyse_Supervisory_Sequence_3
-                  0x00d388                  _Detect_PD_Failures_3
-                  0x00d79c                  _Register_PD1212_Transition_3
-                  0x00d7ce                  _Register_PD2121_Transition_3
-                  0x00d800                  _Chk_for_AxleCount_Completion_3
-                  0x00d83c                  _Decrement_TrackMon_50msTmr_3
-                  0x00d8a2                  _Clear_US_AxleCount_3
-                  0x00d8c4                  _Clear_DS_AxleCount_3
-                  0x00d8e6                  _Get_US_AxleCount_3
-                  0x00d8ee                  _Get_DS_AxleCount_3
-                  0x00d8f6                  _Get_US_AxleDirection_3
-                  0x00d900                  _Get_DS_AxleDirection_3
-                  0x00d90a                  _Get_US_Fwd_AxleCount_3
-                  0x00d912                  _Get_US_Rev_AxleCount_3
-                  0x00d91a                  _Get_DS_Fwd_AxleCount_3
-                  0x00d922                  _Get_DS_Rev_AxleCount_3
-                  0x00d92a                  _Clear_DS_Local_Counts_3
-                  0x00d938                  _Clear_US_Local_Counts_3
-                  0x00d946                  _Clear_PD1_Supervisory_Count_3
-                  0x00d964                  _Clear_PD2_Supervisory_Count_3
-                  0x00d97c                  _Clear_PD12_Main_Pulse_Count_3
-                  0x00d98e                  _Clear_Wheel_Type_3
-                  0x00d9bc                  _Start_US_Axle_Counting_3
-                  0x00d9c8                  _Start_DS_Axle_Counting_3
-                  0x00d9d4                  _Stop_US_Axle_Counting_3
-                  0x00d9e0                  _Stop_DS_Axle_Counting_3
-                  0x00d9ec                  _Get_DS_Local_Counts_Clearing_Status_3
-                  0x00da06                  _Get_US_Local_Counts_Clearing_Status_3
-                  0x00da20                  _Chk_For_Track_Occupancy_3
- .text            0x00da5c        0xb56 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
-                  0x00da5c                  _Initialise_AxleMon_4
-                  0x00db7e                  _Validate_PD_Signals_4
-                  0x00dc26                  _Monitor_Supervisory_Pulse_4
-                  0x00dd0e                  _Monitor_Wheel_Pulse_4
-                  0x00dd74                  _Determine_TrackState_4
-                  0x00de96                  _Analyse_Supervisory_Sequence_4
-                  0x00dede                  _Detect_PD_Failures_4
-                  0x00e2f2                  _Register_PD1212_Transition_4
-                  0x00e324                  _Register_PD2121_Transition_4
-                  0x00e356                  _Chk_for_AxleCount_Completion_4
-                  0x00e392                  _Decrement_TrackMon_50msTmr_4
-                  0x00e3f8                  _Clear_US_AxleCount_4
-                  0x00e41a                  _Clear_DS_AxleCount_4
-                  0x00e43c                  _Get_US_AxleCount_4
-                  0x00e444                  _Get_DS_AxleCount_4
-                  0x00e44c                  _Get_US_AxleDirection_4
-                  0x00e456                  _Get_DS_AxleDirection_4
-                  0x00e460                  _Get_US_Fwd_AxleCount_4
-                  0x00e468                  _Get_US_Rev_AxleCount_4
-                  0x00e470                  _Get_DS_Fwd_AxleCount_4
-                  0x00e478                  _Get_DS_Rev_AxleCount_4
-                  0x00e480                  _Clear_DS_Local_Counts_4
-                  0x00e48e                  _Clear_US_Local_Counts_4
-                  0x00e49c                  _Clear_PD1_Supervisory_Count_4
-                  0x00e4ba                  _Clear_PD2_Supervisory_Count_4
-                  0x00e4d2                  _Clear_PD12_Main_Pulse_Count_4
-                  0x00e4e4                  _Clear_Wheel_Type_4
-                  0x00e512                  _Start_US_Axle_Counting_4
-                  0x00e51e                  _Start_DS_Axle_Counting_4
-                  0x00e52a                  _Stop_US_Axle_Counting_4
-                  0x00e536                  _Stop_DS_Axle_Counting_4
-                  0x00e542                  _Get_DS_Local_Counts_Clearing_Status_4
-                  0x00e55c                  _Get_US_Local_Counts_Clearing_Status_4
-                  0x00e576                  _Chk_For_Track_Occupancy_4
- .text            0x00e5b2        0xb4e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
-                  0x00e5b2                  _Initialise_AxleMon_2
-                  0x00e6d0                  _Validate_PD_Signals_2
-                  0x00e778                  _Monitor_Supervisory_Pulse_2
-                  0x00e860                  _Monitor_Wheel_Pulse_2
-                  0x00e8c6                  _Determine_TrackState_2
-                  0x00e9e8                  _Analyse_Supervisory_Sequence_2
-                  0x00ea30                  _Detect_PD_Failures_2
-                  0x00ee40                  _Register_PD1212_Transition_2
-                  0x00ee72                  _Register_PD2121_Transition_2
-                  0x00eea4                  _Chk_for_AxleCount_Completion_2
-                  0x00eee0                  _Decrement_TrackMon_50msTmr_2
-                  0x00ef46                  _Clear_US_AxleCount_2
-                  0x00ef68                  _Clear_DS_AxleCount_2
-                  0x00ef8a                  _Get_US_AxleCount_2
-                  0x00ef92                  _Get_DS_AxleCount_2
-                  0x00ef9a                  _Get_US_AxleDirection_2
-                  0x00efa4                  _Get_DS_AxleDirection_2
-                  0x00efae                  _Get_US_Fwd_AxleCount_2
-                  0x00efb6                  _Get_US_Rev_AxleCount_2
-                  0x00efbe                  _Get_DS_Fwd_AxleCount_2
-                  0x00efc6                  _Get_DS_Rev_AxleCount_2
-                  0x00efce                  _Clear_DS_Local_Counts_2
-                  0x00efdc                  _Clear_US_Local_Counts_2
-                  0x00efea                  _Clear_PD1_Supervisory_Count_2
-                  0x00f008                  _Clear_PD2_Supervisory_Count_2
-                  0x00f020                  _Clear_PD12_Main_Pulse_Count_2
-                  0x00f032                  _Clear_Wheel_Type_2
-                  0x00f060                  _Start_US_Axle_Counting_2
-                  0x00f06c                  _Start_DS_Axle_Counting_2
-                  0x00f078                  _Stop_US_Axle_Counting_2
-                  0x00f084                  _Stop_DS_Axle_Counting_2
-                  0x00f090                  _Get_DS_Local_Counts_Clearing_Status_2
-                  0x00f0aa                  _Get_US_Local_Counts_Clearing_Status_2
-                  0x00f0c4                  _Chk_For_Track_Occupancy_2
- .text            0x00f100        0x988 build/cpu/production/_ext/1360937237/AES_DS.o
-                  0x00f100                  _Initialise_DS_Crypto_State
-                  0x00f10e                  _Update_DS_Data_Encode
-                  0x00f15e                  _Load_DS_Encrypt_Key
-                  0x00f180                  _DS_Encode_Key_Addition
-                  0x00f1b8                  _DS_Encode_Data
-                  0x00f380                  _DS_EncodeShiftRow
-                  0x00f3e6                  _DS_EncKeySchedule
-                  0x00f508                  _Update_DS_Data_Decode
-                  0x00f558                  _Load_DS_Decrypt_Key
-                  0x00f57a                  _DS_Decode_Key_Addition
-                  0x00f5b8                  _DS_Decode_Data
-                  0x00f8a2                  _DS_DecodeShiftRow
-                  0x00f908                  _DS_DecKeySchedule
-                  0x00fa2e                  _Decrement_DS_Crypto_msTmr
-                  0x00fa4c                  _Start_DS_Data_Encryption
-                  0x00fa56                  _Set_DS_Encryption_Idle
-                  0x00fa5e                  _Get_DS_Encryption_State
-                  0x00fa6a                  _Start_DS_Data_Decryption
-                  0x00fa74                  _Set_DS_Decryption_Idle
-                  0x00fa7c                  _Get_DS_Decryption_State
- .text            0x00fa88        0x978 build/cpu/production/_ext/1360937237/AES_US.o
-                  0x00fa88                  _Initialise_US_Crypto_State
-                  0x00fa96                  _Update_US_Data_Encode
-                  0x00fade                  _Load_Encrypt_Key
-                  0x00fb00                  _US_Encode_Key_Addition
-                  0x00fb38                  _US_Encode_Data
-                  0x00fd00                  _US_EncodeShiftRow
-                  0x00fd66                  _US_EncKeySchedule
-                  0x00fe88                  _Update_US_Data_Decode
-                  0x00fed0                  _Load_Decrypt_Key
-                  0x00fef2                  _US_Decode_Key_Addition
-                  0x00ff30                  _US_Decode_Data
-                  0x01021a                  _US_DecodeShiftRow
-                  0x010280                  _US_DecKeySchedule
-                  0x0103a6                  _Decrement_US_Crypto_msTmr
-                  0x0103c4                  _Start_US_Data_Encryption
-                  0x0103ce                  _Set_US_Encryption_Idle
-                  0x0103d6                  _Get_US_Encryption_State
-                  0x0103e2                  _Start_US_Data_Decryption
-                  0x0103ec                  _Set_US_Decryption_Idle
-                  0x0103f4                  _Get_US_Decryption_State
- .text            0x010400        0x978 build/cpu/production/_ext/1360937237/RLYB_MGR.o
-                  0x010400                  _Initialise_Relay_B_Mgr
-                  0x01040a                  _Start_Relay_B_Mgr
-                  0x010458                  _Set_Relay_B_Reset_State
-                  0x010480                  _Update_Relay_B_State
-                  0x0107cc                  _Update_3S_Relay_B_State
-                  0x010b18                  _Reset_Allowed_For_DS
-                  0x010b82                  _Reset_Allowed_For_LCWS
-                  0x010ba6                  _Reset_Allowed_For_DE
-                  0x010bca                  _Process_Relay_B_Local_Direction
-                  0x010bea                  _Process_Relay_B_Local_AxleCount
-                  0x010c0e                  _Process_Peer_Relay_B_AxleCount
-                  0x010c32                  _Process_Peer_Relay_B_Direction
-                  0x010c4c                  _Update_B_DS1_OUT_Count
-                  0x010c58                  _Update_B_DS2_OUT_Count
-                  0x010c64                  _Update_B_LU1_Fwd_Count
-                  0x010c70                  _Update_B_LU2_Fwd_Count
-                  0x010c7c                  _Update_B_LU1_Rev_Count
-                  0x010c88                  _Update_B_LU2_Rev_Count
-                  0x010c94                  _Update_B_Local_AxleCount
-                  0x010ca0                  _Update_B_DS1_IN_Count
-                  0x010cac                  _Update_B_DS2_IN_Count
-                  0x010cb8                  _Update_B_DS1_AxleCount
-                  0x010cc4                  _Update_B_DS2_AxleCount
-                  0x010cd0                  _Update_B_DS1_Direction
-                  0x010cdc                  _Update_B_DS2_Direction
-                  0x010ce8                  _Update_B_LU1_Direction
-                  0x010cf4                  _Update_B_LU2_Direction
-                  0x010d00                  _Update_ATC_Remote1_Relay_B_State
-                  0x010d0c                  _Update_ATC_Remote2_Relay_B_State
-                  0x010d18                  _Set_Relay_B_DAC_Defective
-                  0x010d26                  _Get_Relay_B_State
-                  0x010d30                  _Get_Relay_B_ATC_State
-                  0x010d3a                  _Clear_ATC_Local_Relay_B_State
-                  0x010d52                  _Clear_Relay_B_Counts
- .text            0x010d78        0x95c build/cpu/production/_ext/1360937237/RLYA_MGR.o
-                  0x010d78                  _Initialise_Relay_A_Mgr
-                  0x010d82                  _Start_Relay_A_Mgr
-                  0x010dd6                  _Set_Relay_A_Reset_State
-                  0x010dfe                  _Update_Relay_A_State
-                  0x01114a                  _Update_3S_Relay_A_State
-                  0x011496                  _Reset_Allowed_For_US
-                  0x011500                  _Process_Relay_A_Local_Direction
-                  0x011520                  _Process_Relay_A_Local_AxleCount
-                  0x011544                  _Process_Peer_Relay_A_Direction
-                  0x01155e                  _Process_Peer_Relay_A_AxleCount
-                  0x011582                  _Update_Next_Block_State
-                  0x0115a2                  _Update_A_US1_OUT_Count
-                  0x0115ae                  _Update_A_US2_OUT_Count
-                  0x0115ba                  _Update_A_US1_IN_Count
-                  0x0115c6                  _Update_A_US2_IN_Count
-                  0x0115d2                  _Update_A_LU1_Fwd_Count
-                  0x0115de                  _Update_A_LU2_Fwd_Count
-                  0x0115ea                  _Update_A_LU1_Rev_Count
-                  0x0115f6                  _Update_A_LU2_Rev_Count
-                  0x011602                  _Update_A_Local_AxleCount
-                  0x01160e                  _Update_A_US1_AxleCount
-                  0x01161a                  _Update_A_US2_AxleCount
-                  0x011626                  _Update_A_US1_Direction
-                  0x011632                  _Update_A_US2_Direction
-                  0x01163e                  _Update_A_LU1_Direction
-                  0x01164a                  _Update_A_LU2_Direction
-                  0x011656                  _Update_ATC_Remote1_Relay_A_State
-                  0x011662                  _Update_ATC_Remote2_Relay_A_State
-                  0x01166e                  _Set_Relay_A_DAC_Defective
-                  0x01167c                  _Get_Relay_A_State
-                  0x011686                  _Get_Relay_A_ATC_State
-                  0x011690                  _Clear_ATC_Local_Relay_A_State
-                  0x0116a8                  _Clear_Relay_A_Counts
- .text            0x0116d4        0x2d2 build/cpu/production/_ext/1360937237/ERROR.o
-                  0x0116d4                  _Initialise_Error
-                  0x01170a                  _Update_Display_Error
-                  0x0117ea                  _Set_Error_Status_Byte
-                  0x01180e                  _Set_Error_Status_Bit
-                  0x011854                  _Clear_Error_Display
-                  0x011894                  _Decrement_Err_display_50msTmr
-                  0x0118ac                  _Decrement_LCWS_Health_Relay_Timer
-                  0x0118be                  _Update_Error_Code
-                  0x01195e                  _Get_DS_Error_Code
-                  0x011978                  _Get_US_Error_Code
-                  0x011992                  _Clear_DS_Error_Code
-                  0x01199c                  _Clear_US_Error_Code
- .text            0x0119a6        0x24c build/cpu/production/_ext/1360937237/RELAYDRV.o
-                  0x0119a6                  _Get_Relay_Energising_Key
-                  0x0119ae                  _Energise_Preparatory_Relay_A
-                  0x0119fa                  _Energise_Preparatory_Relay_B
-                  0x011a36                  _Energise_Vital_Relay_A
-                  0x011a58                  _Energise_Vital_Relay_B
-                  0x011a7a                  _DeEnergise_Preparatory_Relay_A
-                  0x011ac2                  _DeEnergise_Preparatory_Relay_B
-                  0x011af8                  _DeEnergise_Vital_Relay_A
-                  0x011b0c                  _DeEnergise_Vital_Relay_B
-                  0x011b20                  _Energise_Relay_B
-                  0x011b52                  _DeEnergise_Relay_B
-                  0x011b8a                  _Energise_Relay_A
-                  0x011bba                  _DeEnergise_Relay_A
+                  0x009df8                  _Check_RAM
+                  0x009e64                  _Get_Calculated_Checksum
+                  0x009e72                  _Get_Compared_Checksum
+                  0x00a010                  _Compare_DS_Checksum
+                  0x00a30c                  _Compare_US_Checksum
+                  0x00a608                  _Clear_DS_Checksum_Info
+                  0x00a664                  _Clear_US_Checksum_Info
+ .text            0x00a6be        0xdd0 build/cpu/production/_ext/1360937237/COMM_SM.o
+                  0x00a6be                  _Initialise_SPI
+                  0x00a746                  _re_init_spi
+                  0x00a760                  _de_init_spi
+                  0x00a76c                  _process_spi_tx_fifo
+                  0x00a7a6                  _process_spi_rx_fifo
+                  0x00a7da                  _Update_SPI_State
+                  0x00a860                  _Decrement_SPI_50msTmr
+                  0x00a872                  _Clear_SPI_Receive_Buffer
+                  0x00a892                  _Clear_SPI_Transmit_Buffer
+                  0x00a8b2                  _Build_Interprocess_Message
+                  0x00a8d2                  _Build_Interprocess_Post_Reset_Message
+                  0x00ad9c                  _Build_Interprocess_Reset_Info_Message
+                  0x00b018                  _Process_Interprocess_Message
+                  0x00b03a                  _Process_Interprocess_Reset_Info_Message
+                  0x00b1e6                  _Process_Interprocess_Post_Reset_Message
+                  0x00b442                  _Update_SM_DS_Remote_Axle_Counts
+                  0x00b458                  _Update_SM_US_Remote_Axle_Counts
+                  0x00b46e                  _Get_DS_Remote_AxleCount
+                  0x00b47e                  _Get_US_Remote_AxleCount
+ .text            0x00b48e        0xdc6 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_1.o
+                  0x00b48e                  _Initialise_AxleMon_1
+                  0x00b5fa                  _Validate_PD_Signals_1
+                  0x00b824                  _Monitor_Supervisory_Pulse_1
+                  0x00b93a                  _Monitor_Wheel_Pulse_1
+                  0x00b9a0                  _Determine_TrackState_1
+                  0x00bac2                  _Analyse_Supervisory_Sequence_1
+                  0x00bb0a                  _Detect_PD_Failures_1
+                  0x00bf7a                  _Register_PD1212_Transition_1
+                  0x00bfac                  _Register_PD2121_Transition_1
+                  0x00bfde                  _Chk_for_AxleCount_Completion_1
+                  0x00c01a                  _Decrement_TrackMon_50msTmr_1
+                  0x00c080                  _Clear_US_AxleCount_1
+                  0x00c0a2                  _Clear_DS_AxleCount_1
+                  0x00c0c4                  _Get_US_AxleCount_1
+                  0x00c0cc                  _Get_DS_AxleCount_1
+                  0x00c0d4                  _Get_US_AxleDirection_1
+                  0x00c0de                  _Get_DS_AxleDirection_1
+                  0x00c0e8                  _Get_US_Fwd_AxleCount_1
+                  0x00c0f0                  _Get_US_Rev_AxleCount_1
+                  0x00c0f8                  _Get_DS_Fwd_AxleCount_1
+                  0x00c100                  _Get_DS_Rev_AxleCount_1
+                  0x00c108                  _Clear_DS_Local_Counts_1
+                  0x00c116                  _Clear_US_Local_Counts_1
+                  0x00c124                  _Clear_PD1_Supervisory_Count_1
+                  0x00c142                  _Clear_PD2_Supervisory_Count_1
+                  0x00c15a                  _Clear_PD12_Main_Pulse_Count_1
+                  0x00c16c                  _Clear_Wheel_Type_1
+                  0x00c19a                  _Start_US_Axle_Counting_1
+                  0x00c1a6                  _Start_DS_Axle_Counting_1
+                  0x00c1b2                  _Stop_US_Axle_Counting_1
+                  0x00c1be                  _Stop_DS_Axle_Counting_1
+                  0x00c1ca                  _Get_DS_Local_Counts_Clearing_Status_1
+                  0x00c1e4                  _Get_US_Local_Counts_Clearing_Status_1
+                  0x00c1fe                  _Chk_For_Track_Occupancy_1
+ .text            0x00c254        0xcaa build/cpu/production/_ext/1360937237/RLYD3_MGR.o
+                  0x00c254                  _Initialise_Relay_D3_Mgr
+                  0x00c264                  _Start_Relay_D3_Mgr
+                  0x00c2c2                  _Update_Relay_D3_State
+                  0x00c538                  _Check_For_D3_Direct_Out_Count
+                  0x00c676                  _Reset_Allowed_For_D3
+                  0x00c770                  _Update_D3_A1_OUT_Count
+                  0x00c77c                  _Update_D3_A2_OUT_Count
+                  0x00c788                  _Update_D3_A1_IN_Count
+                  0x00c794                  _Update_D3_A2_IN_Count
+                  0x00c7a0                  _Update_D3_B1_OUT_Count
+                  0x00c7ac                  _Update_D3_B2_OUT_Count
+                  0x00c7b8                  _Update_D3_B1_IN_Count
+                  0x00c7c4                  _Update_D3_B2_IN_Count
+                  0x00c7d0                  _Update_D3_C1_OUT_Count
+                  0x00c7dc                  _Update_D3_C2_OUT_Count
+                  0x00c7e8                  _Update_D3_C1_IN_Count
+                  0x00c7f4                  _Update_D3_C2_IN_Count
+                  0x00c800                  _Update_D3_Local_Count
+                  0x00c80c                  _Update_D3_A1_IN_AxleCount
+                  0x00c818                  _Update_D3_A1_OUT_AxleCount
+                  0x00c824                  _Update_D3_A2_IN_AxleCount
+                  0x00c830                  _Update_D3_A2_OUT_AxleCount
+                  0x00c83c                  _Update_D3_B1_IN_AxleCount
+                  0x00c848                  _Update_D3_B1_OUT_AxleCount
+                  0x00c854                  _Update_D3_B2_IN_AxleCount
+                  0x00c860                  _Update_D3_B2_OUT_AxleCount
+                  0x00c86c                  _Update_D3_C1_IN_AxleCount
+                  0x00c878                  _Update_D3_C1_OUT_AxleCount
+                  0x00c884                  _Update_D3_C2_IN_AxleCount
+                  0x00c890                  _Update_D3_C2_OUT_AxleCount
+                  0x00c89c                  _Update_D3_A1_Direction
+                  0x00c8a8                  _Update_D3_A2_Direction
+                  0x00c8b4                  _Update_D3_B1_Direction
+                  0x00c8c0                  _Update_D3_B2_Direction
+                  0x00c8cc                  _Update_D3_C1_Direction
+                  0x00c8d8                  _Update_D3_C2_Direction
+                  0x00c8e4                  _Update_D3_Local_Direction
+                  0x00c8f0                  _Set_Relay_D3_DAC_Defective
+                  0x00c8fe                  _Process_D3_Local_AxleCount
+                  0x00c974                  _Process_D3_Peer_AxleCount
+                  0x00c9ea                  _Process_D3_Remote_AxleCount
+                  0x00ca64                  _Process_D3_Local_Direction
+                  0x00cbd2                  _Process_D3_Peer_Direction
+                  0x00cd38                  _Process_D3_Remote_Direction
+                  0x00cea2                  _Decrement_D3_Track_Clearing_Timeout_50msTmr
+                  0x00ceba                  _Get_Relay_D3_ATC_State
+                  0x00cec4                  _Get_Relay_D3_State
+                  0x00cece                  _Update_ATC_Remote1_Relay_D3_State
+                  0x00ceda                  _Update_ATC_Remote2_Relay_D3_State
+                  0x00cee6                  _Update_ATC_Remote3_Relay_D3_State
+                  0x00cef2                  _Update_ATC_Remote4_Relay_D3_State
+ .text            0x00cefe        0xb56 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_3.o
+                  0x00cefe                  _Initialise_AxleMon_3
+                  0x00d020                  _Validate_PD_Signals_3
+                  0x00d0c8                  _Monitor_Supervisory_Pulse_3
+                  0x00d1b0                  _Monitor_Wheel_Pulse_3
+                  0x00d216                  _Determine_TrackState_3
+                  0x00d338                  _Analyse_Supervisory_Sequence_3
+                  0x00d380                  _Detect_PD_Failures_3
+                  0x00d794                  _Register_PD1212_Transition_3
+                  0x00d7c6                  _Register_PD2121_Transition_3
+                  0x00d7f8                  _Chk_for_AxleCount_Completion_3
+                  0x00d834                  _Decrement_TrackMon_50msTmr_3
+                  0x00d89a                  _Clear_US_AxleCount_3
+                  0x00d8bc                  _Clear_DS_AxleCount_3
+                  0x00d8de                  _Get_US_AxleCount_3
+                  0x00d8e6                  _Get_DS_AxleCount_3
+                  0x00d8ee                  _Get_US_AxleDirection_3
+                  0x00d8f8                  _Get_DS_AxleDirection_3
+                  0x00d902                  _Get_US_Fwd_AxleCount_3
+                  0x00d90a                  _Get_US_Rev_AxleCount_3
+                  0x00d912                  _Get_DS_Fwd_AxleCount_3
+                  0x00d91a                  _Get_DS_Rev_AxleCount_3
+                  0x00d922                  _Clear_DS_Local_Counts_3
+                  0x00d930                  _Clear_US_Local_Counts_3
+                  0x00d93e                  _Clear_PD1_Supervisory_Count_3
+                  0x00d95c                  _Clear_PD2_Supervisory_Count_3
+                  0x00d974                  _Clear_PD12_Main_Pulse_Count_3
+                  0x00d986                  _Clear_Wheel_Type_3
+                  0x00d9b4                  _Start_US_Axle_Counting_3
+                  0x00d9c0                  _Start_DS_Axle_Counting_3
+                  0x00d9cc                  _Stop_US_Axle_Counting_3
+                  0x00d9d8                  _Stop_DS_Axle_Counting_3
+                  0x00d9e4                  _Get_DS_Local_Counts_Clearing_Status_3
+                  0x00d9fe                  _Get_US_Local_Counts_Clearing_Status_3
+                  0x00da18                  _Chk_For_Track_Occupancy_3
+ .text            0x00da54        0xb56 build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_4.o
+                  0x00da54                  _Initialise_AxleMon_4
+                  0x00db76                  _Validate_PD_Signals_4
+                  0x00dc1e                  _Monitor_Supervisory_Pulse_4
+                  0x00dd06                  _Monitor_Wheel_Pulse_4
+                  0x00dd6c                  _Determine_TrackState_4
+                  0x00de8e                  _Analyse_Supervisory_Sequence_4
+                  0x00ded6                  _Detect_PD_Failures_4
+                  0x00e2ea                  _Register_PD1212_Transition_4
+                  0x00e31c                  _Register_PD2121_Transition_4
+                  0x00e34e                  _Chk_for_AxleCount_Completion_4
+                  0x00e38a                  _Decrement_TrackMon_50msTmr_4
+                  0x00e3f0                  _Clear_US_AxleCount_4
+                  0x00e412                  _Clear_DS_AxleCount_4
+                  0x00e434                  _Get_US_AxleCount_4
+                  0x00e43c                  _Get_DS_AxleCount_4
+                  0x00e444                  _Get_US_AxleDirection_4
+                  0x00e44e                  _Get_DS_AxleDirection_4
+                  0x00e458                  _Get_US_Fwd_AxleCount_4
+                  0x00e460                  _Get_US_Rev_AxleCount_4
+                  0x00e468                  _Get_DS_Fwd_AxleCount_4
+                  0x00e470                  _Get_DS_Rev_AxleCount_4
+                  0x00e478                  _Clear_DS_Local_Counts_4
+                  0x00e486                  _Clear_US_Local_Counts_4
+                  0x00e494                  _Clear_PD1_Supervisory_Count_4
+                  0x00e4b2                  _Clear_PD2_Supervisory_Count_4
+                  0x00e4ca                  _Clear_PD12_Main_Pulse_Count_4
+                  0x00e4dc                  _Clear_Wheel_Type_4
+                  0x00e50a                  _Start_US_Axle_Counting_4
+                  0x00e516                  _Start_DS_Axle_Counting_4
+                  0x00e522                  _Stop_US_Axle_Counting_4
+                  0x00e52e                  _Stop_DS_Axle_Counting_4
+                  0x00e53a                  _Get_DS_Local_Counts_Clearing_Status_4
+                  0x00e554                  _Get_US_Local_Counts_Clearing_Status_4
+                  0x00e56e                  _Chk_For_Track_Occupancy_4
+ .text            0x00e5aa        0xb4e build/cpu/production/_ext/1360937237/AXLE_MON_LCWS_2.o
+                  0x00e5aa                  _Initialise_AxleMon_2
+                  0x00e6c8                  _Validate_PD_Signals_2
+                  0x00e770                  _Monitor_Supervisory_Pulse_2
+                  0x00e858                  _Monitor_Wheel_Pulse_2
+                  0x00e8be                  _Determine_TrackState_2
+                  0x00e9e0                  _Analyse_Supervisory_Sequence_2
+                  0x00ea28                  _Detect_PD_Failures_2
+                  0x00ee38                  _Register_PD1212_Transition_2
+                  0x00ee6a                  _Register_PD2121_Transition_2
+                  0x00ee9c                  _Chk_for_AxleCount_Completion_2
+                  0x00eed8                  _Decrement_TrackMon_50msTmr_2
+                  0x00ef3e                  _Clear_US_AxleCount_2
+                  0x00ef60                  _Clear_DS_AxleCount_2
+                  0x00ef82                  _Get_US_AxleCount_2
+                  0x00ef8a                  _Get_DS_AxleCount_2
+                  0x00ef92                  _Get_US_AxleDirection_2
+                  0x00ef9c                  _Get_DS_AxleDirection_2
+                  0x00efa6                  _Get_US_Fwd_AxleCount_2
+                  0x00efae                  _Get_US_Rev_AxleCount_2
+                  0x00efb6                  _Get_DS_Fwd_AxleCount_2
+                  0x00efbe                  _Get_DS_Rev_AxleCount_2
+                  0x00efc6                  _Clear_DS_Local_Counts_2
+                  0x00efd4                  _Clear_US_Local_Counts_2
+                  0x00efe2                  _Clear_PD1_Supervisory_Count_2
+                  0x00f000                  _Clear_PD2_Supervisory_Count_2
+                  0x00f018                  _Clear_PD12_Main_Pulse_Count_2
+                  0x00f02a                  _Clear_Wheel_Type_2
+                  0x00f058                  _Start_US_Axle_Counting_2
+                  0x00f064                  _Start_DS_Axle_Counting_2
+                  0x00f070                  _Stop_US_Axle_Counting_2
+                  0x00f07c                  _Stop_DS_Axle_Counting_2
+                  0x00f088                  _Get_DS_Local_Counts_Clearing_Status_2
+                  0x00f0a2                  _Get_US_Local_Counts_Clearing_Status_2
+                  0x00f0bc                  _Chk_For_Track_Occupancy_2
+ .text            0x00f0f8        0x988 build/cpu/production/_ext/1360937237/AES_DS.o
+                  0x00f0f8                  _Initialise_DS_Crypto_State
+                  0x00f106                  _Update_DS_Data_Encode
+                  0x00f156                  _Load_DS_Encrypt_Key
+                  0x00f178                  _DS_Encode_Key_Addition
+                  0x00f1b0                  _DS_Encode_Data
+                  0x00f378                  _DS_EncodeShiftRow
+                  0x00f3de                  _DS_EncKeySchedule
+                  0x00f500                  _Update_DS_Data_Decode
+                  0x00f550                  _Load_DS_Decrypt_Key
+                  0x00f572                  _DS_Decode_Key_Addition
+                  0x00f5b0                  _DS_Decode_Data
+                  0x00f89a                  _DS_DecodeShiftRow
+                  0x00f900                  _DS_DecKeySchedule
+                  0x00fa26                  _Decrement_DS_Crypto_msTmr
+                  0x00fa44                  _Start_DS_Data_Encryption
+                  0x00fa4e                  _Set_DS_Encryption_Idle
+                  0x00fa56                  _Get_DS_Encryption_State
+                  0x00fa62                  _Start_DS_Data_Decryption
+                  0x00fa6c                  _Set_DS_Decryption_Idle
+                  0x00fa74                  _Get_DS_Decryption_State
+ .text            0x00fa80        0x978 build/cpu/production/_ext/1360937237/AES_US.o
+                  0x00fa80                  _Initialise_US_Crypto_State
+                  0x00fa8e                  _Update_US_Data_Encode
+                  0x00fad6                  _Load_Encrypt_Key
+                  0x00faf8                  _US_Encode_Key_Addition
+                  0x00fb30                  _US_Encode_Data
+                  0x00fcf8                  _US_EncodeShiftRow
+                  0x00fd5e                  _US_EncKeySchedule
+                  0x00fe80                  _Update_US_Data_Decode
+                  0x00fec8                  _Load_Decrypt_Key
+                  0x00feea                  _US_Decode_Key_Addition
+                  0x00ff28                  _US_Decode_Data
+                  0x010212                  _US_DecodeShiftRow
+                  0x010278                  _US_DecKeySchedule
+                  0x01039e                  _Decrement_US_Crypto_msTmr
+                  0x0103bc                  _Start_US_Data_Encryption
+                  0x0103c6                  _Set_US_Encryption_Idle
+                  0x0103ce                  _Get_US_Encryption_State
+                  0x0103da                  _Start_US_Data_Decryption
+                  0x0103e4                  _Set_US_Decryption_Idle
+                  0x0103ec                  _Get_US_Decryption_State
+ .text            0x0103f8        0x978 build/cpu/production/_ext/1360937237/RLYB_MGR.o
+                  0x0103f8                  _Initialise_Relay_B_Mgr
+                  0x010402                  _Start_Relay_B_Mgr
+                  0x010450                  _Set_Relay_B_Reset_State
+                  0x010478                  _Update_Relay_B_State
+                  0x0107c4                  _Update_3S_Relay_B_State
+                  0x010b10                  _Reset_Allowed_For_DS
+                  0x010b7a                  _Reset_Allowed_For_LCWS
+                  0x010b9e                  _Reset_Allowed_For_DE
+                  0x010bc2                  _Process_Relay_B_Local_Direction
+                  0x010be2                  _Process_Relay_B_Local_AxleCount
+                  0x010c06                  _Process_Peer_Relay_B_AxleCount
+                  0x010c2a                  _Process_Peer_Relay_B_Direction
+                  0x010c44                  _Update_B_DS1_OUT_Count
+                  0x010c50                  _Update_B_DS2_OUT_Count
+                  0x010c5c                  _Update_B_LU1_Fwd_Count
+                  0x010c68                  _Update_B_LU2_Fwd_Count
+                  0x010c74                  _Update_B_LU1_Rev_Count
+                  0x010c80                  _Update_B_LU2_Rev_Count
+                  0x010c8c                  _Update_B_Local_AxleCount
+                  0x010c98                  _Update_B_DS1_IN_Count
+                  0x010ca4                  _Update_B_DS2_IN_Count
+                  0x010cb0                  _Update_B_DS1_AxleCount
+                  0x010cbc                  _Update_B_DS2_AxleCount
+                  0x010cc8                  _Update_B_DS1_Direction
+                  0x010cd4                  _Update_B_DS2_Direction
+                  0x010ce0                  _Update_B_LU1_Direction
+                  0x010cec                  _Update_B_LU2_Direction
+                  0x010cf8                  _Update_ATC_Remote1_Relay_B_State
+                  0x010d04                  _Update_ATC_Remote2_Relay_B_State
+                  0x010d10                  _Set_Relay_B_DAC_Defective
+                  0x010d1e                  _Get_Relay_B_State
+                  0x010d28                  _Get_Relay_B_ATC_State
+                  0x010d32                  _Clear_ATC_Local_Relay_B_State
+                  0x010d4a                  _Clear_Relay_B_Counts
+ .text            0x010d70        0x95c build/cpu/production/_ext/1360937237/RLYA_MGR.o
+                  0x010d70                  _Initialise_Relay_A_Mgr
+                  0x010d7a                  _Start_Relay_A_Mgr
+                  0x010dce                  _Set_Relay_A_Reset_State
+                  0x010df6                  _Update_Relay_A_State
+                  0x011142                  _Update_3S_Relay_A_State
+                  0x01148e                  _Reset_Allowed_For_US
+                  0x0114f8                  _Process_Relay_A_Local_Direction
+                  0x011518                  _Process_Relay_A_Local_AxleCount
+                  0x01153c                  _Process_Peer_Relay_A_Direction
+                  0x011556                  _Process_Peer_Relay_A_AxleCount
+                  0x01157a                  _Update_Next_Block_State
+                  0x01159a                  _Update_A_US1_OUT_Count
+                  0x0115a6                  _Update_A_US2_OUT_Count
+                  0x0115b2                  _Update_A_US1_IN_Count
+                  0x0115be                  _Update_A_US2_IN_Count
+                  0x0115ca                  _Update_A_LU1_Fwd_Count
+                  0x0115d6                  _Update_A_LU2_Fwd_Count
+                  0x0115e2                  _Update_A_LU1_Rev_Count
+                  0x0115ee                  _Update_A_LU2_Rev_Count
+                  0x0115fa                  _Update_A_Local_AxleCount
+                  0x011606                  _Update_A_US1_AxleCount
+                  0x011612                  _Update_A_US2_AxleCount
+                  0x01161e                  _Update_A_US1_Direction
+                  0x01162a                  _Update_A_US2_Direction
+                  0x011636                  _Update_A_LU1_Direction
+                  0x011642                  _Update_A_LU2_Direction
+                  0x01164e                  _Update_ATC_Remote1_Relay_A_State
+                  0x01165a                  _Update_ATC_Remote2_Relay_A_State
+                  0x011666                  _Set_Relay_A_DAC_Defective
+                  0x011674                  _Get_Relay_A_State
+                  0x01167e                  _Get_Relay_A_ATC_State
+                  0x011688                  _Clear_ATC_Local_Relay_A_State
+                  0x0116a0                  _Clear_Relay_A_Counts
+ .text            0x0116cc        0x2d2 build/cpu/production/_ext/1360937237/ERROR.o
+                  0x0116cc                  _Initialise_Error
+                  0x011702                  _Update_Display_Error
+                  0x0117e2                  _Set_Error_Status_Byte
+                  0x011806                  _Set_Error_Status_Bit
+                  0x01184c                  _Clear_Error_Display
+                  0x01188c                  _Decrement_Err_display_50msTmr
+                  0x0118a4                  _Decrement_LCWS_Health_Relay_Timer
+                  0x0118b6                  _Update_Error_Code
+                  0x011956                  _Get_DS_Error_Code
+                  0x011970                  _Get_US_Error_Code
+                  0x01198a                  _Clear_DS_Error_Code
+                  0x011994                  _Clear_US_Error_Code
+ .text            0x01199e        0x24c build/cpu/production/_ext/1360937237/RELAYDRV.o
+                  0x01199e                  _Get_Relay_Energising_Key
+                  0x0119a6                  _Energise_Preparatory_Relay_A
+                  0x0119f2                  _Energise_Preparatory_Relay_B
+                  0x011a2e                  _Energise_Vital_Relay_A
+                  0x011a50                  _Energise_Vital_Relay_B
+                  0x011a72                  _DeEnergise_Preparatory_Relay_A
+                  0x011aba                  _DeEnergise_Preparatory_Relay_B
+                  0x011af0                  _DeEnergise_Vital_Relay_A
+                  0x011b04                  _DeEnergise_Vital_Relay_B
+                  0x011b18                  _Energise_Relay_B
+                  0x011b4a                  _DeEnergise_Relay_B
+                  0x011b82                  _Energise_Relay_A
+                  0x011bb2                  _DeEnergise_Relay_A
 
-.dinit            0x011bf2        0x23e
- .dinit           0x011bf2        0x23e data_init
+.dinit            0x011bea        0x23e
+ .dinit           0x011bea        0x23e data_init
 
-.text             0x011e30        0x16e
- .text            0x011e30         0xd0 build/cpu/production/_ext/1360937237/CRC16.o
-                  0x011e30                  _Crc16
- .text            0x011f00         0x9e build/cpu/production/_ext/1360937237/CRC32.o
-                  0x011f00                  _crc32
+.text             0x011e28        0x172
+ .text            0x011e28         0xd4 build/cpu/production/_ext/1360937237/CRC16.o
+                  0x011e28                  _Crc16
+ .text            0x011efc         0x9e build/cpu/production/_ext/1360937237/CRC32.o
+                  0x011efc                  _crc32
 LOAD fill0
 
-fill$.0           0x011f9e      0x18c5a
- fill$.0          0x011f9e      0x18c5a fill0
+fill$.0           0x011f9a      0x18c5e
+ fill$.0          0x011f9a      0x18c5e fill0

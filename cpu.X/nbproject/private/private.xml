@@ -3,6 +3,39 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/DAC_MAIN.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/CRC32.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AES_US.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/cpu.X/nbproject/Makefile-cpu.mk</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RESTORE.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/SYS_MON.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMM_DS.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/SYS_MON.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMMON.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RLYA_MGR.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RLYD4_MGR.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AES.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMM1_FDP.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AES.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON_LCWS_3.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON_LCWS_2.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON_LCWS_1.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RESET.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RESET.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON_LCWS_4.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RELAYMGR.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RLYB_MGR.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/CRC16.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AXLE_MON.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMM_SM.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/CRC16.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMM_US.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/ERROR.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/RELAYMGR.c</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/COMM_SM.h</file>
+            <file>file:/F:/Personal/Personal_GIT/CPU/D_CPU/src/AES_DS.c</file>
+        </group>
     </open-files>
 </project-private>

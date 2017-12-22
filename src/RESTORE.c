@@ -750,11 +750,11 @@ void Check_Flash(void)
 	else	
 	{
 		Status.Flags.Flash_CheckSum = CRC32_CHECKSUM_BAD;
-        SECTION_A_LED_OCCUPIED_PORT = 1;
-        SECTION_B_LED_OCCUPIED_PORT = 1;
-        SECTION_A_LED_CLEAR_PORT = 1;
-        SECTION_B_LED_CLEAR_PORT = 1;
-        while(1);
+    //    SECTION_A_LED_OCCUPIED_PORT = 1;
+    //    SECTION_B_LED_OCCUPIED_PORT = 1;
+    //    SECTION_A_LED_CLEAR_PORT = 1;
+    //    SECTION_B_LED_CLEAR_PORT = 1;
+    //    while(1);
 	}	
 }
 

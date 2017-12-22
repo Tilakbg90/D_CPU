@@ -145,7 +145,7 @@ UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
 
     BYTE uchCRCHi = 0xFF ; /* high byte of CRC initialized */
     BYTE uchCRCLo = 0xFF ; /* low byte of CRC initialized */
-    BYTE uchIndex,uchIndex2 ; /* will index into CRC lookup table */
+    BYTE uchIndex,uchIndex2 =0; /* will index into CRC lookup table */
 
     while (iMsgLen) /* pass through message buffer */
     {
