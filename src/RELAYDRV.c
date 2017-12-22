@@ -53,6 +53,7 @@ void DeEnergise_Relay_B(void);
 BYTE Relay_A_State = 1;
 BYTE Relay_B_State = 1;
 BYTE Relay_B_PR_State = 1;
+BYTE ISO_ctrl_A =0,ISO_ctrl_B=0; 
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :INT16 Get_Relay_Energising_Key(void)
@@ -185,6 +186,7 @@ void Energise_Preparatory_Relay_A(void)
 //  PREPARATORY_A_ENABLE_PORT = TURN_ON_PREPARATORY_RELAY;
     PREPARATORY_RELAY_A_PORT = TURN_ON_PREPARATORY_RELAY;
     LATGbits.LATG7 = 1;
+    ISO_ctrl_A = 1;
     PR_Relay_A_State = 1;
     Start_FeedBack_Check(FB_STATUS_RELAY_A_ON_ID);
 }
@@ -274,6 +276,7 @@ void Energise_Preparatory_Relay_B(void)
 //  PREPARATORY_B_ENABLE_PORT = TURN_ON_PREPARATORY_RELAY;
     PREPARATORY_RELAY_B_PORT = TURN_ON_PREPARATORY_RELAY;
     LATGbits.LATG7 = 1;
+    ISO_ctrl_B = 1;
     PR_Relay_B_State = 1;
     Relay_B_PR_State = 1;
     Start_FeedBack_Check(FB_STATUS_RELAY_B_ON_ID);
@@ -782,6 +785,7 @@ void Energise_Relay_B(void)
      //CCPR2 = PWM_DUTY_CYCLE_A;                  /* Turn ON Vital Relay-A */
      //CCP2CON = TURN_ON_PWM_A;
     Relay_B_State = 1;
+    ISO_ctrl_B = 1;
     LATGbits.LATG7 = 1; // To Enable Isolated Power Supply
     OC1CON1bits.OCM = TURN_ON_PWM_A;
 
@@ -868,8 +872,8 @@ void DeEnergise_Relay_B(void)
 //  {
     //CCP2CON = TURN_OFF_PWM_A;                   /* Turn OFF Vital Relay-A */
     Relay_B_State = 0;
-    
-    if(Relay_A_State == 0 && Relay_B_State == 0)
+    ISO_ctrl_B = 0;
+    if(ISO_ctrl_A == 0 && ISO_ctrl_B == 0)
     {
         LATGbits.LATG7 = 0; // To Disable Isolated Power Supply
     }
@@ -956,6 +960,7 @@ void Energise_Relay_A(void)
      //CCPR4 = PWM_DUTY_CYCLE_B;                  /* Turn ON Vital Relay-B */
      //CCP4CON = TURN_ON_PWM_B;
     Relay_A_State = 1;
+    ISO_ctrl_A = 1;
     LATGbits.LATG7 = 1; // To Enable Isolated Power Supply
     OC2CON1bits.OCM = TURN_ON_PWM_B;
 //  }
@@ -1040,8 +1045,8 @@ void DeEnergise_Relay_A(void)
 //  if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == TRUE)
 //  {
     //CCP4CON = TURN_OFF_PWM_B;                   /* Turn OFF Vital Relay-B */
-    Relay_A_State = 0;
-    if(Relay_A_State == 0 && Relay_B_State == 0)    // If both the relays are off, then switch off the iso line
+    ISO_ctrl_A = 0;
+    if(ISO_ctrl_A == 0 && ISO_ctrl_B == 0)   // If both the relays are off, then switch off the iso line
     {
         LATGbits.LATG7 = 0; // To Disable Isolated Power Supply
     }

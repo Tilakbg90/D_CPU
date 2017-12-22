@@ -98,7 +98,7 @@
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
         <makeCustomizationPreStep></makeCustomizationPreStep>
-        <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
+        <makeCustomizationPostStepEnabled>true</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep>"E:\Microchip\MPLABX\v3.65_R\mplab_ide\bin\hexmate.exe" --edf="E:\Microchip\MPLABX\v3.65_R\mplab_ide\dat\en_msgs.txt" ${ImagePath} -ADDRESSING=2 +-CK=0x0000-0x2ABEF@0x2ABF0w4g5p0x04C11DB7t000000 -O${ImagePath}</makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
