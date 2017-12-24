@@ -34,7 +34,6 @@
 
 extern void Initialise_Relay_Mgr(void);             //Defined in RELAYMGR.c
 extern void Update_Relay_A_Counts(void);            //Defined in RELAYMGR.c
-extern void Update_FDP_Relay_A_Counts(void);        //Defined in RELAYMGR.c
 extern void Update_Relay_B_Counts(void);            //Defined in RELAYMGR.c
 extern void Update_Relay_D3_Counts(void);           //Defined in RELAYMGR.c
 extern void Update_Relay_D4_Counts(void);           //Defined in RELAYMGR.c
@@ -47,7 +46,7 @@ extern void Update_SF_Track_Status(void);           //Defined in RELAYMGR.c
 extern void Update_CF_Track_Status(void);           //Defined in RELAYMGR.c
 extern void Update_EF_Track_Status(void);           //Defined in RELAYMGR.c
 
-extern void A_Sec_Led_drive(Led_State);
-extern void B_Sec_Led_drive(Led_State);
+extern void A_Sec_Led_drive(Led_State Led_status);
+extern void B_Sec_Led_drive(Led_State Led_status);
 
 #endif

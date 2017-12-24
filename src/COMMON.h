@@ -144,14 +144,13 @@ typedef enum
               DAC_UNIT_TYPE_D4_C, // 13
 
     /* Enumarator to define D3A Unit type of DAC system */
-              DAC_UNIT_TYPE_D4_D, // 14
+              DAC_UNIT_TYPE_D4_D // 14
 
              }SSDAC_Unit_Type;
 
 typedef enum
             {
-              SSDAC = 1,
-              FIELD_DETECTION_POINT
+              SSDAC = 1
             }Unit_Configuration;
 
 typedef enum
@@ -392,7 +391,7 @@ typedef enum {
              ON =0,
 
     /* Enumarator to check the status of LED is OFF */
-             OFF,
+             OFF
 
              }Led_State;
 
@@ -1393,13 +1392,13 @@ extern BYTE ErrorCodeForSPI;
 union def_SPI_Failure
 {
     unsigned int Failure_Data;
-    struct
+    struct bits
     {
-        BYTE US_Failure:1;
-        BYTE DS_Failure:1;
-        BYTE LOCAL_Failure:1;
+        unsigned int US_Failure:1;
+        unsigned int DS_Failure:1;
+        unsigned int LOCAL_Failure:1;
         unsigned int unused:13;
-    };
+    } fail_bits;
 };
 
 extern union def_SPI_Failure SPI_Failure;
@@ -1410,10 +1409,10 @@ extern void Decrement_Bootuplock_50msTmr(void);
 extern void Declare_DAC_Defective(void);
 extern void Declare_DAC_Defective_US(void);
 extern void Declare_DAC_Defective_DS(void);
-extern void Process_Peer_Relay_A_AxleCount(UINT16,UINT16);
-extern void Process_Peer_Relay_B_AxleCount(UINT16,UINT16);
-extern void Process_Peer_Relay_A_Direction(BYTE);
-extern void Process_Peer_Relay_B_Direction(BYTE);
+extern void Process_Peer_Relay_A_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void Process_Peer_Relay_B_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void  Process_Peer_Relay_A_Direction( BYTE uchDirection);
+extern void  Process_Peer_Relay_B_Direction( BYTE uchDirection);
 extern UINT16 Get_US_Remote_AxleCount(void);
 extern UINT16 Get_DS_Remote_AxleCount(void);
 extern UINT16 LCWS_Section_TimeOut;
@@ -1424,47 +1423,47 @@ extern void Set_Relay_A_DAC_Defective(void);
 extern BYTE Get_Relay_A_State(void);
 extern BYTE Get_Relay_A_ATC_State(void);
 extern void Set_Relay_A_Reset_State(void);
-extern void Update_A_US1_IN_Count(UINT16);
-extern void Update_A_US2_IN_Count(UINT16);
-extern void Update_A_US1_OUT_Count(UINT16);
-extern void Update_A_US2_OUT_Count(UINT16);
-extern void Update_A_US1_AxleCount(UINT16);
-extern void Update_A_US2_AxleCount(UINT16);
-extern void Update_A_US1_Direction(BYTE);
-extern void Update_A_US2_Direction(BYTE);
-extern void Update_Next_Block_State(bitadrb_t,BYTE);
+extern void Update_A_US1_IN_Count (UINT16 uiCount);
+extern void Update_A_US2_IN_Count (UINT16 uiCount);
+extern void Update_A_US1_OUT_Count(UINT16 uiCount);
+extern void Update_A_US2_OUT_Count(UINT16 uiCount);
+extern void Update_A_US1_AxleCount(UINT16 uiCount);
+extern void Update_A_US2_AxleCount(UINT16 uiCount);
+extern void Update_A_US1_Direction(BYTE Direction);
+extern void Update_A_US2_Direction(BYTE Direction);
+extern void Update_Next_Block_State(bitadrb_t SrcAdr, BYTE Next_Block_Status);
 
 
 /* Declaration for functions defined in rlyb_mgr.c */
 extern BOOL Reset_Allowed_For_DS(void);
 extern void Set_Relay_B_DAC_Defective(void);
 extern BYTE Get_Relay_B_State(void);
-extern BYTE Get_Relay_A_ATC_State(void);
+extern BYTE Get_Relay_B_ATC_State(void);
 extern void Set_Relay_B_Reset_State(void);
-extern void Update_B_DS1_OUT_Count(UINT16);
-extern void Update_B_DS2_OUT_Count(UINT16);
-extern void Update_B_DS1_IN_Count(UINT16);
-extern void Update_B_DS2_IN_Count(UINT16);
-extern void Update_B_DS1_AxleCount(UINT16);
-extern void Update_B_DS2_AxleCount(UINT16);
-extern void Update_B_DS1_Direction(BYTE);
-extern void Update_B_DS2_Direction(BYTE);
+extern void Update_B_DS1_OUT_Count(UINT16 uiCount);
+extern void Update_B_DS2_OUT_Count(UINT16 uiCount);
+extern void Update_B_DS1_IN_Count (UINT16 uiCount);
+extern void Update_B_DS2_IN_Count (UINT16 uiCount);
+extern void Update_B_DS1_AxleCount(UINT16 uiCount);
+extern void Update_B_DS2_AxleCount(UINT16 uiCount);
+extern void Update_B_DS1_Direction(BYTE Direction);
+extern void Update_B_DS2_Direction(BYTE Direction);
 //extern void   Update_Previous_Block_State(bitadrb_t,BYTE);
 
 
 /* Declaration for functions defined in rlyd3_mgr.c */
-extern void Process_D3_Peer_AxleCount  (UINT16,UINT16);
-extern void Process_D3_Remote_AxleCount(bitadrb_t,SSDAC_Unit_Type,UINT16,UINT16);
-extern void Process_D3_Remote_Direction(bitadrb_t,SSDAC_Unit_Type,BYTE,UINT16);
-extern void Process_D3_Peer_Direction(BYTE,UINT16);
+extern void Process_D3_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void Process_D3_Remote_AxleCount(bitadrb_t SrcAdr,SSDAC_Unit_Type Src_Unit_Type,UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type, BYTE uchDirection,UINT16 uiAxleCount);
+extern void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount);
 extern BOOL Reset_Allowed_For_D3(void);
 extern void Set_Relay_D3_DAC_Defective(void);
 extern void Decrement_D3_Track_Clearing_Timeout_50msTmr(void);
 extern BYTE Get_Relay_D3_State(void);
-extern void Process_D4_Peer_AxleCount  (UINT16,UINT16);
-extern void Process_D4_Remote_AxleCount(bitadrb_t,SSDAC_Unit_Type,UINT16,UINT16);
-extern void Process_D4_Remote_Direction(bitadrb_t,SSDAC_Unit_Type,BYTE,UINT16);
-extern void Process_D4_Peer_Direction(BYTE,UINT16);
+extern void Process_D4_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void Process_D4_Remote_AxleCount(bitadrb_t SrcAdr,SSDAC_Unit_Type Src_Unit_Type,UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
+extern void Process_D4_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type, BYTE uchDirection,UINT16 uiAxleCount);
+extern void  Process_D4_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount);
 extern BOOL Reset_Allowed_For_D4(void);
 extern void Set_Relay_D4_DAC_Defective(void);
 extern void Decrement_D4_Track_Clearing_Timeout_50msTmr(void);
@@ -1494,6 +1493,8 @@ extern void Stop_DS_Axle_Counting(void);
 
 extern BOOL Get_DS_Local_Counts_Clearing_Status(void);
 extern BOOL Get_US_Local_Counts_Clearing_Status(void);
+extern BOOL Get_DS_Local_Counts_Clearing_Status_1(void);
+extern BOOL Get_US_Local_Counts_Clearing_Status_1(void);
 extern void Initialise_AxleMon_1(void);
 extern void Validate_PD_Signals_1(void);
 extern void Chk_for_AxleCount_Completion_1(void);
@@ -1514,14 +1515,13 @@ extern void Update_DS_Sch_State(void);
 extern void Decrement_DS_Sch_msTmr(void);
 extern void Configure_Modem_B(void);
 extern BYTE Get_Modem_B_State(void);
-extern void Initialise_Comm2_Sch(void);
-extern void Clear_DS_Transmit_Buffer(void);
+
+
 
 
 /* Declaration for functions defined in comm_us.c */
 extern void Initialise_US_CommSch(void);
 extern void Start_US_CommSch(void);
-extern void Start_Comm1_Sch(void);
 extern void Update_US_Sch_State(void);
 
 extern void Decrement_US_Sch_msTmr(void);
@@ -1530,9 +1530,9 @@ extern void Configure_Modem_A(void);
 
 extern BYTE Get_Modem_A_State(void);
 
-extern void Initialise_Comm1_Sch(void);
+
 extern void Clear_US_Transmit_Buffer(void);
-extern void Update_MDP_Sequence_Number(const BYTE);
+
 
 
 
@@ -1541,8 +1541,8 @@ extern void Check_DIP_Switches(void);
 extern void Check_DAC_Boards_Runtime(void);
 extern void Check_Flash(void);
 extern void Check_RAM(void);
-extern void Compare_DS_Checksum(bitadrb_t);
-extern void Compare_US_Checksum(bitadrb_t);
+extern void Compare_DS_Checksum(bitadrb_t Config);
+extern void Compare_US_Checksum(bitadrb_t Config);
 extern UINT32 Get_Calculated_Checksum(void);
 extern UINT32 Get_Compared_Checksum(void);
 extern void Clear_DS_Checksum_Info(void);
@@ -1553,20 +1553,18 @@ extern void Clear_US_Checksum_Info(void);
 extern void Start_Relay_A_Mgr(void);
 extern void Clear_ATC_Local_Relay_A_State(void);
 extern void Clear_ATC_Local_Relay_B_State(void);
-extern void Update_ATC_Remote1_Relay_A_State(BYTE);
-extern void Update_ATC_Remote2_Relay_A_State(BYTE);
-extern void Update_ATC_Remote1_Relay_B_State(BYTE);
-extern void Update_ATC_Remote2_Relay_B_State(BYTE);
-extern void Update_ATC_Remote1_Relay_D3_State(BYTE);
-extern void Update_ATC_Remote2_Relay_D3_State(BYTE);
-extern void Update_ATC_Remote3_Relay_D3_State(BYTE);
-extern void Update_ATC_Remote4_Relay_D3_State(BYTE);
-extern void Update_ATC_Remote1_Relay_D4_State(BYTE);
-extern void Update_ATC_Remote2_Relay_D4_State(BYTE);
-extern void Update_ATC_Remote3_Relay_D4_State(BYTE);
-extern void Update_ATC_Remote4_Relay_D4_State(BYTE);
-extern BYTE Get_Relay_A_ATC_State(void);
-extern BYTE Get_Relay_B_ATC_State(void);
+extern void Update_ATC_Remote1_Relay_A_State (BYTE Remote_state);
+extern void Update_ATC_Remote2_Relay_A_State (BYTE Remote_state);
+extern void Update_ATC_Remote1_Relay_B_State (BYTE Remote_state);
+extern void Update_ATC_Remote2_Relay_B_State (BYTE Remote_state);
+extern void Update_ATC_Remote1_Relay_D3_State(BYTE Remote_state);
+extern void Update_ATC_Remote2_Relay_D3_State(BYTE Remote_state);
+extern void Update_ATC_Remote3_Relay_D3_State(BYTE Remote_state);
+extern void Update_ATC_Remote4_Relay_D3_State(BYTE Remote_state);
+extern void Update_ATC_Remote1_Relay_D4_State(BYTE Remote_state);
+extern void Update_ATC_Remote2_Relay_D4_State(BYTE Remote_state);
+extern void Update_ATC_Remote3_Relay_D4_State(BYTE Remote_state);
+extern void Update_ATC_Remote4_Relay_D4_State(BYTE Remote_state);
 extern BYTE Get_Relay_D3_ATC_State(void);
 extern BYTE Get_Relay_D4_ATC_State(void);
 extern void Start_Relay_B_Mgr(void);
@@ -1575,8 +1573,8 @@ extern void Start_Relay_D4_Mgr(void);
 
 /* Declaration for functions defined in reset.c */
 extern BYTE Update_System_Mode(void);
-extern BYTE Update_DS_Section_Mode(BYTE,BYTE);
-extern BYTE Update_US_Section_Mode(BYTE,BYTE);
+extern BYTE Update_DS_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode);
+extern BYTE Update_US_Section_Mode(BYTE us_remote_mode,BYTE us_local_mode);
 
 /* Declaration for functions defined in error.c */
 extern BYTE Get_DS_Error_Code(void);
@@ -1596,8 +1594,8 @@ extern void Set_US_Encryption_Idle(void);
 extern void Set_DS_Encryption_Idle(void);
 extern void Decrement_LCWS_Health_Relay_Timer(void);
 /* Declaration for functions defined in comm_sm.c */
-extern void Update_SM_DS_Remote_Axle_Counts(BYTE,BYTE);
-extern void Update_SM_US_Remote_Axle_Counts(BYTE,BYTE);
+extern void Update_SM_DS_Remote_Axle_Counts(BYTE DS_Count_Lo_byte,BYTE DS_Count_Hi_byte);
+extern void Update_SM_US_Remote_Axle_Counts(BYTE US_Count_Lo_byte,BYTE US_Count_Hi_byte);
 
 
 

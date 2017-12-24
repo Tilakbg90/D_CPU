@@ -39,7 +39,6 @@
 #include "COMM_SM.h"                                /*Header file*/
 #include "RESET.h"                                  /*Header file*/
 #include "ERROR.h"                                  /*Header file*/
-#include "RLYDE_MGR.h"
 #include "RLYD4_MGR.h"
 #include "AXLE_MON.h"
 
@@ -287,7 +286,7 @@ Algorithm           :1.Check for slave select port,if the master has selected th
 
 void re_init_spi(void)
 {
-    unsigned int Temp = 0;
+    unsigned int Temp;
     /* Prepare the Module */
     SPI1STATbits.SPIEN = 0;     // Enable Module
     SPI_SDO_TRIS = OUTPUT_PORT;    // Make SDO as Output to drive the SPI Signals
@@ -329,7 +328,7 @@ void process_spi_rx_fifo(void)
     if (SPI1STATbits.SRXMPT == 0)
     {
         /* Data has been received from Master (SM-CPU) */
-        SPI_Receive_Object.Msg_Buffer[SPI_Receive_Object.Index] = SPI1BUF;
+        SPI_Receive_Object.Msg_Buffer[SPI_Receive_Object.Index] = (BYTE)SPI1BUF;
         if (SPI_Receive_Object.Index < (SPI_MESSAGE_LENGTH - 1))
         {
             SPI_Receive_Object.Index = SPI_Receive_Object.Index + 1;
@@ -707,7 +706,7 @@ Algorithm           :1.Load the CPU address,system status flag bytes,Upstream an
                         system mode,upstream and downstream error codes,message ID and 16bit CRC value into the SPI Transmit object buffer
                         inorder to send it to the master
 **************************************************************************/
-BYTE Direction = 0,FWD = 0,REV = 0;
+BYTE FWD = 0,REV = 0;
 extern relay_d3_info_t Relay_D3_Info;
 extern unsigned int COM_US_pkt_error_cnt, COM_DS_pkt_error_cnt;
 void Build_Interprocess_Post_Reset_Message(void)
@@ -780,9 +779,9 @@ void Build_Interprocess_Post_Reset_Message(void)
         Status.Flags.US_System_Status = 1;
         Status.Flags.US_Track_Status = 0;
         
-        if(Track_Info_1.LCWS_Axle_Direction == FORWARD_DIRECTION || Track_Info_2.LCWS_Axle_Direction == FORWARD_DIRECTION || Track_Info_3.LCWS_Axle_Direction == FORWARD_DIRECTION || Track_Info_4.LCWS_Axle_Direction == FORWARD_DIRECTION)
+        if(Track_Info_1.LCWS_Axle_Direction == (BYTE)FORWARD_DIRECTION || Track_Info_2.LCWS_Axle_Direction == (BYTE)FORWARD_DIRECTION || Track_Info_3.LCWS_Axle_Direction == (BYTE)FORWARD_DIRECTION || Track_Info_4.LCWS_Axle_Direction == (BYTE)FORWARD_DIRECTION)
         {
-            Direction = 1;
+            
             US_Fwd_AxleCount.Word = Track_Info_1.LCWS_Fwd_Count;
             US_Rev_AxleCount.Word = Track_Info_2.LCWS_Fwd_Count;
             DS_Fwd_AxleCount.Word = Track_Info_3.LCWS_Fwd_Count;
@@ -790,9 +789,9 @@ void Build_Interprocess_Post_Reset_Message(void)
             FWD = 1;
             REV = 0;
         }
-        else if(Track_Info_4.LCWS_Axle_Direction == REVERSE_DIRECTION || Track_Info_3.LCWS_Axle_Direction == REVERSE_DIRECTION || Track_Info_2.LCWS_Axle_Direction == REVERSE_DIRECTION || Track_Info_1.LCWS_Axle_Direction == REVERSE_DIRECTION)
+        else if(Track_Info_4.LCWS_Axle_Direction == (BYTE)REVERSE_DIRECTION || Track_Info_3.LCWS_Axle_Direction == (BYTE)REVERSE_DIRECTION || Track_Info_2.LCWS_Axle_Direction == (BYTE)REVERSE_DIRECTION || Track_Info_1.LCWS_Axle_Direction == (BYTE)REVERSE_DIRECTION)
         {
-            Direction = 2;
+            
             US_Fwd_AxleCount.Word = Track_Info_1.LCWS_Rev_Count;
             US_Rev_AxleCount.Word = Track_Info_2.LCWS_Rev_Count;
             DS_Fwd_AxleCount.Word = Track_Info_3.LCWS_Rev_Count;
@@ -825,7 +824,7 @@ void Build_Interprocess_Post_Reset_Message(void)
                 DS_Fwd_AxleCount.Word = 3;
                 DS_Rev_AxleCount.Word = 4;
             }
-            Direction = 0;
+            
         }
     }
     else if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A || DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B || DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C)
@@ -929,7 +928,7 @@ void Build_Interprocess_Post_Reset_Message(void)
     SPI_Transmit_Object.Msg_Buffer[32] = Calculated_Checksum.DWord.HiWord.Byte.Lo;
     SPI_Transmit_Object.Msg_Buffer[33] = Calculated_Checksum.DWord.LoWord.Byte.Hi;
     SPI_Transmit_Object.Msg_Buffer[34] = Calculated_Checksum.DWord.LoWord.Byte.Lo;    
-    SPI_Transmit_Object.Msg_Buffer[35] = DIP_Switch_Info.DAC_Unit_Type;
+    SPI_Transmit_Object.Msg_Buffer[35] = (BYTE)DIP_Switch_Info.DAC_Unit_Type;
     SPI_Transmit_Object.Msg_Buffer[36] = SW_Version_No;
 
     SPI_Transmit_Object.Msg_Buffer[37] = SPI_Relay_A_InfoLU1_Fwd_Count.Byte.Lo; // BFC
@@ -1131,14 +1130,14 @@ void Build_Interprocess_Reset_Info_Message(void)
     SPI_Transmit_Object.Msg_Buffer[9] = Compared_Checksum.DWord.HiWord.Byte.Lo;
     SPI_Transmit_Object.Msg_Buffer[10]= Compared_Checksum.DWord.LoWord.Byte.Hi;
     SPI_Transmit_Object.Msg_Buffer[11]= Compared_Checksum.DWord.LoWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[12]= DIP_Switch_Info.DAC_Unit_Type;
+    SPI_Transmit_Object.Msg_Buffer[12]= (BYTE)DIP_Switch_Info.DAC_Unit_Type;
     SPI_Transmit_Object.Msg_Buffer[13]= SW_Version_No;
     Calculated_Checksum.LWord = Get_Calculated_Checksum();
     SPI_Transmit_Object.Msg_Buffer[14] = Calculated_Checksum.DWord.HiWord.Byte.Hi;
     SPI_Transmit_Object.Msg_Buffer[15] = Calculated_Checksum.DWord.HiWord.Byte.Lo;
     SPI_Transmit_Object.Msg_Buffer[16] =  Calculated_Checksum.DWord.LoWord.Byte.Hi;
     SPI_Transmit_Object.Msg_Buffer[17] =  Calculated_Checksum.DWord.LoWord.Byte.Lo;
-    SPI_Transmit_Object.Msg_Buffer[20] =  DIP_Switch_Info.Configuration;
+    SPI_Transmit_Object.Msg_Buffer[20] =  (BYTE)DIP_Switch_Info.Configuration;
     uchDirection = Get_US_AxleDirection();
     SPI_Transmit_Object.Msg_Buffer[24]= uchDirection;
     uchDirection = Get_DS_AxleDirection();
@@ -1306,7 +1305,7 @@ Algorithm           :1.Check the message ID,then process the message as per the 
 *************************************************************************/
 void Process_Interprocess_Message(void)
 {
-   BYTE uchCommand = 0;
+   BYTE uchCommand;
 
    uchCommand = SPI_Receive_Object.Msg_Buffer[77];
    if(uchCommand == READ_RESET_INFO)
@@ -1440,7 +1439,7 @@ void Process_Interprocess_Reset_Info_Message(void)
 //   }
   Peer_CPU_Unit_Type = SPI_Receive_Object.Msg_Buffer[12];
 
-   if(DIP_Switch_Info.DAC_Unit_Type != Peer_CPU_Unit_Type)
+   if((BYTE)DIP_Switch_Info.DAC_Unit_Type != Peer_CPU_Unit_Type)
     {
      Declare_DAC_Defective();
     Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
@@ -1802,7 +1801,7 @@ void Update_SM_US_Remote_Axle_Counts(BYTE US_Count_Lo_byte,BYTE US_Count_Hi_byte
 //29/07/10
 UINT16 Get_DS_Remote_AxleCount(void)
 {
- UINT16 uicount = 0;
+ UINT16 uicount;
  uicount = (UINT16) SM_Message.DS_Remote_Axle_Count.Word;
  return(uicount);
 }
@@ -1810,7 +1809,7 @@ UINT16 Get_DS_Remote_AxleCount(void)
 //29/07/10
 UINT16 Get_US_Remote_AxleCount(void)
 {
-   UINT16 uicount = 0;
+   UINT16 uicount;
    uicount = (UINT16) SM_Message.US_Remote_Axle_Count.Word;
   return(uicount);
 }

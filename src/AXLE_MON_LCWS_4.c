@@ -63,21 +63,19 @@
 #include "COMMON.h"
 #include "AXLE_MON.h"
 #include "ERROR.h"
-#include "RESTORE.h"
+
 
 extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
-extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
+
  /*near*/  track_info_t Track_Info_4;
 
 
 
 extern const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIONS];
 
-void Initialise_AxleMon_4(void);
-void Validate_PD_Signals_4(void);
 void Monitor_Supervisory_Pulse_4(void);
-void Monitor_Wheel_Pulse_4(bitadrb_t);
-void Determine_TrackState_4(BYTE);
+void Monitor_Wheel_Pulse_4( bitadrb_t Temp_IO);
+void Determine_TrackState_4(BYTE uchPD_IO_Value);
 void Analyse_Supervisory_Sequence_4(void);
 void Register_PD1212_Transition_4(void);
 void Register_PD2121_Transition_4(void);
@@ -236,12 +234,12 @@ Algorithm           :1.Initialise all the Track_Info variables
 void Initialise_AxleMon_4(void)
 {
     Track_Info_4.State = PRE_SYNCHRONISATION_WAIT;
-    Track_Info_4.US_Axle_Direction = DIRECTION_NOT_DEFINED;
-    Track_Info_4.DS_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info_4.US_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
+    Track_Info_4.DS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info_4.US_Axle_Count = 0;
     Track_Info_4.DS_Axle_Count = 0;
 
-    Track_Info_4.LCWS_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info_4.LCWS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info_4.LCWS_Count = 0;
     Track_Info_4.LCWS_Fwd_Count = 0;
     Track_Info_4.LCWS_Rev_Count = 0;
@@ -791,31 +789,31 @@ void Determine_TrackState_4(BYTE uchPD_IO_Value)
         case PRE_SYNCHRONISATION_WAIT:
              break;
         case WAIT_FOR_AXLE_AT_TRAILING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
                 {
                 /* wheel is moving forward to middle of Both PD, So clear the sup errors */
                     Clear_PD1_Supervisory_Count_4();
                     Clear_PD2_Supervisory_Count_4();
                 }
-            if(uchNewState == WAITING_FOR_AXLE)
+            if(uchNewState == (BYTE)WAITING_FOR_AXLE)
               {
                 Track_Info_4.Flags.PD_Without_Overlapping = TRUE;
               }
             break;
         case LET_AXLE_CLEAR_LEADING_PD_FIRST:
             Track_Info_4.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
                 {
-                Register_PD1212_Transition_4();
+                    Register_PD1212_Transition_4();
                 }
             break;
         case LET_AXLE_CLEAR_TRAILING_PD_NEXT:
-            if (uchNewState == WAITING_FOR_AXLE)
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
                 {
                 Register_PD1212_Transition_4();
                 break;
                 }
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
                 {
                 /* wheel is moving Backward to middle of Both PD,so clear the sup errors */
                 Clear_PD1_Supervisory_Count_4();
@@ -823,7 +821,7 @@ void Determine_TrackState_4(BYTE uchPD_IO_Value)
                 }
             break;
         case DIR_CHANGE_FROM_FWD_TO_REV:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
                 {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count_4();
@@ -831,39 +829,39 @@ void Determine_TrackState_4(BYTE uchPD_IO_Value)
                 }
             break;
         case WAIT_FOR_AXLE_AT_LEADING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
                 {
                 /* wheel is moving forward to middle of Both PD */
 
                 Clear_PD1_Supervisory_Count_4();
                 Clear_PD2_Supervisory_Count_4();
                 }
-            if(uchNewState == WAITING_FOR_AXLE)
+            if(uchNewState == (BYTE)WAITING_FOR_AXLE)
               {
                 Track_Info_4.Flags.PD_Without_Overlapping = TRUE;
               }
             break;
         case LET_AXLE_CLEAR_TRAILING_PD_FIRST:
             Track_Info_4.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
                 {
                 Register_PD2121_Transition_4();
                 }
             break;
         case LET_AXLE_CLEAR_LEADING_PD_NEXT:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
                 {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count_4();
                 Clear_PD2_Supervisory_Count_4();
                 }
-            if (uchNewState == WAITING_FOR_AXLE)
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
                 {
                 Register_PD2121_Transition_4();
                 }
             break;
         case DIR_CHANGE_FROM_REV_TO_FWD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
                 {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count_4();
@@ -878,7 +876,7 @@ void Determine_TrackState_4(BYTE uchPD_IO_Value)
             break;
      }
 
-       Track_Info_4.State = uchNewState;
+       Track_Info_4.State = (Axle_Counter_State)uchNewState;
        if(Track_Info_4.State != WAITING_FOR_AXLE )
         {
          Track_Info_4.PD_Last_Change_Timeout_50ms  = PD_CLEARING_TIMEOUT;
@@ -1389,7 +1387,7 @@ void Register_PD1212_Transition_4(void)
     Track_Info_4.Flags.PD_State_Counted = TRUE;
     Track_Info_4.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
 #if NO_SHUNTING
-    Track_Info_4.LCWS_Axle_Direction = FORWARD_DIRECTION;
+    Track_Info_4.LCWS_Axle_Direction = (BYTE)FORWARD_DIRECTION;
     Track_Info_4.LCWS_Fwd_Count = Track_Info_4.LCWS_Fwd_Count + 1;
     if (Track_Info_4.LCWS_Total_Fwd_Count >= MAX_AXLE_COUNTS)
     {
@@ -1502,7 +1500,7 @@ void Register_PD2121_Transition_4(void)
     Track_Info_4.Flags.PD_State_Counted = TRUE;
     Track_Info_4.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
 #if NO_SHUNTING
-    Track_Info_4.LCWS_Axle_Direction = REVERSE_DIRECTION;
+    Track_Info_4.LCWS_Axle_Direction = (BYTE)REVERSE_DIRECTION;
     Track_Info_4.LCWS_Rev_Count = Track_Info_4.LCWS_Rev_Count + 1;
     if (Track_Info_4.LCWS_Total_Rev_Count >= MAX_AXLE_COUNTS)
     {
@@ -1605,7 +1603,7 @@ void Chk_for_AxleCount_Completion_4(void)
 {
     if (Track_Info_4.LCWS_Fwd_Count == 0 && Track_Info_4.LCWS_Rev_Count == 0)
     {
-        Track_Info_4.LCWS_Axle_Direction = DIRECTION_NOT_DEFINED;
+        Track_Info_4.LCWS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     }
     if (Track_Info_4.LCWS_Fwd_Count > MAX_AXLE_COUNTS )
     {
@@ -1770,7 +1768,7 @@ Algorithm           :1.Set the Upstream axle direction as "DIRECTION NOT DEFINED
 ************************************************************************/
 void Clear_US_AxleCount_4(void)
 {
-    Track_Info_4.US_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info_4.US_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info_4.US_Axle_Count = 0;
     Track_Info_4.Flags.US_Local_Counts_Just_Cleared = SET_HIGH;
     Track_Info_4.US_Local_Counts_Clearing_Flag_Timeout_50ms = LOCAL_COUNT_CLEARING_FLAG_TIMEOUT;
@@ -1844,7 +1842,7 @@ Algorithm           :1.Set the Downstream axle direction as "DIRECTION NOT DEFIN
 ************************************************************************/
 void Clear_DS_AxleCount_4(void)
 {
-    Track_Info_4.DS_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info_4.DS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info_4.DS_Axle_Count = 0;
     Track_Info_4.Flags.DS_Local_Counts_Just_Cleared = SET_HIGH;
     Track_Info_4.DS_Local_Counts_Clearing_Flag_Timeout_50ms = LOCAL_COUNT_CLEARING_FLAG_TIMEOUT;
@@ -2279,62 +2277,7 @@ UINT16 Get_DS_Rev_AxleCount_4(void)
 {
     return Track_Info_4.DS_Rev_Axle_Count;
 }
-/*********************************************************************
-Component name      :AXLE_MON
-Module Name         :void Clear_DS_Local_Counts(void)
-Created By          :
-Date Created        :
-Modification History:
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |             |               |                 |             |                              |
-                    |             |               |                 |             |                              |
-                    |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract            :Clear the Down stream remote unit forward and reverse axle
-                     counts at the Local unit
 
-
-Allocated Requirements  :
-
-Design Requirements     :
-
-
-
-Interfaces
-    Calls           :   Nil
-
-    Called by       :   RLYB_MGR.c  -   Start_Relay_B_Mgr()
-                        RLYB_MGR.c  -   Set_Relay_B_Reset_State()
-                        RLYD3_MGR.c -   Start_Relay_D3_Mgr()
-                        RLYDE_MGR.c -   Start_Relay_DE_Mgr()
-
-Input Variables         Name                            Type
-    Global          :   None
-
-    Local           :   None
-
-Output Variables        Name                            Type
-    Global          :   Track_Info_4.DS_Fwd_Axle_Count    UINT16
-                        Track_Info_4.DS_Rev_Axle_Count    UINT16
-
-    Local           :   None
-Signal Variables
-
-                                    Nil                         Nil                 Nil
-
-Macro definitions used:     Macro                           Value
-                            None
-References          :
-
-Derived Requirements:
-
-************************************************************************/
-void Clear_DS_Local_Counts_4(void)
-{
-    Track_Info_4.DS_Fwd_Axle_Count = 0;
-    Track_Info_4.DS_Rev_Axle_Count = 0;
-}
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_US_Local_Counts(void)
@@ -2609,11 +2552,11 @@ void Clear_Wheel_Type_4(void)
 {
     if (Track_Info_4.LCWS_Fwd_Count == 0)
     {
-    Track_Info_4.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
+        Track_Info_4.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
     }
     if (Track_Info_4.LCWS_Rev_Count == 0)
     {
-    Track_Info_4.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
+        Track_Info_4.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
     }
     if(Track_Info_4.PD1M_Count == 0 && Track_Info_4.PD2M_Count == 0)
     {

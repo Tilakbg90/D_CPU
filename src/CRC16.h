@@ -27,9 +27,9 @@ COM2_TX,
 SPI_RX,
 SPI_TX,
 COM1_RX,
-COM1_TX,
+COM1_TX
 } CRC16_PACK;
 
-extern UINT16 Crc16(CRC16_PACK, INT16);
+extern UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen);
 
 #endif

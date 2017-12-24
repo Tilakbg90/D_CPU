@@ -44,13 +44,13 @@
 
 relay_security_info_t Security;
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;
-BYTE PR_Relay_A_State=0,PR_Relay_B_State=0;
+
 void Energise_Relay_A(void);
 void DeEnergise_Relay_A(void);
 void Energise_Relay_B(void);
 void DeEnergise_Relay_B(void);
 
-BYTE Relay_A_State = 1;
+
 BYTE Relay_B_State = 1;
 BYTE Relay_B_PR_State = 1;
 BYTE ISO_ctrl_A =0,ISO_ctrl_B=0; 
@@ -181,13 +181,13 @@ void Energise_Preparatory_Relay_A(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  PREPARATORY_A_ENABLE_PORT = TURN_ON_PREPARATORY_RELAY;
     PREPARATORY_RELAY_A_PORT = TURN_ON_PREPARATORY_RELAY;
     LATGbits.LATG7 = 1;
     ISO_ctrl_A = 1;
-    PR_Relay_A_State = 1;
+
     Start_FeedBack_Check(FB_STATUS_RELAY_A_ON_ID);
 }
 
@@ -271,13 +271,13 @@ void Energise_Preparatory_Relay_B(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  PREPARATORY_B_ENABLE_PORT = TURN_ON_PREPARATORY_RELAY;
     PREPARATORY_RELAY_B_PORT = TURN_ON_PREPARATORY_RELAY;
     LATGbits.LATG7 = 1;
     ISO_ctrl_B = 1;
-    PR_Relay_B_State = 1;
+
     Relay_B_PR_State = 1;
     Start_FeedBack_Check(FB_STATUS_RELAY_B_ON_ID);
 }
@@ -495,12 +495,11 @@ void DeEnergise_Preparatory_Relay_A(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
     PREPARATORY_RELAY_A_PORT = TURN_OFF_PREPARATORY_RELAY;
-    PR_Relay_A_State = 0;
-    //if(PR_Relay_A_State == 0 && PR_Relay_B_State == 0 && Relay_A_State == 0 && Relay_B_State == 0)
-        //LATGbits.LATG7 = 0;
+
+
 //  PREPARATORY_A_ENABLE_PORT = TURN_OFF_PREPARATORY_RELAY;
     Start_FeedBack_Check(FB_STATUS_RELAY_A_OFF_ID);
 }
@@ -582,13 +581,10 @@ void DeEnergise_Preparatory_Relay_B(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
     PREPARATORY_RELAY_B_PORT = TURN_OFF_PREPARATORY_RELAY;
-    PR_Relay_B_State = 0;
-    //if(PR_Relay_A_State == 0 && PR_Relay_B_State == 0 && Relay_A_State == 0 && Relay_B_State == 0)
-        //LATGbits.LATG7 = 0;
-//  PREPARATORY_B_ENABLE_PORT = TURN_OFF_PREPARATORY_RELAY;
+
     Relay_B_PR_State = 0;
     Start_FeedBack_Check(FB_STATUS_RELAY_B_OFF_ID);
 }
@@ -778,7 +774,7 @@ void Energise_Relay_B(void)
     {
         Security.Rand_Generator_Seed = 1;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == TRUE)
 //  {
@@ -866,7 +862,7 @@ void DeEnergise_Relay_B(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == TRUE)
 //  {
@@ -953,13 +949,13 @@ void Energise_Relay_A(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == TRUE)
 //  {
      //CCPR4 = PWM_DUTY_CYCLE_B;                  /* Turn ON Vital Relay-B */
      //CCP4CON = TURN_ON_PWM_B;
-    Relay_A_State = 1;
+
     ISO_ctrl_A = 1;
     LATGbits.LATG7 = 1; // To Enable Isolated Power Supply
     OC2CON1bits.OCM = TURN_ON_PWM_B;
@@ -1040,7 +1036,7 @@ void DeEnergise_Relay_A(void)
     {
         Security.Rand_Generator_Seed = 0;
     }
-    srand(Security.Rand_Generator_Seed);    /* Change the SEED */
+    srand((UINT16)Security.Rand_Generator_Seed);    /* Change the SEED */
     Security.Key = rand();                  /* Generate new KEY */
 //  if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == TRUE)
 //  {

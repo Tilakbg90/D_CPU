@@ -35,7 +35,7 @@
 
 *****************************************************************************/
 #include <xc.h>
-#include <stdio.h>
+
 
 //#include <sys.h>
 /*
@@ -75,19 +75,12 @@
 #include "COMMON.h"
 #include "AXLE_MON.h"
 #include "RELAYMGR.h"
-#include "RLYA_MGR.h"
-#include "RLYB_MGR.h"
 #include "COMM_DS.h"
 #include "COMM_US.h"
 #include "COMM_SM.h"
 #include "RELAYDRV.h"
-//#include "LCD_DRV.h"
-#include "DAC_MAIN.h"
 #include "SYS_MON.h"
 #include "RESET.h"
-#include "CRC16.h"
-#include "CRC32.h"
-//#include "DISPLAY.h"
 #include "ERROR.h"
 #include "RESTORE.h"
 #include "AES.h"
@@ -104,12 +97,13 @@ checksum_info_t Checksum_Info;              /*structure to hold the CRC values*/
 ds_section_mode DS_Section_Mode;            /*structure to hold the DS section local and remote unit modes */
 us_section_mode US_Section_Mode;            /*structure to hold the US section local and remote unit modes */
 BYTE uchIDInfo_List[20];
+BYTE Always_true = 1;
 
-BYTE uchCheckSum_List[10];
+
 
 union def_SPI_Failure SPI_Failure;
 
-extern error_display Error_Display;
+
 
 void Initialise_System(void);
 void Start_SF_Reset_Sequence(void);
@@ -117,7 +111,7 @@ void Start_CF_Reset_Sequence(void);
 void Start_D3_Reset_Sequence(void);
 void Start_D4_Reset_Sequence(void);
 void Start_EF_Reset_Sequence(void);
-void Start_1C1E_Reset_Sequence(void);
+
 void Start_LCWS_Reset_Sequence(void);
 void Start_DE_Reset_Sequence(void);
 
@@ -233,9 +227,9 @@ int main(void)
     /*
      * Initialise persistent variables, in case Magic number and
      */
-    ClrWdt();
+    ClrWdt(); /*lint -e526 -e628 */
     Initialise_System();
-    ClrWdt();
+    ClrWdt(); /*lint -e526 -e628 */
     if(RCONbits.SWR == 0)   // Do this only upon normal power up.
     {
         Initialize_Reset();
@@ -570,7 +564,7 @@ void Initialise_System(void)
     Status.Byte[4] = (BYTE) 0b11111111;
     Status.Byte[5] = (BYTE) 0b00000000;
     Status.Byte[6] = (BYTE) 0b00100011;
-    Status.Byte[7] = (BYTE) 0b00000000;
+
 
 
     Checksum_Info.Byte[0]  = (BYTE) 0x00;
@@ -595,14 +589,14 @@ void Initialise_System(void)
     Checksum_Info.Byte[19] = (BYTE) 0x00;
     Checksum_Info.Byte[20] = (BYTE) 0x00;
 
-    DIP_Switch_Info.Configuration       = (BYTE) 0x00;        /*Configuration*/
+    DIP_Switch_Info.Configuration       = (Unit_Configuration) 0x00;        /*Configuration*/
     DIP_Switch_Info.Address             = (BYTE) 0x00;      /* Unit Address */
-    DIP_Switch_Info.DAC_Unit_Type       = (BYTE) 0x00;      /* Unit Type */
-    DIP_Switch_Info.Baud_Rate           = (BYTE) 0x00;      /* 1200/2400/9600/19200 */
+    DIP_Switch_Info.DAC_Unit_Type       = (SSDAC_Unit_Type) 0x00;      /* Unit Type */
+    DIP_Switch_Info.Baud_Rate           = (Baud_Rate_Config) 0x00;      /* 1200/2400/9600/19200 */
     DIP_Switch_Info.Peer_Address        = (BYTE) 0x00;      /* Address of Peer CPU */
 
-    DIP_Switch_Info.COM1_Mode           = (BYTE) 0x00;
-    DIP_Switch_Info.COM2_Mode           = (BYTE) 0x00;
+    DIP_Switch_Info.COM1_Mode           = (comm_type) 0x00;
+    DIP_Switch_Info.COM2_Mode           = (comm_type) 0x00;
     DIP_Switch_Info.COM1_NW_Address     = (BYTE) 0x00;
     DIP_Switch_Info.COM2_NW_Address     = (BYTE) 0x00;
 
@@ -633,14 +627,14 @@ void Initialise_System(void)
     //*************************************************************
     // Unlock Registers
     //*************************************************************
-    __builtin_write_OSCCONL(OSCCON & 0xbf); //clear the bit 6 of OSCCONL to unlock Pin Re-map
+    __builtin_write_OSCCONL(OSCCON & 0xbf); /*lint -e526 -e628 */ //clear the bit 6 of OSCCONL to unlock Pin Re-map
 
     RPOR11bits.RP22R = 18;             // Map RP22 to OC1 Output
     RPOR10bits.RP20R = 19;             // Map RP20 to OC2 Output
     //************************************************************
     // Lock Registers
     //************************************************************
-    __builtin_write_OSCCONL(OSCCON | 0x40); //set the bit 6 of OSCCONL to lock Pin Re-map
+    __builtin_write_OSCCONL(OSCCON | 0x40); /*lint -e526 -e628 */ //set the bit 6 of OSCCONL to lock Pin Re-map
     //******************************************************************
     // PWM for Vial Relay 1
     OC1CON1 = 0;
@@ -681,17 +675,8 @@ void Initialise_System(void)
     /*
      * Initialise sub-systems
      */
- if(DIP_Switch_Info.Configuration == G39_DAC)
-  {
 
-//  if (DIP_Switch_Info/.Flags.Is_DAC_CPU1 == TRUE)
-//  {
-//   PR2 = PWM_PERIOD_B;
-//  }
-//  else
-//  {
      PR2 = PWM_PERIOD_A;
-//  }
 
     SetupCOM1BaudRate();                            /* from comm_us.c */
     SetupCOM2BaudRate();                            /* from comm_ds.c */
@@ -721,53 +706,14 @@ void Initialise_System(void)
     Initialise_Sys_Mon();                           /* Initialise System Monitor */
     //Initialise_DisplayManager();                    /* Initialise Display manager */
 
-    if (Status.Flags.System_Status == NORMAL)
-    {
-        /*
-        sprintf(uchIDInfo_List, "Ad %03d ", DIP_Switch_Info.Address);
-        switch (DIP_Switch_Info.DAC_Unit_Type)
-        {
-            case DAC_UNIT_TYPE_SF:
-                strcat(uchIDInfo_List, " SF ");
-                break;
-            case DAC_UNIT_TYPE_EF:
-                strcat(uchIDInfo_List, " EF ");
-                break;
-            case DAC_UNIT_TYPE_CF:
-                strcat(uchIDInfo_List, " CF ");
-                break;
-            case DAC_UNIT_TYPE_D3_A:
-                strcat(uchIDInfo_List, "D3A ");
-                break;
-            case DAC_UNIT_TYPE_D3_B:
-                strcat(uchIDInfo_List, "D3B ");
-                break;
-            case DAC_UNIT_TYPE_D3_C:
-                strcat(uchIDInfo_List, "D3C ");
-                break;
-            case DAC_UNIT_TYPE_3D_SF:
-                strcat(uchIDInfo_List, "3DSF ");
-                break;
-            case DAC_UNIT_TYPE_3D_EF:
-                strcat(uchIDInfo_List, "3DEF ");
-                break;
-            default:
-                break;
-
-        }
-        strcat(uchIDInfo_List,uchCheckSum_List);
-        DisplayDAC_InfoLine();
-        */
-    }
-    else
+    if (Status.Flags.System_Status != NORMAL)
     {
         if(Status.Flags.Flash_CheckSum == CRC32_CHECKSUM_BAD)
         {
             Set_Error_Status_Bit(INCORRECT_CODE_CRC_ERROR_NUM);
         }
     }
-   return;
-  }
+
 
 }
 /*********************************************************************************
@@ -887,14 +833,14 @@ void Start_SF_Reset_Sequence(void)
 
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
-    if (uchPreparatoryState == SF_WAIT_FOR_RESET)
+    if (uchPreparatoryState == (BYTE)SF_WAIT_FOR_RESET)
     {
         Initialise_SF_Reset_Monitor();
     }
     else
     {
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-        DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+        DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
     }
     Start_SF_Reset_Monitor();
     uchReset_Pending = TRUE;
@@ -944,7 +890,7 @@ void Start_SF_Reset_Sequence(void)
             }
             Update_SF_Reset_Monitor_State();
             uchPreparatoryState = Get_SF_Reset_State();
-            if (uchPreparatoryState == SF_RESET_SEQUENCE_COMPLETED)
+            if (uchPreparatoryState == (BYTE)SF_RESET_SEQUENCE_COMPLETED)
             {
               uchReset_Pending = FALSE;
               Clear_DS_Checksum_Info();
@@ -959,14 +905,14 @@ void Start_SF_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
 
         Configure_Modem_B ();
         Modem_State = Get_Modem_B_State();
-      if(Modem_State == CONFIGURATION_COMPLETED)
+      if(Modem_State == (BYTE)CONFIGURATION_COMPLETED)
        {
         Update_DS_Sch_State();
         }                                               /* from comm_ds.c */
@@ -1109,24 +1055,24 @@ void Start_CF_Reset_Sequence(void)
     
     uchPreparatoryState = Get_CF_DS_Reset_State();
     uchPreparatoryState1 = Get_CF_US_Reset_State();
-    if((uchPreparatoryState == CF_DS_WAIT_FOR_RESET) &&
-        (uchPreparatoryState1 == CF_US_WAIT_FOR_RESET))
+    if((uchPreparatoryState == (BYTE)CF_DS_WAIT_FOR_RESET) &&
+        (uchPreparatoryState1 == (BYTE)CF_US_WAIT_FOR_RESET))
     {
         Initialise_CF_Reset_Monitor();
     }
     else
     {
-        if(uchPreparatoryState > CF_DS_WAIT_FOR_RESET)
+        if(uchPreparatoryState > (BYTE)CF_DS_WAIT_FOR_RESET)
          {
            Status.Flags.Local_Reset_Done2  = SM_HAS_RESETTED_SYSTEM;
-           DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
-           US_Section_Mode.Local_Unit = (BYTE)SYSTEM_ERROR_MODE;
+           DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
+           US_Section_Mode.Local_Unit = SYSTEM_ERROR_MODE;
          }
-        if(uchPreparatoryState1 > CF_US_WAIT_FOR_RESET)
+        if(uchPreparatoryState1 > (BYTE)CF_US_WAIT_FOR_RESET)
          {
            Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
-           US_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
-           DS_Section_Mode.Local_Unit = (BYTE)SYSTEM_ERROR_MODE;
+           US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
+           DS_Section_Mode.Local_Unit = SYSTEM_ERROR_MODE;
          }
     }
     Start_CF_Reset_Monitor();
@@ -1191,8 +1137,8 @@ void Start_CF_Reset_Sequence(void)
             Update_CF_Reset_Monitor_State();
             uchPreparatoryState  = Get_CF_DS_Reset_State();
             uchPreparatoryState1 = Get_CF_US_Reset_State();
-            if((uchPreparatoryState  == CF_DS_RESET_SEQUENCE_COMPLETED) ||
-               (uchPreparatoryState1 == CF_US_RESET_SEQUENCE_COMPLETED))
+            if((uchPreparatoryState  == (BYTE)CF_DS_RESET_SEQUENCE_COMPLETED) ||
+               (uchPreparatoryState1 == (BYTE)CF_US_RESET_SEQUENCE_COMPLETED))
             {
              uchReset_Pending = FALSE;
             }
@@ -1206,7 +1152,7 @@ void Start_CF_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
@@ -1214,11 +1160,11 @@ void Start_CF_Reset_Sequence(void)
         Configure_Modem_B ();
         A_Modem_State = Get_Modem_A_State();
         B_Modem_State = Get_Modem_B_State();
-        if(B_Modem_State == CONFIGURATION_COMPLETED)
+        if(B_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
         {
          Update_DS_Sch_State();
         }
-        if(A_Modem_State == CONFIGURATION_COMPLETED)
+        if(A_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
          {
           Update_US_Sch_State();                                /* from comm_us.c */
          }
@@ -1363,14 +1309,14 @@ void Start_LCWS_Reset_Sequence(void)
 
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
-    if (uchPreparatoryState == SF_WAIT_FOR_RESET)
+    if (uchPreparatoryState == (BYTE)SF_WAIT_FOR_RESET)
     {
         Initialise_LCWS_Reset_Monitor();
     }
     else
     {
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-        DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+        DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
     }
     Start_LCWS_Reset_Monitor();
     uchReset_Pending = TRUE;
@@ -1426,7 +1372,7 @@ void Start_LCWS_Reset_Sequence(void)
             }
             Update_LCWS_Reset_Monitor_State();
             uchPreparatoryState = Get_SF_Reset_State();
-            if (uchPreparatoryState == SF_RESET_SEQUENCE_COMPLETED)
+            if (uchPreparatoryState == (BYTE)SF_RESET_SEQUENCE_COMPLETED)
             {
               uchReset_Pending = FALSE;
               Clear_DS_Checksum_Info();
@@ -1441,7 +1387,7 @@ void Start_LCWS_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
@@ -1574,8 +1520,8 @@ void Start_D3_Reset_Sequence(void)
     
     uchPreparatoryState  = Get_CF_DS_Reset_State();
     uchPreparatoryState1 = Get_CF_US_Reset_State();
-    if((uchPreparatoryState == CF_DS_WAIT_FOR_RESET) &&
-       (uchPreparatoryState1== CF_US_WAIT_FOR_RESET))
+    if((uchPreparatoryState == (BYTE)CF_DS_WAIT_FOR_RESET) &&
+       (uchPreparatoryState1== (BYTE)CF_US_WAIT_FOR_RESET))
     {
        Initialise_CF_Reset_Monitor();
     }
@@ -1628,8 +1574,8 @@ void Start_D3_Reset_Sequence(void)
             Update_CF_Reset_Monitor_State();
             uchPreparatoryState  = Get_CF_DS_Reset_State();
             uchPreparatoryState1 = Get_CF_US_Reset_State();
-            if((uchPreparatoryState  == CF_DS_RESET_SEQUENCE_COMPLETED) &&
-               (uchPreparatoryState1 == CF_US_RESET_SEQUENCE_COMPLETED ))
+            if((uchPreparatoryState  == (BYTE)CF_DS_RESET_SEQUENCE_COMPLETED) &&
+               (uchPreparatoryState1 == (BYTE)CF_US_RESET_SEQUENCE_COMPLETED ))
             {
 
              uchReset_Pending = FALSE;
@@ -1644,7 +1590,7 @@ void Start_D3_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
@@ -1652,11 +1598,11 @@ void Start_D3_Reset_Sequence(void)
         Configure_Modem_B ();
         A_Modem_State = Get_Modem_A_State();
         B_Modem_State = Get_Modem_B_State();
-        if(B_Modem_State == CONFIGURATION_COMPLETED)
+        if(B_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
         {
          Update_DS_Sch_State();
         }
-        if(A_Modem_State == CONFIGURATION_COMPLETED)
+        if(A_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
          {
           Update_US_Sch_State();                                /* from comm_us.c */
          }
@@ -1779,8 +1725,8 @@ void Start_D4_Reset_Sequence(void)
 
     uchPreparatoryState  = Get_CF_DS_Reset_State();
     uchPreparatoryState1 = Get_CF_US_Reset_State();
-    if((uchPreparatoryState == CF_DS_WAIT_FOR_RESET) &&
-       (uchPreparatoryState1== CF_US_WAIT_FOR_RESET))
+    if((uchPreparatoryState == (BYTE)CF_DS_WAIT_FOR_RESET) &&
+       (uchPreparatoryState1== (BYTE)CF_US_WAIT_FOR_RESET))
     {
        Initialise_CF_Reset_Monitor();
     }
@@ -1833,8 +1779,8 @@ void Start_D4_Reset_Sequence(void)
             Update_CF_Reset_Monitor_State();
             uchPreparatoryState  = Get_CF_DS_Reset_State();
             uchPreparatoryState1 = Get_CF_US_Reset_State();
-            if((uchPreparatoryState  == CF_DS_RESET_SEQUENCE_COMPLETED) &&
-               (uchPreparatoryState1 == CF_US_RESET_SEQUENCE_COMPLETED ))
+            if((uchPreparatoryState  == (BYTE)CF_DS_RESET_SEQUENCE_COMPLETED) &&
+               (uchPreparatoryState1 == (BYTE)CF_US_RESET_SEQUENCE_COMPLETED ))
             {
 
              uchReset_Pending = FALSE;
@@ -1849,7 +1795,7 @@ void Start_D4_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
@@ -1857,11 +1803,11 @@ void Start_D4_Reset_Sequence(void)
         Configure_Modem_B ();
         A_Modem_State = Get_Modem_A_State();
         B_Modem_State = Get_Modem_B_State();
-        if(B_Modem_State == CONFIGURATION_COMPLETED)
+        if(B_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
         {
          Update_DS_Sch_State();
         }
-        if(A_Modem_State == CONFIGURATION_COMPLETED)
+        if(A_Modem_State == (BYTE)CONFIGURATION_COMPLETED)
          {
           Update_US_Sch_State();                                /* from comm_us.c */
          }
@@ -1989,7 +1935,7 @@ void Start_EF_Reset_Sequence(void)
 //    Reset_Info.EF.US_State = EF_WAIT_FOR_RESET;
 
     uchPreparatoryState = Get_EF_Reset_State();
-    if (uchPreparatoryState == EF_WAIT_FOR_RESET)
+    if (uchPreparatoryState == (BYTE)EF_WAIT_FOR_RESET)
     {
         Initialise_EF_Reset_Monitor();
     }
@@ -2045,7 +1991,7 @@ void Start_EF_Reset_Sequence(void)
             }
             Update_EF_Reset_Monitor_State();
             uchPreparatoryState = Get_EF_Reset_State();
-            if(uchPreparatoryState == EF_RESET_SEQUENCE_COMPLETED)
+            if(uchPreparatoryState == (BYTE)EF_RESET_SEQUENCE_COMPLETED)
             {
               uchReset_Pending = FALSE;
               Clear_US_Checksum_Info();
@@ -2060,14 +2006,14 @@ void Start_EF_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
 
         Configure_Modem_A ();
         Modem_State = Get_Modem_A_State();
-        if(Modem_State == CONFIGURATION_COMPLETED)
+        if(Modem_State == (BYTE)CONFIGURATION_COMPLETED)
          {
           Update_US_Sch_State();                                /* from comm_us.c */
          }
@@ -2173,14 +2119,14 @@ void Start_DE_Reset_Sequence(void)
     
 //    Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
     uchPreparatoryState = Get_SF_Reset_State();
-    if (uchPreparatoryState == SF_WAIT_FOR_RESET)
+    if (uchPreparatoryState == (BYTE)SF_WAIT_FOR_RESET)
     {
         Initialise_DE_Reset_Monitor();
     }
     else
     {
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-        DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+        DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
     }
     Start_DE_Reset_Monitor();
     uchReset_Pending = TRUE;
@@ -2236,7 +2182,7 @@ void Start_DE_Reset_Sequence(void)
             }
             Update_DE_Reset_Monitor_State();
             uchPreparatoryState = Get_SF_Reset_State();
-            if (uchPreparatoryState == SF_RESET_SEQUENCE_COMPLETED)
+            if (uchPreparatoryState == (BYTE)SF_RESET_SEQUENCE_COMPLETED)
             {
               uchReset_Pending = FALSE;
               Clear_DS_Checksum_Info();
@@ -2252,7 +2198,7 @@ void Start_DE_Reset_Sequence(void)
                if(Bootup_Lock.Timeout_50ms == TIMEOUT_EVENT)
                 {
                  Clear_Reset_State();                            /*Clear the reset state and intialise to waiting for reset*/
-                 {__asm__ volatile ("reset");} // RESET();                                      /* Reset the System */
+                 {asm("reset");} // RESET();                                      /* Reset the System */
                 }
               }
         }
@@ -2405,11 +2351,11 @@ void Control_DAC_Type_SF(void)
         }
         Update_DS_Sch_State();                          /* from comm_ds.c */
         Update_SPI_State();                             /* from comm_sm.c */
-        //Update_LCD_State();                             /* from lcd_drv.c */
+
         Update_Sys_Mon_State();                         /* from sys_mon.c */
         Update_SF_Reset_Monitor_State();                /* from reset.c */
-        //Update_itoa_SF_State();                         /* from display.c  */
-    } while (1);
+
+    } while(Always_true == 1);
 }
 /*********************************************************************************
 Component name      :DAC_MAIN
@@ -2519,18 +2465,13 @@ References          :
 
 Derived Requirements:
 *********************************************************************************/
-extern track_info_t Track_Info;
+
 void Control_DAC_Type_CF(void)
 {
     BYTE uchPreparatoryState,uchPreparatoryState1;
     BYTE DS1_Reset_Status,DS2_Reset_Status;
     BYTE US1_Reset_Status,US2_Reset_Status;
 
-    // Clear_Line_on_LCD((BYTE) 2);
-    if( DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
-    {
-
-    }
     do {
         ClrWdt();
         CS11 = !CS11;
@@ -2606,7 +2547,7 @@ void Control_DAC_Type_CF(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c  */
         Update_CF_Reset_Monitor_State();                /* from reset.c    */
         //Update_itoa_CF_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 
@@ -2793,7 +2734,7 @@ void Control_DAC_Type_LCWS(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c */
         Update_LCWS_Reset_Monitor_State();                /* from reset.c */
         //Update_itoa_SF_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 
@@ -2803,7 +2744,7 @@ void Control_DAC_Type_DE(void)
 {
 
 
-        UINT16 uiAuthorisationKey;
+        INT16 uiAuthorisationKey;
         uiAuthorisationKey = Get_Relay_Energising_Key();
         Energise_Vital_Relay_B(uiAuthorisationKey);
     do {
@@ -2850,7 +2791,7 @@ void Control_DAC_Type_DE(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c */
         Update_DE_Reset_Monitor_State();                /* from reset.c */
         //Update_itoa_SF_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 /*********************************************************************************
@@ -2987,7 +2928,7 @@ void Control_DAC_Type_EF(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c */
         Update_EF_Reset_Monitor_State();                /* from reset.c */
         //Update_itoa_EF_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 //19_12_09
@@ -3128,7 +3069,7 @@ void Control_DAC_Type_D3(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c  */
         Update_CF_Reset_Monitor_State();                /* from reset.c    */
         //Update_itoa_D3_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 /*********************************************************************************
@@ -3266,7 +3207,7 @@ void Control_DAC_Type_D4(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c  */
         Update_CF_Reset_Monitor_State();                /* from reset.c    */
         //Update_itoa_D3_State();                         /* from display.c  */
-    } while (1);
+    } while (Always_true == 1);
 }
 
 //15_03_10
@@ -3356,15 +3297,7 @@ void Control_DAC_Type_3S(void)
         Update_Sys_Mon_State();                         /* from sys_mon.c  */
         Update_CF_Reset_Monitor_State();                /* from reset.c    */
 
-        if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF)
-        {
-         //Update_itoa_3D_SF_State();                         /* from display.c  */
-        }
-        if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF)
-        {
-         //Update_itoa_3D_EF_State();                         /* from display.c  */
-        }
-    } while (1);
+    } while (Always_true == 1);
 }
 
 
@@ -3435,42 +3368,42 @@ void Initialize_Reset(void)
     switch(DIP_Switch_Info.DAC_Unit_Type)
     {
         case DAC_UNIT_TYPE_SF:
-            Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+            Reset_Info.SF.DS_State =  SF_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_CF:
         case DAC_UNIT_TYPE_3D_SF:
         case DAC_UNIT_TYPE_3D_EF:
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_D3_A:
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_D3_B:
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_D3_C:
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_D4_A:
         case DAC_UNIT_TYPE_D4_B:
         case DAC_UNIT_TYPE_D4_C:
         case DAC_UNIT_TYPE_D4_D:
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_EF:
-            Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_RESET;
+            Reset_Info.EF.US_State =  EF_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_LCWS:
         case DAC_UNIT_TYPE_LCWS_DL:
-            Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+            Reset_Info.SF.DS_State =  SF_WAIT_FOR_RESET;
             break;
         case DAC_UNIT_TYPE_DE:
-            Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+            Reset_Info.SF.DS_State =  SF_WAIT_FOR_RESET;
             break;
         default:
             break;
@@ -3484,11 +3417,11 @@ void Update_SPI_Error(void)
 {
     if (ErrorCodeForSPI == 255)
     {
-        if (SPI_Failure.DS_Failure == 1)
+        if (SPI_Failure.fail_bits.DS_Failure == 1)
         {
             ErrorCodeForSPI = DS_ERROR_NUM;
         }
-        else if (SPI_Failure.US_Failure == 1)
+        else if (SPI_Failure.fail_bits.US_Failure == 1)
         {
             ErrorCodeForSPI = US_ERROR_NUM;
         }

@@ -63,33 +63,32 @@
 #include "COMMON.h"
 #include "AXLE_MON.h"
 #include "ERROR.h"
-#include "RESTORE.h"
+
 
 extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
-extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
  /*near*/  track_info_t Track_Info;
 
 
 struct def_LU_Speed_Info LU_Speed_Info;
 
 const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIONS] = {
-{OUT_OF_SYNC_OR_PD_ERROR,           WAIT_FOR_AXLE_AT_TRAILING_PD,   WAIT_FOR_AXLE_AT_LEADING_PD,    WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_LEADING_PD_FIRST,   WAIT_FOR_AXLE_AT_TRAILING_PD,   WAIT_FOR_AXLE_AT_LEADING_PD,    WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_LEADING_PD_FIRST,   DIR_CHANGE_FROM_FWD_TO_REV ,    LET_AXLE_CLEAR_TRAILING_PD_NEXT,WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_LEADING_PD_FIRST,   OUT_OF_SYNC_OR_PD_ERROR,        LET_AXLE_CLEAR_TRAILING_PD_NEXT,WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_LEADING_PD_FIRST,   DIR_CHANGE_FROM_FWD_TO_REV,     OUT_OF_SYNC_OR_PD_ERROR,        WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_TRAILING_PD_FIRST,  WAIT_FOR_AXLE_AT_TRAILING_PD,   WAIT_FOR_AXLE_AT_LEADING_PD,    WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_TRAILING_PD_FIRST,  LET_AXLE_CLEAR_LEADING_PD_NEXT, DIR_CHANGE_FROM_REV_TO_FWD,     WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_TRAILING_PD_FIRST,  LET_AXLE_CLEAR_LEADING_PD_NEXT, OUT_OF_SYNC_OR_PD_ERROR,        WAITING_FOR_AXLE},
-{LET_AXLE_CLEAR_TRAILING_PD_FIRST,  OUT_OF_SYNC_OR_PD_ERROR,        DIR_CHANGE_FROM_REV_TO_FWD,     WAITING_FOR_AXLE},
-{PRE_SYNCHRONISATION_WAIT,          PRE_SYNCHRONISATION_WAIT,       PRE_SYNCHRONISATION_WAIT,       WAITING_FOR_AXLE},
-{OUT_OF_SYNC_OR_PD_ERROR,           OUT_OF_SYNC_OR_PD_ERROR,        OUT_OF_SYNC_OR_PD_ERROR,        OUT_OF_SYNC_OR_PD_ERROR},
+{(BYTE)OUT_OF_SYNC_OR_PD_ERROR,           (BYTE)WAIT_FOR_AXLE_AT_TRAILING_PD,   (BYTE)WAIT_FOR_AXLE_AT_LEADING_PD,    (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST,   (BYTE)WAIT_FOR_AXLE_AT_TRAILING_PD,   (BYTE)WAIT_FOR_AXLE_AT_LEADING_PD,    (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST,   (BYTE)DIR_CHANGE_FROM_FWD_TO_REV ,    (BYTE)LET_AXLE_CLEAR_TRAILING_PD_NEXT,(BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST,   (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)LET_AXLE_CLEAR_TRAILING_PD_NEXT,(BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST,   (BYTE)DIR_CHANGE_FROM_FWD_TO_REV,     (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST,  (BYTE)WAIT_FOR_AXLE_AT_TRAILING_PD,   (BYTE)WAIT_FOR_AXLE_AT_LEADING_PD,    (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST,  (BYTE)LET_AXLE_CLEAR_LEADING_PD_NEXT, (BYTE)DIR_CHANGE_FROM_REV_TO_FWD,     (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST,  (BYTE)LET_AXLE_CLEAR_LEADING_PD_NEXT, (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)WAITING_FOR_AXLE},
+{(BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST,  (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)DIR_CHANGE_FROM_REV_TO_FWD,     (BYTE)WAITING_FOR_AXLE},
+{(BYTE)PRE_SYNCHRONISATION_WAIT,          (BYTE)PRE_SYNCHRONISATION_WAIT,       (BYTE)PRE_SYNCHRONISATION_WAIT,       (BYTE)WAITING_FOR_AXLE},
+{(BYTE)OUT_OF_SYNC_OR_PD_ERROR,           (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)OUT_OF_SYNC_OR_PD_ERROR,        (BYTE)OUT_OF_SYNC_OR_PD_ERROR},
 };
 
 
 void Monitor_Supervisory_Pulse(void);
-void Monitor_Wheel_Pulse(bitadrb_t);
-void Determine_TrackState(BYTE);
+void Monitor_Wheel_Pulse( bitadrb_t Temp_IO);
+void Determine_TrackState(BYTE uchPD_IO_Value);
 
 void Analyse_Supervisory_Sequence(void);
 void Increment_DS_Forward_Count(void);
@@ -109,63 +108,9 @@ void Clear_PD12_Main_Pulse_Count(void);
 BOOL Chk_For_Track_Occupancy(void);
 void Clear_Wheel_Type(void);
 void Detect_PD_Failures(void);
-
-BYTE Get_Shunting_State(void);
 void Convert_Timer_Value_To_Speed(void);
 
 
-/*********************************************************************
-Component name 		:AXLE_MON
-Module Name			:BYTE Get_Shunting_State(void)
-Created By			:
-Date Created		:
-Modification History:
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
-                    |-------------|---------------|-----------------|-------------|------------------------------|
-                    |             |               |                 |             |                              |
-                    |             |               |                 |             |                              |
-                    |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract			:Get the train shunting state at the phasw detectors
-
-Allocated Requirements	:
-
-Design Requirements		:
-
-Interfaces
-	Calls			:	Nil
-
-	Called by		:	RLYDE_MGR.c	-	Reset_Allowed_For_DE()
-
-Input Variables			Name								Type
-	Global			:	None
-
-	Local			:	None
-
-Output Variables		Name								Type
-	Global			:	Track_Info.Flags.Train_Shunting		BYTE
-
-	Local			:	None
-
-Signal Variables
-
-						|---------------------------------|--------------------|------------------------|
-						|			Signal name		      | 	Input/Output   | 	 Portallocated		|
-						|---------------------------------|--------------------|------------------------|
-									Nil							Nil					Nil
-						|---------------------------------|--------------------|------------------------|
-
-Macro definitions used:		Macro							Value
-							None
-
-References			:
-
-Derived Requirements:
-************************************************************************/
-//BYTE Get_Shunting_State(void)
-//{
-//	return((BYTE)Track_Info.Flags.Train_Shunting);
-//}
 
 /*********************************************************************
 Component name      :AXLE_MON
@@ -264,8 +209,8 @@ Algorithm           :1.Initialise all the Track_Info variables
 void Initialise_AxleMon(void)
 {
     Track_Info.State = PRE_SYNCHRONISATION_WAIT;
-    Track_Info.US_Axle_Direction = DIRECTION_NOT_DEFINED;
-    Track_Info.DS_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info.US_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
+    Track_Info.DS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info.US_Axle_Count = 0;
     Track_Info.DS_Axle_Count = 0;
     Track_Info.DS_Fwd_Axle_Count = 0;
@@ -397,13 +342,12 @@ void Validate_PD_Signals(void)
 
     Monitor_Supervisory_Pulse();
     if(Track_Info.Wheel_Type == WHEEL_TYPE_NOT_DETERMINED)
-      {
+    {
         Analyse_Supervisory_Sequence();
-       }
+    }
     Track0_IO.Byte = (BYTE) 0;
-    if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY &&
-       PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
-      {
+    if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY && PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
+    {
         Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
         Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
         Temp_IO.Bit.b2 = PD1_PULSE_MAIN;
@@ -413,15 +357,15 @@ void Validate_PD_Signals(void)
         Determine_TrackState(Track0_IO.Byte);
         Monitor_Wheel_Pulse(Track0_IO);
         Detect_PD_Failures();
-      }
+    }
     else
-      {
+    {
         /* Before declaring error, Main and secondary pulses are compared once again for equality
            Because there may be some nano sec gap between main and secondary. By that time we should
            not declare error. */
         if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY &&
            PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
-          {
+        {
            Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
            Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
            Temp_IO.Bit.b2 = PD1_PULSE_MAIN;
@@ -431,14 +375,14 @@ void Validate_PD_Signals(void)
            Determine_TrackState(Track0_IO.Byte);
            Monitor_Wheel_Pulse(Track0_IO);
            Detect_PD_Failures();
-          }
+        }
         else
-          {
+        {
             Track_Info.State = OUT_OF_SYNC_OR_PD_ERROR;
             Declare_DAC_Defective();
             Set_Error_Status_Bit(AD_PULSE_MISMATCH_ERROR_NUM);
-          }
-      }
+        }
+    }
 }
 
 //01/09/10
@@ -615,115 +559,115 @@ void Convert_Timer_Value_To_Speed(void)
 {
     if(LU_Speed_Info.TimerValue > 33501)
     {
-            LU_Speed_Info.SpeedValue = 0;
+        LU_Speed_Info.SpeedValue = 0;
     }
     if(LU_Speed_Info.TimerValue > 33500)
     {
-            LU_Speed_Info.SpeedValue = 5;
+        LU_Speed_Info.SpeedValue = 5;
     }
     else if(LU_Speed_Info.TimerValue > 15600)
     {
-            LU_Speed_Info.SpeedValue = 10;
+        LU_Speed_Info.SpeedValue = 10;
     }
     else if(LU_Speed_Info.TimerValue > 8000)
     {
-            LU_Speed_Info.SpeedValue = 20;
+        LU_Speed_Info.SpeedValue = 20;
     }
     else if(LU_Speed_Info.TimerValue > 5400)
     {
-            LU_Speed_Info.SpeedValue = 30;
+        LU_Speed_Info.SpeedValue = 30;
     }
     else if(LU_Speed_Info.TimerValue > 4100)
     {
-            LU_Speed_Info.SpeedValue = 40;
+        LU_Speed_Info.SpeedValue = 40;
     }
     else if(LU_Speed_Info.TimerValue > 3300)
     {
-            LU_Speed_Info.SpeedValue = 50;
+        LU_Speed_Info.SpeedValue = 50;
     }
     else if(LU_Speed_Info.TimerValue > 2700)
     {
-            LU_Speed_Info.SpeedValue = 60;
+        LU_Speed_Info.SpeedValue = 60;
     }
     else if(LU_Speed_Info.TimerValue > 2350)
     {
-            LU_Speed_Info.SpeedValue = 70;
+        LU_Speed_Info.SpeedValue = 70;
     }
     else if(LU_Speed_Info.TimerValue > 2000)
     {
-            LU_Speed_Info.SpeedValue = 80;
+        LU_Speed_Info.SpeedValue = 80;
     }
     else if(LU_Speed_Info.TimerValue > 1780)
     {
-            LU_Speed_Info.SpeedValue = 90;
+        LU_Speed_Info.SpeedValue = 90;
     }
     else if(LU_Speed_Info.TimerValue > 1600)
     {
-            LU_Speed_Info.SpeedValue = 100;
+        LU_Speed_Info.SpeedValue = 100;
     }
     else if(LU_Speed_Info.TimerValue > 1480)
     {
-            LU_Speed_Info.SpeedValue = 110;
+        LU_Speed_Info.SpeedValue = 110;
     }
     else if(LU_Speed_Info.TimerValue > 1360)
     {
-            LU_Speed_Info.SpeedValue = 120;
+        LU_Speed_Info.SpeedValue = 120;
     }
     else if(LU_Speed_Info.TimerValue > 1256)
     {
-            LU_Speed_Info.SpeedValue = 130;
+        LU_Speed_Info.SpeedValue = 130;
     }
     else if(LU_Speed_Info.TimerValue > 1160)
     {
-            LU_Speed_Info.SpeedValue = 140;
+        LU_Speed_Info.SpeedValue = 140;
     }
     else if(LU_Speed_Info.TimerValue > 1080)
     {
-            LU_Speed_Info.SpeedValue = 150;
+        LU_Speed_Info.SpeedValue = 150;
     }
     else if(LU_Speed_Info.TimerValue > 1020)
     {
-            LU_Speed_Info.SpeedValue = 160;
+        LU_Speed_Info.SpeedValue = 160;
     }
     else if(LU_Speed_Info.TimerValue > 940)
     {
-            LU_Speed_Info.SpeedValue = 170;
+        LU_Speed_Info.SpeedValue = 170;
     }
     else if(LU_Speed_Info.TimerValue > 920)
     {
-            LU_Speed_Info.SpeedValue = 180;
+        LU_Speed_Info.SpeedValue = 180;
     }
     else if(LU_Speed_Info.TimerValue > 840)
     {
-            LU_Speed_Info.SpeedValue = 190;
+        LU_Speed_Info.SpeedValue = 190;
     }
     else if(LU_Speed_Info.TimerValue > 800)
     {
-            LU_Speed_Info.SpeedValue = 200;
+        LU_Speed_Info.SpeedValue = 200;
     }
     else if(LU_Speed_Info.TimerValue > 770)
     {
-            LU_Speed_Info.SpeedValue = 210;
+        LU_Speed_Info.SpeedValue = 210;
     }
     else if(LU_Speed_Info.TimerValue > 730)
     {
-            LU_Speed_Info.SpeedValue = 220;
+        LU_Speed_Info.SpeedValue = 220;
     }
     else if(LU_Speed_Info.TimerValue > 710)
     {
-            LU_Speed_Info.SpeedValue = 230;
+        LU_Speed_Info.SpeedValue = 230;
     }
     else if(LU_Speed_Info.TimerValue > 680)
     {
-            LU_Speed_Info.SpeedValue = 240;
+        LU_Speed_Info.SpeedValue = 240;
     }
     else if(LU_Speed_Info.TimerValue > 670)
     {
-            LU_Speed_Info.SpeedValue = 250;
+        LU_Speed_Info.SpeedValue = 250;
     }
     else
     {
-            LU_Speed_Info.SpeedValue = 300;
+        LU_Speed_Info.SpeedValue = 300;
     }
 }
 /*********************************************************************
@@ -1027,84 +971,84 @@ void Determine_TrackState(BYTE uchPD_IO_Value)
         case WAITING_FOR_AXLE:
              break;
         case WAIT_FOR_AXLE_AT_TRAILING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            {
                 /* wheel is moving forward to middle of Both PD, So clear the sup errors */
-                    Clear_PD1_Supervisory_Count();
-                    Clear_PD2_Supervisory_Count();
-                }
-            if(uchNewState == WAITING_FOR_AXLE)
-              {
+                Clear_PD1_Supervisory_Count();
+                Clear_PD2_Supervisory_Count();
+            }
+            if(uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Track_Info.Flags.PD_Without_Overlapping = TRUE;
-              }
+            }
             break;
         case LET_AXLE_CLEAR_LEADING_PD_FIRST:
             Track_Info.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Register_PD1212_Transition();
-                }
+            }
             break;
         case LET_AXLE_CLEAR_TRAILING_PD_NEXT:
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Register_PD1212_Transition();
                 break;
-                }
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
+            }
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            {
                 /* wheel is moving Backward to middle of Both PD,so clear the sup errors */
                 Clear_PD1_Supervisory_Count();
                 Clear_PD2_Supervisory_Count();
-                }
+            }
             break;
         case DIR_CHANGE_FROM_FWD_TO_REV:
-            if (uchNewState == LET_AXLE_CLEAR_LEADING_PD_FIRST)
-                {
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_LEADING_PD_FIRST)
+            {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count();
                 Clear_PD2_Supervisory_Count();
-                }
+            }
             break;
         case WAIT_FOR_AXLE_AT_LEADING_PD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            {
                 /* wheel is moving forward to middle of Both PD */
 
                 Clear_PD1_Supervisory_Count();
                 Clear_PD2_Supervisory_Count();
-                }
-            if(uchNewState == WAITING_FOR_AXLE)
-              {
+            }
+            if(uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Track_Info.Flags.PD_Without_Overlapping = TRUE;
-              }
+            }
             break;
         case LET_AXLE_CLEAR_TRAILING_PD_FIRST:
             Track_Info.Flags.PD_Non_Overlapping = FALSE;
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Register_PD2121_Transition();
-                }
+            }
             break;
         case LET_AXLE_CLEAR_LEADING_PD_NEXT:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count();
                 Clear_PD2_Supervisory_Count();
-                }
-            if (uchNewState == WAITING_FOR_AXLE)
-                {
+            }
+            if (uchNewState == (BYTE)WAITING_FOR_AXLE)
+            {
                 Register_PD2121_Transition();
-                }
+            }
             break;
         case DIR_CHANGE_FROM_REV_TO_FWD:
-            if (uchNewState == LET_AXLE_CLEAR_TRAILING_PD_FIRST)
-                {
+            if (uchNewState == (BYTE)LET_AXLE_CLEAR_TRAILING_PD_FIRST)
+            {
                 /* wheel is moving Backward to middle of Both PD */
                 Clear_PD1_Supervisory_Count();
                 Clear_PD2_Supervisory_Count();
-                }
+            }
             break;
         case OUT_OF_SYNC_OR_PD_ERROR:
             Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
@@ -1114,11 +1058,11 @@ void Determine_TrackState(BYTE uchPD_IO_Value)
             break;
      }
 
-       Track_Info.State = uchNewState;
-       if(Track_Info.State != WAITING_FOR_AXLE )
-        {
-         Track_Info.PD_Last_Change_Timeout_50ms  = PD_CLEARING_TIMEOUT;
-        }
+    Track_Info.State = (Axle_Counter_State)uchNewState;
+    if(Track_Info.State != WAITING_FOR_AXLE )
+    {
+        Track_Info.PD_Last_Change_Timeout_50ms  = PD_CLEARING_TIMEOUT;
+    }
 }
 
 //01/09/10
@@ -1191,16 +1135,16 @@ void Analyse_Supervisory_Sequence(void)
 
   if(Track_Info.PD1S_Falling_Edge_Count == 1 &&
      Track_Info.PD2S_Falling_Edge_Count == 1 )
-     {
+    {
        if(Track_Info.PD1S_Rising_Edge_Count == 0 &&
          Track_Info.PD2S_Rising_Edge_Count == 0 )
-         {
-          Track_Info.Wheel_Type = TRAIN_WHEEL_WITH_SINGLE_SUP;
-         }
-         else
-         {
-          Track_Info.Wheel_Type = TRAIN_WHEEL_WITH_DOUBLE_SUP;
-         }
+        {
+            Track_Info.Wheel_Type = TRAIN_WHEEL_WITH_SINGLE_SUP;
+        }
+        else
+        {
+            Track_Info.Wheel_Type = TRAIN_WHEEL_WITH_DOUBLE_SUP;
+        }
         return;
      }
     if(Track_Info.PD1S_Rising_Edge_Count == 1 &&
@@ -1344,123 +1288,123 @@ void Detect_PD_Failures(void)
    if(Track_Info.Flags.PD_State_Counted == TRUE)
     {
          /* Wheel counted .so, clear the PD state errors. Because of Trolley    */
-         Clear_PD1_Supervisory_Count();
-         Clear_PD2_Supervisory_Count();
-         Clear_PD12_Main_Pulse_Count();
-         Clear_Wheel_Type();
-         Track_Info.Flags.PD_State_Counted =FALSE;
-         Track_Info.Flags.PD_Non_Overlapping = FALSE;
-     return;
+        Clear_PD1_Supervisory_Count();
+        Clear_PD2_Supervisory_Count();
+        Clear_PD12_Main_Pulse_Count();
+        Clear_Wheel_Type();
+        Track_Info.Flags.PD_State_Counted =FALSE;
+        Track_Info.Flags.PD_Non_Overlapping = FALSE;
+        return;
     }
     if(Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms == TIMEOUT_EVENT)
-     {
-      Track_Info.Flags.US_Local_Counts_Just_Cleared = SET_LOW;
-     }
+    {
+        Track_Info.Flags.US_Local_Counts_Just_Cleared = SET_LOW;
+    }
     if(Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms == TIMEOUT_EVENT)
-     {
-      Track_Info.Flags.DS_Local_Counts_Just_Cleared = SET_LOW;
-     }
+    {
+        Track_Info.Flags.DS_Local_Counts_Just_Cleared = SET_LOW;
+    }
     if(Track_Info.PD_Last_Change_Timeout_50ms == TIMEOUT_EVENT )
     {
          /*  Wheel state not changed for last 6 sec.
             so, clear the PD state errors. Because of Trolley   */
-         Clear_PD1_Supervisory_Count();
-         Clear_PD2_Supervisory_Count();
-         Clear_PD12_Main_Pulse_Count();
-         Clear_Wheel_Type();
-         Track_Info.Flags.PD_State_Counted =FALSE;
-         Track_Info.Flags.PD_Non_Overlapping = FALSE;
+        Clear_PD1_Supervisory_Count();
+        Clear_PD2_Supervisory_Count();
+        Clear_PD12_Main_Pulse_Count();
+        Clear_Wheel_Type();
+        Track_Info.Flags.PD_State_Counted =FALSE;
+        Track_Info.Flags.PD_Non_Overlapping = FALSE;
     }
   if(!Chk_For_Track_Occupancy())
    {
-    if (Track_Info.Flags.PD1S_Timer_On == TRUE && Track_Info.PD1S_Timeout_50ms == TIMEOUT_EVENT)
-      {
-        Set_Error_Status_Bit (AD1_SUP_LOW_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-      }
-     if (Track_Info.Flags.PD2S_Timer_On == TRUE && Track_Info.PD2S_Timeout_50ms == TIMEOUT_EVENT)
-     {
-        Set_Error_Status_Bit (AD2_SUP_LOW_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
+        if (Track_Info.Flags.PD1S_Timer_On == TRUE && Track_Info.PD1S_Timeout_50ms == TIMEOUT_EVENT)
+        {
+            Set_Error_Status_Bit (AD1_SUP_LOW_ERROR_NUM);
+            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if (Track_Info.Flags.PD2S_Timer_On == TRUE && Track_Info.PD2S_Timeout_50ms == TIMEOUT_EVENT)
+        {
+            Set_Error_Status_Bit (AD2_SUP_LOW_ERROR_NUM);
+            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
 
-     if(Track_Info.PD1M_Count >=2 && Track_Info.PD2M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >2 && Track_Info.PD2M_Count == 0 &&
-        PD2_PULSE_MAIN == SET_LOW)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >=2 &&
-       Track_Info.PD1S_Count > 2 && Track_Info.PD2S_Count == 0)
-     {
-        Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >=2 && Track_Info.PD1M_Count == 0 &&
-        Track_Info.State == WAITING_FOR_AXLE)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >2 && Track_Info.PD1M_Count == 0 &&
-        PD1_PULSE_MAIN == SET_LOW)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD2M_Count >=2  &&
-       Track_Info.PD2S_Count > 2 && Track_Info.PD1S_Count == 0)
-     {
-        Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-     if(Track_Info.PD1M_Count >=4 && Track_Info.PD2M_Count >=4)
-     {
-        Set_Error_Status_Bit(DOUBLE_COIL_INFLUENCE_ERROR_NUM);
-        Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-        Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-        Declare_DAC_Defective();
-        return;
-     }
-   }
+        if(Track_Info.PD1M_Count >=2 && Track_Info.PD2M_Count == 0 &&
+            Track_Info.State == WAITING_FOR_AXLE)
+        {
+            Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
+            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD1M_Count >2 && Track_Info.PD2M_Count == 0 &&
+            PD2_PULSE_MAIN == SET_LOW)
+        {
+            Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
+            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD1M_Count >=2 &&
+           Track_Info.PD1S_Count > 2 && Track_Info.PD2S_Count == 0)
+        {
+            Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
+            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD2M_Count >=2 && Track_Info.PD1M_Count == 0 &&
+            Track_Info.State == WAITING_FOR_AXLE)
+        {
+            Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
+            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD2M_Count >2 && Track_Info.PD1M_Count == 0 &&
+            PD1_PULSE_MAIN == SET_LOW)
+        {
+            Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
+            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD2M_Count >=2  &&
+           Track_Info.PD2S_Count > 2 && Track_Info.PD1S_Count == 0)
+        {
+            Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
+            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+        if(Track_Info.PD1M_Count >=4 && Track_Info.PD2M_Count >=4)
+        {
+            Set_Error_Status_Bit(DOUBLE_COIL_INFLUENCE_ERROR_NUM);
+            Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+            Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+            Declare_DAC_Defective();
+            return;
+        }
+    }
     if(Track_Info.PD1M_Count >=4 && Track_Info.PD2M_Count == 0 &&
         Track_Info.State == WAITING_FOR_AXLE)
-     {
+    {
         Set_Error_Status_Bit (AD1_PULSING_ERROR_NUM);
         Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
         Declare_DAC_Defective();
         return;
-      }
+    }
     if(Track_Info.PD2M_Count >=4 && Track_Info.PD1M_Count == 0 &&
         Track_Info.State == WAITING_FOR_AXLE)
-     {
+    {
         Set_Error_Status_Bit (AD2_PULSING_ERROR_NUM);
         Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
         Declare_DAC_Defective();
         return;
-     }
+    }
     if(Track_Info.PD1M_Count == 1 && Track_Info.PD2M_Count == 1 &&
        Track_Info.PD1S_Count == 0 && Track_Info.PD2S_Count == 0 &&
        Track_Info.Flags.PD_Without_Overlapping == TRUE)
@@ -1485,67 +1429,67 @@ void Detect_PD_Failures(void)
             if(Track_Info.PD1S_Count >= 2 && Track_Info.PD2S_Count >= 2)
             {
               /* Two wheels went off, But it was not Counted */
-              Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
             if(Track_Info.PD1S_Count > 1 && Track_Info.PD2S_Count > 1 &&
                Track_Info.PD1M_Count ==0  && Track_Info.PD2M_Count == 0)
             {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                /* One wheel went off, But Both Pd outputs are at high */
+                Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
             break;
         case TRAIN_WHEEL_WITH_DOUBLE_SUP:
             if(Track_Info.PD1S_Count >= 4 && Track_Info.PD2S_Count >= 4)
             {
-              /* One wheel went off, But it was not counted */
-              Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                /* One wheel went off, But it was not counted */
+                Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
             if(Track_Info.PD1S_Count > 2 &&  Track_Info.PD2S_Count > 2 &&
                Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
             {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                /* One wheel went off, But Both Pd outputs are at high */
+                Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
            break;
         default:
           if(Track_Info.PD1M_Count > 2 && Track_Info.PD2M_Count > 2)
             {
               /* Two trolley wheels went off,hence further nonoverlapping pulse is not alowed */
-              Set_Error_Status_Bit (AD_STATE_MISSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                Set_Error_Status_Bit (AD_STATE_MISSING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
           if(Track_Info.PD1S_Count > 1 && Track_Info.PD2S_Count > 1 &&
              Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
             {
-              /* One wheel went off, But Both Pd outputs are at high */
-              Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
-              Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-              Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-              Declare_DAC_Defective();
+                /* One wheel went off, But Both Pd outputs are at high */
+                Set_Error_Status_Bit (AD_NOT_SENSING_ERROR_NUM);
+                Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                Declare_DAC_Defective();
             }
           if(Track_Info.PD1M_Count ==0 &&  Track_Info.PD2M_Count == 0)
             {
-             if(Track_Info.PD1S_Count > 4 || Track_Info.PD2S_Count > 4)
-              {
-               Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
-               Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
-               Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
-               Declare_DAC_Defective();
-              }
+                if(Track_Info.PD1S_Count > 4 || Track_Info.PD2S_Count > 4)
+                {
+                    Set_Error_Status_Bit (AD_SUP_PULSATING_ERROR_NUM);
+                    Status.Flags.PD1_Status = PHASE_DETECTOR_FAILED;
+                    Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
+                    Declare_DAC_Defective();
+                }
             }
         break;
     }
@@ -1673,7 +1617,7 @@ Algorithm           : 1.Decreament the down stream axle count by 1.
 void Decrement_DS_Forward_Count(void)
 {
     Track_Info.DS_Axle_Count = Track_Info.DS_Axle_Count - 1;
-    if (Track_Info.DS_Fwd_Axle_Count <= MIN_AXLE_COUNTS)
+    if (Track_Info.DS_Fwd_Axle_Count == MIN_AXLE_COUNTS)
     {
         Track_Info.DS_Fwd_Axle_Count = MAX_AXLE_COUNTS;
     }
@@ -1802,7 +1746,7 @@ Algorithm           : 1.Decreament the down stream axle count by 1.
 void Decrement_DS_Reverse_Count(void)
 {
     Track_Info.DS_Axle_Count = Track_Info.DS_Axle_Count - 1;
-    if (Track_Info.DS_Rev_Axle_Count <= MIN_AXLE_COUNTS)
+    if (Track_Info.DS_Rev_Axle_Count == MIN_AXLE_COUNTS)
     {
         Track_Info.DS_Rev_Axle_Count = MAX_AXLE_COUNTS;
     }
@@ -1930,7 +1874,7 @@ Algorithm           : 1.Decreament the Upstream axle count by 1.
 void Decrement_US_Forward_Count(void)
 {
     Track_Info.US_Axle_Count = Track_Info.US_Axle_Count - 1;
-    if (Track_Info.US_Fwd_Axle_Count <= MIN_AXLE_COUNTS)
+    if (Track_Info.US_Fwd_Axle_Count == MIN_AXLE_COUNTS)
     {
         Track_Info.US_Fwd_Axle_Count = MAX_AXLE_COUNTS;
     }
@@ -2061,7 +2005,7 @@ Algorithm           : 1.Decreament the Upstream axle count by 1.
 void Decrement_US_Reverse_Count(void)
 {
     Track_Info.US_Axle_Count = Track_Info.US_Axle_Count - 1;
-    if (Track_Info.US_Rev_Axle_Count <= MIN_AXLE_COUNTS)
+    if (Track_Info.US_Rev_Axle_Count == MIN_AXLE_COUNTS)
     {
         Track_Info.US_Rev_Axle_Count = MAX_AXLE_COUNTS;
     }
@@ -2146,32 +2090,32 @@ void Register_PD1212_Transition(void)
     Track_Info.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
     if(Track_Info.Flags.US_Counting_Enable == SET_HIGH)
     {
-        if (Track_Info.US_Axle_Direction == DIRECTION_NOT_DEFINED)
+        if (Track_Info.US_Axle_Direction == (BYTE)DIRECTION_NOT_DEFINED)
         {
-        Track_Info.US_Axle_Direction = FORWARD_DIRECTION;
+            Track_Info.US_Axle_Direction = (BYTE)FORWARD_DIRECTION;
         }
-        if (Track_Info.US_Axle_Direction == FORWARD_DIRECTION)
+        if (Track_Info.US_Axle_Direction == (BYTE)FORWARD_DIRECTION)
         {
-        Increment_US_Forward_Count();
+            Increment_US_Forward_Count();
         }
         else
         {
-        Decrement_US_Reverse_Count();
+            Decrement_US_Reverse_Count();
         }
     }
     if(Track_Info.Flags.DS_Counting_Enable == SET_HIGH)
     {
-        if (Track_Info.DS_Axle_Direction == DIRECTION_NOT_DEFINED)
+        if (Track_Info.DS_Axle_Direction == (BYTE)DIRECTION_NOT_DEFINED)
         {
-        Track_Info.DS_Axle_Direction = FORWARD_DIRECTION;
+            Track_Info.DS_Axle_Direction = (BYTE)FORWARD_DIRECTION;
         }
-        if (Track_Info.DS_Axle_Direction == FORWARD_DIRECTION)
+        if (Track_Info.DS_Axle_Direction == (BYTE)FORWARD_DIRECTION)
         {
-        Increment_DS_Forward_Count();
+            Increment_DS_Forward_Count();
         }
         else
         {
-        Decrement_DS_Reverse_Count();
+            Decrement_DS_Reverse_Count();
         }
     }
 }
@@ -2252,32 +2196,32 @@ void Register_PD2121_Transition(void)
     Track_Info.Trolley_Timeout_50ms = TROLLEY_TIMEOUT;
     if(Track_Info.Flags.US_Counting_Enable == SET_HIGH)
     {
-        if (Track_Info.US_Axle_Direction == DIRECTION_NOT_DEFINED)
+        if (Track_Info.US_Axle_Direction == (BYTE)DIRECTION_NOT_DEFINED)
         {
-        Track_Info.US_Axle_Direction = REVERSE_DIRECTION;
+            Track_Info.US_Axle_Direction = (BYTE)REVERSE_DIRECTION;
         }
-        if (Track_Info.US_Axle_Direction == REVERSE_DIRECTION)
+        if (Track_Info.US_Axle_Direction == (BYTE)REVERSE_DIRECTION)
         {
-        Increment_US_Reverse_Count();
+            Increment_US_Reverse_Count();
         }
         else
         {
-        Decrement_US_Forward_Count();
+            Decrement_US_Forward_Count();
         }
     }
     if(Track_Info.Flags.DS_Counting_Enable == SET_HIGH)
     {
-        if(Track_Info.DS_Axle_Direction == DIRECTION_NOT_DEFINED)
+        if(Track_Info.DS_Axle_Direction == (BYTE)DIRECTION_NOT_DEFINED)
         {
-        Track_Info.DS_Axle_Direction = REVERSE_DIRECTION;
+            Track_Info.DS_Axle_Direction = (BYTE)REVERSE_DIRECTION;
         }
-        if(Track_Info.DS_Axle_Direction == REVERSE_DIRECTION)
+        if(Track_Info.DS_Axle_Direction == (BYTE)REVERSE_DIRECTION)
         {
-        Increment_DS_Reverse_Count();
+            Increment_DS_Reverse_Count();
         }
         else
         {
-        Decrement_DS_Forward_Count();
+            Decrement_DS_Forward_Count();
         }
     }
 
@@ -2350,11 +2294,11 @@ void Chk_for_AxleCount_Completion(void)
 {
     if (Track_Info.US_Axle_Count == 0)
     {
-        Track_Info.US_Axle_Direction = DIRECTION_NOT_DEFINED;
+        Track_Info.US_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     }
     if (Track_Info.DS_Axle_Count == 0)
     {
-        Track_Info.DS_Axle_Direction = DIRECTION_NOT_DEFINED;
+        Track_Info.DS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     }
     if (Track_Info.US_Axle_Count > MAX_AXLE_COUNTS )
     {
@@ -2442,17 +2386,17 @@ void Decrement_TrackMon_50msTmr(void)
         Track_Info.PD2S_Timeout_50ms = Track_Info.PD2S_Timeout_50ms - 1;
     }
     if(Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms > 0)
-      {
+    {
         Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms = Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms - 1;
-      }
+    }
     if(Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms > 0)
-      {
+    {
         Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms = Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms - 1;
-      }
+    }
     if(Track_Info.Trolley_Timeout_50ms > 0)
-      {
+    {
         Track_Info.Trolley_Timeout_50ms = Track_Info.Trolley_Timeout_50ms - 1;
-      }
+    }
 }
 /*********************************************************************
 Component name      :AXLE_MON
@@ -2519,7 +2463,7 @@ Algorithm           :1.Set the Upstream axle direction as "DIRECTION NOT DEFINED
 ************************************************************************/
 void Clear_US_AxleCount(void)
 {
-    Track_Info.US_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info.US_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info.US_Axle_Count = 0;
     Track_Info.Flags.US_Local_Counts_Just_Cleared = SET_HIGH;
     Track_Info.US_Local_Counts_Clearing_Flag_Timeout_50ms = LOCAL_COUNT_CLEARING_FLAG_TIMEOUT;
@@ -2595,7 +2539,7 @@ Algorithm           :1.Set the Downstream axle direction as "DIRECTION NOT DEFIN
 ************************************************************************/
 void Clear_DS_AxleCount(void)
 {
-    Track_Info.DS_Axle_Direction = DIRECTION_NOT_DEFINED;
+    Track_Info.DS_Axle_Direction = (BYTE)DIRECTION_NOT_DEFINED;
     Track_Info.DS_Axle_Count = 0;
     Track_Info.Flags.DS_Local_Counts_Just_Cleared = SET_HIGH;
     Track_Info.DS_Local_Counts_Clearing_Flag_Timeout_50ms = LOCAL_COUNT_CLEARING_FLAG_TIMEOUT;
@@ -3362,15 +3306,15 @@ void Clear_Wheel_Type(void)
 {
     if (Track_Info.US_Axle_Count == 0)
     {
-    Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
+        Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
     }
     if (Track_Info.DS_Axle_Count == 0)
     {
-    Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
+        Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
     }
     if(Track_Info.PD1M_Count == 0 && Track_Info.PD2M_Count == 0)
     {
-     Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
+        Track_Info.Wheel_Type = WHEEL_TYPE_NOT_DETERMINED;
     }
 }
 /*********************************************************************
@@ -3422,7 +3366,7 @@ Derived Requirements:
 ************************************************************************/
 void Start_US_Axle_Counting(void)
 {
- Track_Info.Flags.US_Counting_Enable = SET_HIGH;
+    Track_Info.Flags.US_Counting_Enable = SET_HIGH;
 }
 
 //01/09/10
@@ -3479,7 +3423,7 @@ Derived Requirements:
 ************************************************************************/
 void Start_DS_Axle_Counting(void)
 {
- Track_Info.Flags.DS_Counting_Enable = SET_HIGH;
+    Track_Info.Flags.DS_Counting_Enable = SET_HIGH;
 }
 //01/09/10
 
@@ -3532,7 +3476,7 @@ Derived Requirements:
 ************************************************************************/
 void Stop_US_Axle_Counting(void)
 {
- Track_Info.Flags.US_Counting_Enable = SET_LOW;
+    Track_Info.Flags.US_Counting_Enable = SET_LOW;
 }
 //01/09/10
 
@@ -3587,7 +3531,7 @@ Algorithm           :Disable the downstream axle counting by set the flag DS_Cou
 ************************************************************************/
 void Stop_DS_Axle_Counting(void)
 {
- Track_Info.Flags.DS_Counting_Enable = SET_LOW;
+    Track_Info.Flags.DS_Counting_Enable = SET_LOW;
 }
 //01/09/10
 
@@ -3640,14 +3584,14 @@ Derived Requirements:
 Algorithm           :1.If the Downstream local count cleared flag got setted
                         return the value as 1 otherwise return zero
 ************************************************************************/
- BOOL Get_DS_Local_Counts_Clearing_Status(void)
+BOOL Get_DS_Local_Counts_Clearing_Status(void)
 {
-  BOOL ReturnValue = FALSE;
-   if(Track_Info.Flags.DS_Local_Counts_Just_Cleared == TRUE)
-      {
-         ReturnValue = (BOOL)SET_HIGH;
-      }
-  return(ReturnValue);
+    BOOL ReturnValue = FALSE;
+    if(Track_Info.Flags.DS_Local_Counts_Just_Cleared == TRUE)
+    {
+          ReturnValue = (BOOL)SET_HIGH;
+    }
+    return(ReturnValue);
 }
 /*********************************************************************
 Component name      :AXLE_MON
@@ -3700,12 +3644,12 @@ Algorithm           :1.If the Upstream local count cleared flag got setted
 ************************************************************************/
 BOOL Get_US_Local_Counts_Clearing_Status(void)
 {
-  BOOL ReturnValue = FALSE;
-   if(Track_Info.Flags.US_Local_Counts_Just_Cleared == TRUE)
-      {
-         ReturnValue = (BOOL) SET_HIGH;
-      }
-  return(ReturnValue);
+    BOOL ReturnValue = FALSE;
+    if(Track_Info.Flags.US_Local_Counts_Just_Cleared == TRUE)
+    {
+        ReturnValue = (BOOL) SET_HIGH;
+    }
+    return(ReturnValue);
 }
 /*********************************************************************
 Component name      :AXLE_MON
@@ -3758,16 +3702,14 @@ Algorithm           :1.If the Upstream local count cleared flag got setted
 ************************************************************************/
 BOOL Chk_For_Track_Occupancy(void)
 {
- UINT16 DS_Remote_Count = Get_DS_Remote_AxleCount();
- UINT16 US_Remote_Count = Get_US_Remote_AxleCount();
- if (Track_Info.US_Axle_Count == 0 && Track_Info.DS_Axle_Count == 0 &&
-     DS_Remote_Count == 0 && US_Remote_Count == 0)
-  {
-
-     return((BOOL)FALSE);
-  }
- return((BOOL)TRUE);
+UINT16 DS_Remote_Count = Get_DS_Remote_AxleCount();
+UINT16 US_Remote_Count = Get_US_Remote_AxleCount();
+if (Track_Info.US_Axle_Count == 0 && Track_Info.DS_Axle_Count == 0 &&
+    DS_Remote_Count == 0 && US_Remote_Count == 0)
+{
+   return((BOOL)FALSE);
+}
+return((BOOL)TRUE);
 
 }
-
 

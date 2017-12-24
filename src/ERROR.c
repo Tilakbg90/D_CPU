@@ -31,11 +31,7 @@
                     void Clear_US_Error_Code()
 
 ****************************************************************/
-#include <xc.h>
-
-
 #include "COMMON.h"
-#include "DAC_MAIN.h"
 #include "ERROR.h"
 
 
@@ -126,9 +122,9 @@ Derived Requirements:
 *************************************************************/
 void Initialise_Error(void)
 {
-     BYTE i=0;
+     BYTE i;
      Error_Display.refresh_Timeout    = 0;
-     Error_Display.State              = 0;
+     Error_Display.State              = (Error_Display_State)0;
      for(i=0;i<TOTAL_NO_MAJOR_ERRORS;i++)
      {
        Minor_Err.Byte[i]=(BYTE) 0x00;
@@ -260,9 +256,9 @@ void Update_Display_Error(void)
             {
                 if(Minor_Err.Byte[Minor_Byte_No] & BitMask_List[Minor_Bit_No])
                 {
-                Error_Display.State=  STRING_COPY;
-                uchCol = 0;
-                Error_Display.position = (Minor_Byte_No * BITS_PER_BYTE) + Minor_Bit_No;
+                    Error_Display.State=  STRING_COPY;
+                    uchCol = 0;
+                    Error_Display.position = (BYTE)((Minor_Byte_No * BITS_PER_BYTE) + Minor_Bit_No);
                 }
                 Minor_Bit_No = Minor_Bit_No + 1;
             }
@@ -433,8 +429,8 @@ Algorithm           :1. Assign error number / BITS_PER_BYTE (8) to Minor byte nu
 ************************************************************/
 void Set_Error_Status_Bit (BYTE Error_No)
 {
-    BYTE  Minor_Byte_No =0;
-    BYTE  Minor_Bit_position =0;
+    BYTE  Minor_Byte_No;
+    BYTE  Minor_Bit_position;
 
     Minor_Byte_No = Error_No / BITS_PER_BYTE;
     Minor_Bit_position = Error_No % BITS_PER_BYTE;
@@ -507,7 +503,7 @@ void Clear_Error_Display(void)
 
     uch_A_State = Get_Relay_A_State();
     uch_B_State = Get_Relay_B_State();
-    if( uch_A_State != DAC_DEFECTIVE && uch_B_State != DAC_DEFECTIVE)
+    if( uch_A_State != (BYTE)DAC_DEFECTIVE && uch_B_State != (BYTE)DAC_DEFECTIVE)
     {
        for(i=0;i<TOTAL_NO_MAJOR_ERRORS;i++)
        {

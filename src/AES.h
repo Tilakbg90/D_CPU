@@ -5,13 +5,13 @@
 #define BLOCKSIZE        (16)
 #define DECRYPT_TIMEOUT  (10)
 #define ENCRYPT_TIMEOUT  (5)
-#define xtime(a) (((a)<0x80)?(a)<<1:(((a)<<1)^0x1b) )
+#define xtime(a) (((a)<0x80)?(BYTE)((a)<<1):((BYTE)((a)<<1)^0x1b) )
 
 
 
 extern void US_Encode_Key_Addition(void);
 extern void US_Encode_Data(void);
-extern void US_Decode_Key_Addition();
+extern void US_Decode_Key_Addition(void);
 extern void US_Decode_Data(void);
 extern void Update_US_Data_Encode(void);
 extern void Update_US_Data_Decode(void);

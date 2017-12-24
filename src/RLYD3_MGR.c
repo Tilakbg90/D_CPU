@@ -47,7 +47,7 @@
                     void Decrement_D3_Track_Clearing_Timeout_50msTmr(void)
 
 *******************************************************************************/
-#include <xc.h>
+
 
 #include "COMMON.h"
 #include "RELAYDRV.h"
@@ -60,42 +60,42 @@ extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
 relay_d3_info_t Relay_D3_Info;
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
-extern us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
 
-void Update_D3_Local_Count(UINT16);
-void Update_D3_A1_IN_Count(UINT16);
-void Update_D3_A2_IN_Count(UINT16);
-void Update_D3_B1_IN_Count(UINT16);
-void Update_D3_B2_IN_Count(UINT16);
-void Update_D3_C1_IN_Count(UINT16);
-void Update_D3_C2_IN_Count(UINT16);
-void Update_D3_A1_OUT_Count(UINT16);
-void Update_D3_A2_OUT_Count(UINT16);
-void Update_D3_B1_OUT_Count(UINT16);
-void Update_D3_B2_OUT_Count(UINT16);
-void Update_D3_C1_OUT_Count(UINT16);
-void Update_D3_C2_OUT_Count(UINT16);
-void Update_D3_A1_IN_AxleCount(UINT16);
-void Update_D3_A2_IN_AxleCount(UINT16);
-void Update_D3_A1_OUT_AxleCount(UINT16);
-void Update_D3_A2_OUT_AxleCount(UINT16);
-void Update_D3_B1_IN_AxleCount(UINT16);
-void Update_D3_B2_IN_AxleCount(UINT16);
-void Update_D3_B1_OUT_AxleCount(UINT16);
-void Update_D3_B2_OUT_AxleCount(UINT16);
-void Update_D3_C1_IN_AxleCount(UINT16);
-void Update_D3_C2_IN_AxleCount(UINT16);
-void Update_D3_C1_OUT_AxleCount(UINT16);
-void Update_D3_C2_OUT_AxleCount(UINT16);
-void Update_D3_A1_Direction(BYTE);
-void Update_D3_A2_Direction(BYTE);
-void Update_D3_B1_Direction(BYTE);
-void Update_D3_B2_Direction(BYTE);
-void Update_D3_C1_Direction(BYTE);
-void Update_D3_C2_Direction(BYTE);
-void Update_D3_Local_Direction(BYTE);
+
+void Update_D3_Local_Count     (UINT16 uiCount);
+void Update_D3_A1_IN_Count     (UINT16 uiCount);
+void Update_D3_A2_IN_Count     (UINT16 uiCount);
+void Update_D3_B1_IN_Count     (UINT16 uiCount);
+void Update_D3_B2_IN_Count     (UINT16 uiCount);
+void Update_D3_C1_IN_Count     (UINT16 uiCount);
+void Update_D3_C2_IN_Count     (UINT16 uiCount);
+void Update_D3_A1_OUT_Count    (UINT16 uiCount);
+void Update_D3_A2_OUT_Count    (UINT16 uiCount);
+void Update_D3_B1_OUT_Count    (UINT16 uiCount);
+void Update_D3_B2_OUT_Count    (UINT16 uiCount);
+void Update_D3_C1_OUT_Count    (UINT16 uiCount);
+void Update_D3_C2_OUT_Count    (UINT16 uiCount);
+void Update_D3_A1_IN_AxleCount (UINT16 uiCount);
+void Update_D3_A2_IN_AxleCount (UINT16 uiCount);
+void Update_D3_A1_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_A2_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_B1_IN_AxleCount (UINT16 uiCount);
+void Update_D3_B2_IN_AxleCount (UINT16 uiCount);
+void Update_D3_B1_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_B2_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_C1_IN_AxleCount (UINT16 uiCount);
+void Update_D3_C2_IN_AxleCount (UINT16 uiCount);
+void Update_D3_C1_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_C2_OUT_AxleCount(UINT16 uiCount);
+void Update_D3_A1_Direction   (BYTE Direction);
+void Update_D3_A2_Direction   (BYTE Direction);
+void Update_D3_B1_Direction   (BYTE Direction);
+void Update_D3_B2_Direction   (BYTE Direction);
+void Update_D3_C1_Direction   (BYTE Direction);
+void Update_D3_C2_Direction   (BYTE Direction);
+void Update_D3_Local_Direction(BYTE Direction);
 void Check_For_D3_Direct_Out_Count(void);
-extern void B_Sec_Led_drive(Led_State);
+
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Initialise_Relay_D3_Mgr(void)
@@ -222,14 +222,14 @@ void Start_Relay_D3_Mgr(void)
     Clear_DS_AxleCount();
     if( DIP_Switch_Info.Flags.ATC_Enabled == TRUE)
     {
-     Relay_D3_Info.State = ATC_WAIT_FOR_REMOTE_CLEAR;
-     Relay_D3_Info.ATC_Local_State = ATC_READY_TO_CLEAR;
+        Relay_D3_Info.State = ATC_WAIT_FOR_REMOTE_CLEAR;
+        Relay_D3_Info.ATC_Local_State = ATC_READY_TO_CLEAR;
     }
     else
     {
-    Energise_Preparatory_Relay_B();
-    Relay_D3_Info.State = WAIT_FOR_PILOT_TRAIN;
-//  B_Sec_Led_drive(ON);
+        Energise_Preparatory_Relay_B();
+        Relay_D3_Info.State = WAIT_FOR_PILOT_TRAIN;
+
     }
     Clear_DS_Local_Counts();
     Clear_US_Local_Counts();
@@ -343,19 +343,19 @@ Algorithm           :1.
 *******************************************************************************/
 void Update_Relay_D3_State(void)
 {
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
     UINT16 Entry1_Count,Exit1_Count;
     UINT16 Entry2_Count,Exit2_Count;
     UINT16 Entry1_Axle_Count,Entry2_Axle_Count;
     UINT16 Exit1_Axle_Count,Exit2_Axle_Count;
 
-    Entry1_Count    = ((Relay_D3_Info.A1_IN_Count + Relay_D3_Info.B1_IN_Count + Relay_D3_Info.C1_IN_Count)% MAX_OVERFLOW_COUNTS);
+    Entry1_Count    = ((Relay_D3_Info.A1_IN_Count + Relay_D3_Info.B1_IN_Count + Relay_D3_Info.C1_IN_Count)% MAX_OVERFLOW_COUNTS_3);
 
-    Entry2_Count    =  ((Relay_D3_Info.A2_IN_Count+ Relay_D3_Info.B2_IN_Count  + Relay_D3_Info.C2_IN_Count)% MAX_OVERFLOW_COUNTS);
+    Entry2_Count    =  ((Relay_D3_Info.A2_IN_Count+ Relay_D3_Info.B2_IN_Count  + Relay_D3_Info.C2_IN_Count)% MAX_OVERFLOW_COUNTS_3);
 
-    Exit1_Count     = ((Relay_D3_Info.A1_OUT_Count + Relay_D3_Info.B1_OUT_Count + Relay_D3_Info.C1_OUT_Count)% MAX_OVERFLOW_COUNTS);
+    Exit1_Count     = ((Relay_D3_Info.A1_OUT_Count + Relay_D3_Info.B1_OUT_Count + Relay_D3_Info.C1_OUT_Count)% MAX_OVERFLOW_COUNTS_3);
 
-    Exit2_Count     = ((Relay_D3_Info.A2_OUT_Count + Relay_D3_Info.B2_OUT_Count + Relay_D3_Info.C2_OUT_Count )% MAX_OVERFLOW_COUNTS);
+    Exit2_Count     = ((Relay_D3_Info.A2_OUT_Count + Relay_D3_Info.B2_OUT_Count + Relay_D3_Info.C2_OUT_Count )% MAX_OVERFLOW_COUNTS_3);
 
     Entry1_Axle_Count = (Relay_D3_Info.A1_IN_Axle_Count + Relay_D3_Info.B1_IN_Axle_Count + Relay_D3_Info.C1_IN_Axle_Count);
     Entry2_Axle_Count = (Relay_D3_Info.A2_IN_Axle_Count + Relay_D3_Info.B2_IN_Axle_Count + Relay_D3_Info.C2_IN_Axle_Count);
@@ -390,7 +390,7 @@ void Update_Relay_D3_State(void)
         case PILOT_TRAIN_IN_SECTION:
             Check_For_D3_Direct_Out_Count();
 
-            if(((Entry1_Axle_Count >= MAX_OVERFLOW_COUNTS) || (Entry2_Axle_Count >= MAX_OVERFLOW_COUNTS)) &&
+            if(((Entry1_Axle_Count >= MAX_OVERFLOW_COUNTS_3) || (Entry2_Axle_Count >= MAX_OVERFLOW_COUNTS_3)) &&
                 (Exit1_Axle_Count == 0 || Exit2_Axle_Count == 0) )
              {
                 Set_Error_Status_Bit(INOPERATIVE_COUNTS_ERROR_NUM);
@@ -400,7 +400,7 @@ void Update_Relay_D3_State(void)
 
             if(Entry1_Count < 2 || Entry2_Count < 2)
             {
-            break;
+                break;
             }
             if (Status.Flags.Direct_Out_Count == SET_LOW && Entry1_Count ==  Exit1_Count &&
                  Entry2_Count ==  Exit2_Count && Entry1_Count ==  Entry2_Count && Exit1_Count == Exit2_Count)
@@ -412,7 +412,7 @@ void Update_Relay_D3_State(void)
                    Relay_D3_Info.State = RELAY_MANAGER_IDLE;
                    DS_Section_Mode.Local_Unit  = SYSTEM_CLEAR_MODE;
                    DS_Section_Mode.Remote_Unit = DP3_MODE;
-                   Relay_D3_Info.Track_Clearing_Timeout_50ms = LOCAL_COUNT_CLEARING_TIMEOUT;
+                   Relay_D3_Info.Track_Clearing_Timeout_50ms = LOCAL_COUNT_CLEARING_TIMEOUT_3;
                     B_Sec_Led_drive(ON);
              }
 
@@ -431,7 +431,7 @@ void Update_Relay_D3_State(void)
         case TRAIN_IN_SECTION:
              Check_For_D3_Direct_Out_Count();
 
-             if(((Entry1_Axle_Count >= MAX_OVERFLOW_COUNTS) || (Entry2_Axle_Count >= MAX_OVERFLOW_COUNTS)) &&
+             if(((Entry1_Axle_Count >= MAX_OVERFLOW_COUNTS_3) || (Entry2_Axle_Count >= MAX_OVERFLOW_COUNTS_3)) &&
                 (Exit1_Axle_Count == 0 || Exit2_Axle_Count == 0) )
              {
                 Set_Error_Status_Bit(INOPERATIVE_COUNTS_ERROR_NUM);
@@ -447,8 +447,8 @@ void Update_Relay_D3_State(void)
                    Relay_D3_Info.State = RELAY_MANAGER_IDLE;
                    DS_Section_Mode.Local_Unit  = SYSTEM_CLEAR_MODE;
                    DS_Section_Mode.Remote_Unit = DP3_MODE;
-                   Relay_D3_Info.Track_Clearing_Timeout_50ms = LOCAL_COUNT_CLEARING_TIMEOUT;
-                    B_Sec_Led_drive(ON);
+                   Relay_D3_Info.Track_Clearing_Timeout_50ms = LOCAL_COUNT_CLEARING_TIMEOUT_3;
+                   B_Sec_Led_drive(ON);
 
              }
              break;
@@ -570,7 +570,7 @@ void Check_For_D3_Direct_Out_Count(void)
     switch(DIP_Switch_Info.DAC_Unit_Type)
     {
         case DAC_UNIT_TYPE_D3_A :
-            if(Relay_D3_Info.Local_Direction == REVERSE_DIRECTION )
+            if(Relay_D3_Info.Local_Direction == (BYTE)REVERSE_DIRECTION )
               {
                 if(Relay_D3_Info.Local_Count > (Relay_D3_Info.B1_IN_Axle_Count + Relay_D3_Info.C1_IN_Axle_Count))
                   {
@@ -589,7 +589,7 @@ void Check_For_D3_Direct_Out_Count(void)
               }
             break;
         case DAC_UNIT_TYPE_D3_B:
-            if(Relay_D3_Info.Local_Direction == FORWARD_DIRECTION )
+            if(Relay_D3_Info.Local_Direction == (BYTE)FORWARD_DIRECTION )
               {
                 if(Relay_D3_Info.Local_Count > (Relay_D3_Info.A1_IN_Axle_Count + Relay_D3_Info.C1_IN_Axle_Count))
                   {
@@ -608,7 +608,7 @@ void Check_For_D3_Direct_Out_Count(void)
               }
             break;
         case DAC_UNIT_TYPE_D3_C :
-            if(Relay_D3_Info.Local_Direction == FORWARD_DIRECTION )
+            if(Relay_D3_Info.Local_Direction == (BYTE)FORWARD_DIRECTION )
               {
                 if(Relay_D3_Info.Local_Count > (Relay_D3_Info.A1_IN_Axle_Count + Relay_D3_Info.B1_IN_Axle_Count))
                    {
@@ -696,42 +696,42 @@ BOOL Reset_Allowed_For_D3(void)
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
     }
-    if((Relay_D3_Info.A1_Direction == FORWARD_DIRECTION ||
-       Relay_D3_Info.A2_Direction  == FORWARD_DIRECTION) &&
-      (Relay_D3_Info.B1_Direction  == FORWARD_DIRECTION  ||
-       Relay_D3_Info.B2_Direction  == FORWARD_DIRECTION  ||
-       Relay_D3_Info.C1_Direction  == FORWARD_DIRECTION  ||
-       Relay_D3_Info.C2_Direction  == FORWARD_DIRECTION  ))
+    if((Relay_D3_Info.A1_Direction == (BYTE)FORWARD_DIRECTION ||
+       Relay_D3_Info.A2_Direction  == (BYTE)FORWARD_DIRECTION) &&
+      (Relay_D3_Info.B1_Direction  == (BYTE)FORWARD_DIRECTION  ||
+       Relay_D3_Info.B2_Direction  == (BYTE)FORWARD_DIRECTION  ||
+       Relay_D3_Info.C1_Direction  == (BYTE)FORWARD_DIRECTION  ||
+       Relay_D3_Info.C2_Direction  == (BYTE)FORWARD_DIRECTION  ))
       {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
       }
-    if((Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION ||
-       Relay_D3_Info.A2_Direction   == REVERSE_DIRECTION) &&
-       (Relay_D3_Info.B1_Direction  == REVERSE_DIRECTION  ||
-       Relay_D3_Info.B2_Direction   == REVERSE_DIRECTION  ||
-       Relay_D3_Info.C1_Direction   == REVERSE_DIRECTION  ||
-       Relay_D3_Info.C2_Direction   == REVERSE_DIRECTION  ))
+    if((Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION ||
+       Relay_D3_Info.A2_Direction   == (BYTE)REVERSE_DIRECTION) &&
+       (Relay_D3_Info.B1_Direction  == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.B2_Direction   == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.C1_Direction   == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.C2_Direction   == (BYTE)REVERSE_DIRECTION  ))
       {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
       }
-    if((Relay_D3_Info.B1_Direction  == REVERSE_DIRECTION ||
-       Relay_D3_Info.B2_Direction   == REVERSE_DIRECTION) &&
-       (Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION  ||
-       Relay_D3_Info.A2_Direction   == REVERSE_DIRECTION  ||
-       Relay_D3_Info.C1_Direction   == FORWARD_DIRECTION  ||
-       Relay_D3_Info.C2_Direction   == FORWARD_DIRECTION ))
+    if((Relay_D3_Info.B1_Direction  == (BYTE)REVERSE_DIRECTION ||
+       Relay_D3_Info.B2_Direction   == (BYTE)REVERSE_DIRECTION) &&
+       (Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.A2_Direction   == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.C1_Direction   == (BYTE)FORWARD_DIRECTION  ||
+       Relay_D3_Info.C2_Direction   == (BYTE)FORWARD_DIRECTION ))
       {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
       }
-    if((Relay_D3_Info.C1_Direction  == REVERSE_DIRECTION ||
-       Relay_D3_Info.C2_Direction   == REVERSE_DIRECTION) &&
-       (Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION  ||
-       Relay_D3_Info.A2_Direction   == REVERSE_DIRECTION  ||
-       Relay_D3_Info.B1_Direction   == FORWARD_DIRECTION  ||
-       Relay_D3_Info.B2_Direction   == FORWARD_DIRECTION ))
+    if((Relay_D3_Info.C1_Direction  == (BYTE)REVERSE_DIRECTION ||
+       Relay_D3_Info.C2_Direction   == (BYTE)REVERSE_DIRECTION) &&
+       (Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.A2_Direction   == (BYTE)REVERSE_DIRECTION  ||
+       Relay_D3_Info.B1_Direction   == (BYTE)FORWARD_DIRECTION  ||
+       Relay_D3_Info.B2_Direction   == (BYTE)FORWARD_DIRECTION ))
       {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
@@ -2387,37 +2387,37 @@ void Process_D3_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
         case DAC_UNIT_TYPE_D3_A :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_A1_IN_Count(uiFwdAxleCount);
-                Update_D3_A1_OUT_Count(uiRevAxleCount);
+                    Update_D3_A1_IN_Count(uiFwdAxleCount);
+                    Update_D3_A1_OUT_Count(uiRevAxleCount);
                 }
                 else
                 {
-                Update_D3_A2_IN_Count (uiFwdAxleCount);
-                Update_D3_A2_OUT_Count(uiRevAxleCount);
+                    Update_D3_A2_IN_Count (uiFwdAxleCount);
+                    Update_D3_A2_OUT_Count(uiRevAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_B :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_B1_IN_Count (uiRevAxleCount);
-                Update_D3_B1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B1_IN_Count (uiRevAxleCount);
+                    Update_D3_B1_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_B2_IN_Count (uiRevAxleCount);
-                Update_D3_B2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B2_IN_Count (uiRevAxleCount);
+                    Update_D3_B2_OUT_Count(uiFwdAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_C :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_C1_IN_Count (uiRevAxleCount);
-                Update_D3_C1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C1_IN_Count (uiRevAxleCount);
+                    Update_D3_C1_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_C2_IN_Count (uiRevAxleCount);
-                Update_D3_C2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C2_IN_Count (uiRevAxleCount);
+                    Update_D3_C2_OUT_Count(uiFwdAxleCount);
                 }
             break;
 
@@ -2508,37 +2508,37 @@ void Process_D3_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
         case DAC_UNIT_TYPE_D3_A :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_A2_IN_Count(uiFwdAxleCount);
-                Update_D3_A2_OUT_Count(uiRevAxleCount);
+                    Update_D3_A2_IN_Count(uiFwdAxleCount);
+                    Update_D3_A2_OUT_Count(uiRevAxleCount);
                 }
                 else
                 {
-                Update_D3_A1_IN_Count (uiFwdAxleCount);
-                Update_D3_A1_OUT_Count(uiRevAxleCount);
+                    Update_D3_A1_IN_Count (uiFwdAxleCount);
+                    Update_D3_A1_OUT_Count(uiRevAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_B :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_B2_IN_Count (uiRevAxleCount);
-                Update_D3_B2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B2_IN_Count (uiRevAxleCount);
+                    Update_D3_B2_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_B1_IN_Count (uiRevAxleCount);
-                Update_D3_B1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B1_IN_Count (uiRevAxleCount);
+                    Update_D3_B1_OUT_Count(uiFwdAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_C :
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                Update_D3_C2_IN_Count (uiRevAxleCount);
-                Update_D3_C2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C2_IN_Count (uiRevAxleCount);
+                    Update_D3_C2_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_C1_IN_Count (uiRevAxleCount);
-                Update_D3_C1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C1_IN_Count (uiRevAxleCount);
+                    Update_D3_C1_OUT_Count(uiFwdAxleCount);
                 }
             break;
         }
@@ -2633,37 +2633,37 @@ void Process_D3_Remote_AxleCount(bitadrb_t SrcAdr,SSDAC_Unit_Type Src_Unit_Type,
         case DAC_UNIT_TYPE_D3_A:
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
-                Update_D3_A1_IN_Count(uiFwdAxleCount);
-                Update_D3_A1_OUT_Count(uiRevAxleCount);
+                    Update_D3_A1_IN_Count(uiFwdAxleCount);
+                    Update_D3_A1_OUT_Count(uiRevAxleCount);
                 }
                 else
                 {
-                Update_D3_A2_IN_Count(uiFwdAxleCount);
-                Update_D3_A2_OUT_Count(uiRevAxleCount);
+                    Update_D3_A2_IN_Count(uiFwdAxleCount);
+                    Update_D3_A2_OUT_Count(uiRevAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_B:
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
-                Update_D3_B1_IN_Count (uiRevAxleCount);
-                Update_D3_B1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B1_IN_Count (uiRevAxleCount);
+                    Update_D3_B1_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_B2_IN_Count (uiRevAxleCount);
-                Update_D3_B2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_B2_IN_Count (uiRevAxleCount);
+                    Update_D3_B2_OUT_Count(uiFwdAxleCount);
                 }
             break;
         case DAC_UNIT_TYPE_D3_C:
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
-                Update_D3_C1_IN_Count (uiRevAxleCount);
-                Update_D3_C1_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C1_IN_Count (uiRevAxleCount);
+                    Update_D3_C1_OUT_Count(uiFwdAxleCount);
                 }
                 else
                 {
-                Update_D3_C2_IN_Count (uiRevAxleCount);
-                Update_D3_C2_OUT_Count(uiFwdAxleCount);
+                    Update_D3_C2_IN_Count (uiRevAxleCount);
+                    Update_D3_C2_OUT_Count(uiFwdAxleCount);
                 }
             break;
      }
@@ -2756,16 +2756,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_A1_Direction(uchDirection);
-                if(Relay_D3_Info.A1_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.A1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A1_IN_AxleCount(uiAxleCount);
                         Update_D3_A1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.A1_Direction  == FORWARD_DIRECTION)
+                if(Relay_D3_Info.A1_Direction  == (BYTE)FORWARD_DIRECTION)
                 {
                     Update_D3_A1_IN_AxleCount(uiAxleCount);
                 }
-                if(Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION)
                 {
                     Update_D3_A1_OUT_AxleCount(uiAxleCount);
                  }
@@ -2773,16 +2773,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_A2_Direction(uchDirection);
-                if(Relay_D3_Info.A2_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.A2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.A2_Direction  == FORWARD_DIRECTION)
+                if(Relay_D3_Info.A2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.A2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
@@ -2792,16 +2792,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_B1_Direction(uchDirection);
-                if(Relay_D3_Info.B1_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.B1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.B1_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.B1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
@@ -2809,16 +2809,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_B2_Direction(uchDirection);
-                    if(Relay_D3_Info.B2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
@@ -2828,16 +2828,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_C1_Direction(uchDirection);
-                if(Relay_D3_Info.C1_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.C1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.C1_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.C1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
@@ -2845,16 +2845,16 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_C2_Direction(uchDirection);
-                    if(Relay_D3_Info.C2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.C2_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.C2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
@@ -2942,16 +2942,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_A2_Direction(uchDirection);
-                if(Relay_D3_Info.A2_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.A2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.A2_Direction  == FORWARD_DIRECTION)
+                if(Relay_D3_Info.A2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.A2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
@@ -2959,16 +2959,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_A1_Direction(uchDirection);
-                if(Relay_D3_Info.A1_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.A1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A1_IN_AxleCount(uiAxleCount);
                         Update_D3_A1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.A1_Direction  == FORWARD_DIRECTION)
+                if(Relay_D3_Info.A1_Direction  == (BYTE)FORWARD_DIRECTION)
                 {
                     Update_D3_A1_IN_AxleCount(uiAxleCount);
                 }
-                 if(Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION)
+                 if(Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION)
                  {
                     Update_D3_A1_OUT_AxleCount(uiAxleCount);
                  }
@@ -2978,16 +2978,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_B2_Direction(uchDirection);
-                    if(Relay_D3_Info.B2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
@@ -2995,16 +2995,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_B1_Direction(uchDirection);
-                    if(Relay_D3_Info.B1_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.B1_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.B1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
@@ -3014,16 +3014,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
             {
                 Update_D3_C2_Direction(uchDirection);
-                    if(Relay_D3_Info.C2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.C2_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.C2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
@@ -3031,16 +3031,16 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
             else
             {
                 Update_D3_C1_Direction(uchDirection);
-                if(Relay_D3_Info.C1_Direction  == DIRECTION_NOT_DEFINED)
+                if(Relay_D3_Info.C1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
-                if(Relay_D3_Info.C1_Direction  == REVERSE_DIRECTION)
+                if(Relay_D3_Info.C1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
@@ -3138,16 +3138,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
                     Update_D3_A1_Direction(uchDirection);
-                    if(Relay_D3_Info.A1_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.A1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A1_IN_AxleCount(uiAxleCount);
                         Update_D3_A1_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.A1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_A1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A1_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.A1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_A1_OUT_AxleCount(uiAxleCount);
                     }
@@ -3155,16 +3155,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 else
                 {
                     Update_D3_A2_Direction(uchDirection);
-                    if(Relay_D3_Info.A2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.A2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.A2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_A2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.A2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.A2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_A2_OUT_AxleCount(uiAxleCount);
                     }
@@ -3174,16 +3174,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
                     Update_D3_B1_Direction(uchDirection);
-                    if(Relay_D3_Info.B1_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B1_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B1_OUT_AxleCount(uiAxleCount);
                     }
@@ -3191,16 +3191,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 else
                 {
                     Update_D3_B2_Direction(uchDirection);
-                    if(Relay_D3_Info.B2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_B2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.B2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.B2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_B2_OUT_AxleCount(uiAxleCount);
                     }
@@ -3210,16 +3210,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 if (SrcAdr.Bit.b0 == SET_HIGH)
                 {
                     Update_D3_C1_Direction(uchDirection);
-                    if(Relay_D3_Info.C1_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.C1_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C1_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.C1_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C1_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C1_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C1_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
@@ -3227,16 +3227,16 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                 else
                 {
                     Update_D3_C2_Direction(uchDirection);
-                    if(Relay_D3_Info.C2_Direction  == DIRECTION_NOT_DEFINED)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)DIRECTION_NOT_DEFINED)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C2_Direction  == REVERSE_DIRECTION)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)REVERSE_DIRECTION)
                     {
                         Update_D3_C2_IN_AxleCount(uiAxleCount);
                     }
-                    if(Relay_D3_Info.C2_Direction  == FORWARD_DIRECTION)
+                    if(Relay_D3_Info.C2_Direction  == (BYTE)FORWARD_DIRECTION)
                     {
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }

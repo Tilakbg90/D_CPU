@@ -32,13 +32,12 @@
 ************************************************************************/
 
 #include <xc.h>
-#include <stdio.h>
 #include <libpic30.h>
 #include "COMMON.h"
 #include "RESTORE.h"
 #include "CRC32.h"
 #include "ERROR.h"
-#include "RELAYMGR.h"
+
     /*DE     SF   EF    CF   D3A   D3B   D3C   3D_SF  3D_EF LCWS  LCWS_DL*/
 const char Board_data_List[15] = {0xD8, 0xD0, 0xE0, 0xC0, 0xD0, 0xD0, 0xD0, 0xC0,  0xC0, 0xE8, 0xE8, 0xD0, 0xD0, 0xD0, 0xD0};
 
@@ -46,9 +45,9 @@ const char Board_data_List[15] = {0xD8, 0xD0, 0xE0, 0xC0, 0xD0, 0xD0, 0xD0, 0xC0
 static UINT32 CPU_Calculated_Checksum;
 extern  /*near*/  dac_status_t Status;                    /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
-extern BYTE uchCheckSum_List[10];                   /* from DAC_MAIN.c */
-extern checksum_info_t Checksum_Info;               /* from DAC_MAIN.c */
 
+extern checksum_info_t Checksum_Info;               /* from DAC_MAIN.c */
+BYTE RAM_CHECK_VALUES[4] = { 0x00, 0x55, 0xAA, 0xFF };
 
 
 BYTE Get_Board_Details(void);
@@ -169,19 +168,19 @@ void Check_DIP_Switches(void)
      * is needed for I/O lines on High Nibble of Port J to stabilise
      */
     LATAbits.LATA4 = 0;  //              /* DIP switch S1 1:2 - Configuration SSDAC */
-    Nop();                  /* SSDAC - 1 Bit-1 set & Bit-2 noset,    */
-    Nop();                  /* DIP switch S1 bit-3 for direct clear without pilot option */
-    Nop();                  
-    Nop();
-    Nop();
-    Nop();
-    Nop();
-    Nop();
+    Nop();    /*lint -e526 -e628 */              /* SSDAC - 1 Bit-1 set & Bit-2 noset,    */
+    Nop();    /*lint -e526 -e628 */              /* DIP switch S1 bit-3 for direct clear without pilot option */
+    Nop();    /*lint -e526 -e628 */              
+    Nop();  /*lint -e526 -e628 */ 
+    Nop();/*lint -e526 -e628 */ 
+    Nop();/*lint -e526 -e628 */ 
+    Nop();/*lint -e526 -e628 */ 
+    Nop();/*lint -e526 -e628 */ 
     PortBuffer.Byte = (PORTA & 0x000F);
     Buffer.Byte = (BYTE) 0;
     Buffer.Bit.b0 = PortBuffer.Bit.b0;
     Buffer.Bit.b1 = PortBuffer.Bit.b1;
-    DIP_Switch_Info.Configuration = (BYTE)(Buffer.Byte);
+    DIP_Switch_Info.Configuration = (Unit_Configuration)(Buffer.Byte);
     DIP_Switch_Info.Flags.ATC_Enabled = PortBuffer.Bit.b2;
     DIP_Switch_Info.Flags.Is_FDP_CPU1 = PortBuffer.Bit.b3;
 
@@ -198,7 +197,7 @@ void Check_DIP_Switches(void)
     PortBuffer.Byte = (PORTA & 0x000F);
     Buffer.Byte = (BYTE) 0;
     Buffer.Byte = PortBuffer.Byte;
-    DIP_Switch_Info.DAC_Unit_Type = (BYTE)(Buffer.Byte);
+    DIP_Switch_Info.DAC_Unit_Type = (SSDAC_Unit_Type)(Buffer.Byte);
 
 
     LATAbits.LATA5 = 1;
@@ -280,13 +279,13 @@ void Check_DIP_Switches(void)
     Nop();
     PortBuffer.Byte = (PORTA & 0x000F);
     Buffer.Byte = (BYTE) 0;
-    DIP_Switch_Info.COM1_Mode = PortBuffer.Bit.b0;
-    DIP_Switch_Info.COM2_Mode = PortBuffer.Bit.b1;
+    DIP_Switch_Info.COM1_Mode = (comm_type)PortBuffer.Bit.b0;
+    DIP_Switch_Info.COM2_Mode = (comm_type)PortBuffer.Bit.b1;
 
     Buffer.Byte = (BYTE) 0;
     Buffer.Bit.b0 = PortBuffer.Bit.b3;
     Buffer.Bit.b1 = PortBuffer.Bit.b4;
-    DIP_Switch_Info.Baud_Rate = Buffer.Byte;
+    DIP_Switch_Info.Baud_Rate = (Baud_Rate_Config)Buffer.Byte;
     LATBbits.LATB3 = 1;
 
 
@@ -418,8 +417,7 @@ void Check_DIP_Switches(void)
                         }
                     break;
 		case DAC_UNIT_TYPE_D4_D:
-                    if (DIP_Switch_Info.Address >= (BYTE) D4_D_UNIT_MIN_ADDRESS &&
-                        DIP_Switch_Info.Address <= (BYTE) D4_D_UNIT_MAX_ADDRESS)
+                    if (DIP_Switch_Info.Address >= (BYTE) D4_D_UNIT_MIN_ADDRESS)
                         {
                         Status.Flags.Network_Addr = VALID_ADDRESS;
                         }
@@ -467,11 +465,11 @@ void Check_DIP_Switches(void)
             {
                 if (DIP_Switch_Info.Flags.Is_DAC_CPU1 == SET_HIGH)
                 {
-                DIP_Switch_Info.Peer_Address = DIP_Switch_Info.Address + 1;
+                    DIP_Switch_Info.Peer_Address = DIP_Switch_Info.Address + 1;
                 }
                 else
                 {
-                DIP_Switch_Info.Peer_Address = DIP_Switch_Info.Address - 1;
+                    DIP_Switch_Info.Peer_Address = DIP_Switch_Info.Address - 1;
                 }
             }
             return;
@@ -541,13 +539,12 @@ Algorithm           :1. Get the board details
 
 
 ************************************************************************/
-BYTE Reset_Error_State;
+
 void Check_DAC_Boards_Runtime(void)
 {
     bitadrb_t BoardData;
 
-    if(DIP_Switch_Info.Configuration == G39_DAC)
-    {
+
      BoardData.Byte = Get_Board_Details();
      BoardData.Byte = BoardData.Byte | Board_data_List[DIP_Switch_Info.DAC_Unit_Type];
 
@@ -557,15 +554,14 @@ void Check_DAC_Boards_Runtime(void)
         Status.Flags.Unit_Board_Status = BOARD_MISSING;
         Set_Error_Status_Byte(BOARDS_MISSING_ID,BoardData.Byte);
         Declare_DAC_Defective();
-        Reset_Error_State = 1;
+
      }
      else
      {
         Status.Flags.Unit_Board_Status = BOARD_PRESENT;
-        Reset_Error_State = 0;
+
      }
-     return;
-    }
+
 
 }
 /*********************************************************************
@@ -820,9 +816,8 @@ void Check_RAM(void)
 {
  BYTE page_Mem[64];
  BYTE i,j;
- BYTE RAM_CHECK_VALUES[4] = { 0x00, 0x55, 0xAA, 0xFF };
 
-  for( i =0;i<64;i++)
+  for(i=0;i<64;i++)
   {
     for(j=0;j<4;j++)
     {

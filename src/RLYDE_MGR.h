@@ -30,7 +30,7 @@ extern void Update_Relay_DE_State(void);						//Defined in RLYDE_MGR.c
 extern void Set_Relay_DE_DAC_Defective(void);					//Defined in RLYDE_MGR.c
 extern void Process_Relay_DE_Local_Direction(BYTE);				//Defined in RLYDE_MGR.c
 extern void Process_Relay_DE_Local_AxleCount(UINT16,UINT16);	//Defined in RLYDE_MGR.c
-extern void  Process_Relay_DE_Peer_Direction( BYTE uchDirection);
-extern void  Process_Relay_DE_Peer_Direction( BYTE uchDirection);
+extern void Process_Relay_DE_Peer_Direction( BYTE uchDirection);
+extern void Process_Relay_DE_Peer_Direction( BYTE uchDirection);
 extern void Process_Relay_DE_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);
 #endif

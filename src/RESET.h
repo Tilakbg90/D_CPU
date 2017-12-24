@@ -347,12 +347,12 @@ extern void Clear_Reset_State(void);                //Defined in RESET.c
 
 extern void Clear_Local_Reset_Flag(void);           //Defined in RESET.c
 extern void Clear_Local_Reset2_Flag(void);          //Defined in RESET.c
-extern void Post_DS1_has_been_Reset(BYTE);          //Defined in RESET.c
-extern void Post_DS2_has_been_Reset(BYTE);          //Defined in RESET.c
-extern void Post_US1_has_been_Reset(BYTE);          //Defined in RESET.c
-extern void Post_US2_has_been_Reset(BYTE);          //Defined in RESET.c
-extern void Post_Peer_CPU_Reset(BYTE);              //Defined in RESET.c
-extern void Post_Peer_CPU_Reset1(BYTE);             //Defined in RESET.c
+extern void Post_DS1_has_been_Reset(BYTE uchData);          //Defined in RESET.c
+extern void Post_DS2_has_been_Reset(BYTE uchData);          //Defined in RESET.c
+extern void Post_US1_has_been_Reset(BYTE uchData);          //Defined in RESET.c
+extern void Post_US2_has_been_Reset(BYTE uchData);          //Defined in RESET.c
+extern void Post_Peer_CPU_Reset    (BYTE uchData);              //Defined in RESET.c
+extern void Post_Peer_CPU_Reset1   (BYTE uchData);             //Defined in RESET.c
 extern void Update_DS_Section_Remote_Reset(void);   //Defined in RESET.c
 extern void Update_US_Section_Remote_Reset(void);   //Defined in RESET.c
 extern void Update_DS_Section_Remote_Preparatory(void);   //Defined in RESET.c

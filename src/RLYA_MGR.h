@@ -24,7 +24,7 @@
 
 extern void Initialise_Relay_A_Mgr(void);                       //Defined in RLYA_MGR.c
 extern void Update_Relay_A_State(void);                         //Defined in RLYA_MGR.c
-extern void Process_Relay_A_Local_AxleCount(UINT16,UINT16);     //Defined in RLYA_MGR.c
-extern void Process_Relay_A_Local_Direction(BYTE,UINT16);       //Defined in RLYA_MGR.c
+extern void Process_Relay_A_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);     //Defined in RLYA_MGR.c
+extern void Process_Relay_A_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount);       //Defined in RLYA_MGR.c
 extern void Update_3S_Relay_A_State(void);                      //Defined in RLYA_MGR.c
 #endif

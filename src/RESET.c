@@ -80,7 +80,6 @@ F                       void CF_US_Reset_Sequence_Complete(void)
                         BYTE Update_DS_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode)
 *****************************************************************************/
 #include <xc.h>
-//#include <sys.h>
 
 #include "COMMON.h"
 #include "RESET.h"
@@ -95,14 +94,14 @@ extern  us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
 
 
 const BYTE uchDAC_Status_Table[NO_OF_REMOTE_UNIT_STATES][NO_OF_LOCAL_UNIT_STATES] = {
-{ZERO_MODE, ZERO_MODE,                         ERROR_RESET_APPLIED_AT_LOCAL_UNIT, ZERO_MODE,                   ZERO_MODE,                   ZERO_MODE,                      SECTION_ERROR_AT_BOTH_UNITS},
-{ZERO_MODE, WAITING_FOR_RESET_AT_BOTH_UNITS,   RESET_APPLIED_AT_LOCAL_UNIT,       ZERO_MODE,                   ZERO_MODE,                   ZERO_MODE,                      ERROR_REMOTE_UNIT_WAITING_FOR_RESET},
-{ZERO_MODE, RESET_APPLIED_AT_REMOTE_UNIT,      RESET_APPLIED_AT_BOTH_UNITS,       ERROR_RESET_APPLIED_AT_REMOTE_UNIT,ZERO_MODE,             ZERO_MODE,                      ERROR_RESET_APPLIED_AT_REMOTE_UNIT},
-{ZERO_MODE, ZERO_MODE,                         ZERO_MODE,                         SECTION_WAIT_FOR_PILOT_TRAIN,ZERO_MODE,                   ZERO_MODE,                      SECTION_ERROR_AT_BOTH_UNITS},
-{ZERO_MODE, ZERO_MODE,                         ZERO_MODE,                         ZERO_MODE,                   SECTION_CLEAR_AT_BOTH_UNITS, ZERO_MODE,                      SECTION_ERROR_AT_BOTH_UNITS},
-{ZERO_MODE, ZERO_MODE,                         ZERO_MODE,                         ZERO_MODE,                   ZERO_MODE,                   SECTION_OCCUPIED_AT_BOTH_UNITS, SECTION_ERROR_AT_BOTH_UNITS},
-{ZERO_MODE, ERROR_LOCAL_UNIT_WAITING_FOR_RESET,ERROR_RESET_APPLIED_AT_LOCAL_UNIT, ZERO_MODE,                   ZERO_MODE,                   ZERO_MODE,                      SECTION_ERROR_AT_BOTH_UNITS},
-{ZERO_MODE, WAITING_FOR_RESET_AT_BOTH_UNITS   ,RESET_APPLIED_AT_LOCAL_UNIT       ,SECTION_WAIT_FOR_PILOT_TRAIN,SECTION_CLEAR_AT_BOTH_UNITS, SECTION_OCCUPIED_AT_BOTH_UNITS, SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)ZERO_MODE,                         (BYTE)ERROR_RESET_APPLIED_AT_LOCAL_UNIT, (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)WAITING_FOR_RESET_AT_BOTH_UNITS,   (BYTE)RESET_APPLIED_AT_LOCAL_UNIT,       (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)ERROR_REMOTE_UNIT_WAITING_FOR_RESET},
+{(BYTE)ZERO_MODE, (BYTE)RESET_APPLIED_AT_REMOTE_UNIT,      (BYTE)RESET_APPLIED_AT_BOTH_UNITS,       (BYTE)ERROR_RESET_APPLIED_AT_REMOTE_UNIT,   (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)ERROR_RESET_APPLIED_AT_REMOTE_UNIT},
+{(BYTE)ZERO_MODE, (BYTE)ZERO_MODE,                         (BYTE)ZERO_MODE,                         (BYTE)SECTION_WAIT_FOR_PILOT_TRAIN,         (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)ZERO_MODE,                         (BYTE)ZERO_MODE,                         (BYTE)ZERO_MODE,                            (BYTE)SECTION_CLEAR_AT_BOTH_UNITS, (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)ZERO_MODE,                         (BYTE)ZERO_MODE,                         (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)SECTION_OCCUPIED_AT_BOTH_UNITS, (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)ERROR_LOCAL_UNIT_WAITING_FOR_RESET,(BYTE)ERROR_RESET_APPLIED_AT_LOCAL_UNIT, (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
+{(BYTE)ZERO_MODE, (BYTE)WAITING_FOR_RESET_AT_BOTH_UNITS   ,(BYTE)RESET_APPLIED_AT_LOCAL_UNIT       ,(BYTE)SECTION_WAIT_FOR_PILOT_TRAIN,         (BYTE)SECTION_CLEAR_AT_BOTH_UNITS, (BYTE)SECTION_OCCUPIED_AT_BOTH_UNITS, (BYTE)SECTION_ERROR_AT_BOTH_UNITS}
 };
 
 void SF_Wait_for_Local_Reset(void);
@@ -203,43 +202,43 @@ Algorithm           :1.Initialize the SF system where in the system waits for re
 ************************************************************************/
 void Initialise_SF_Reset_Monitor(void)
 {
-    Reset_Button2_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button2_Info.State = RESET_BUTTON_POLLING_NOT_STARTED;
     Reset_Button2_Info.Timeout_ms = 0;
     Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
     DS_Section_Mode.Flags.Remote_Reset_Applied =  FALSE;
     DS_Section_Mode.Flags.Remote_Preparatory_State =  TRUE;
-    DS_Section_Mode.Local_Unit = (BYTE)WAITING_FOR_RESET_MODE;
-    DS_Section_Mode.Remote_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
 }
 
 
 void Initialise_LCWS_Reset_Monitor(void)
 {
-    Reset_Button2_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button2_Info.State = RESET_BUTTON_POLLING_NOT_STARTED;
     Reset_Button2_Info.Timeout_ms = 0;
     Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
     DS_Section_Mode.Flags.Remote_Reset_Applied =  FALSE;
     DS_Section_Mode.Flags.Remote_Preparatory_State =  TRUE;
-    DS_Section_Mode.Local_Unit = (BYTE)WAITING_FOR_RESET_MODE;
-    DS_Section_Mode.Remote_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
 }
 
 
 void Initialise_DE_Reset_Monitor(void)
 {
-    Reset_Button2_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button2_Info.State = RESET_BUTTON_POLLING_NOT_STARTED;
     Reset_Button2_Info.Timeout_ms = 0;
     Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
     Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
     DS_Section_Mode.Flags.Remote_Reset_Applied =  FALSE;
     DS_Section_Mode.Flags.Remote_Preparatory_State =  TRUE;
-    DS_Section_Mode.Local_Unit = (BYTE)WAITING_FOR_RESET_MODE;
-    DS_Section_Mode.Remote_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
 }
 
 /*********************************************************************
@@ -326,8 +325,8 @@ Algorithm           :1.Initialize the CF system where in the system waits for re
 ************************************************************************/
 void Initialise_CF_Reset_Monitor(void)
 {
-    Reset_Button_Info.State  = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
-    Reset_Button2_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button_Info.State  =  RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button2_Info.State =  RESET_BUTTON_POLLING_NOT_STARTED;
     Reset_Button_Info.Timeout_ms = 0;
     Reset_Button2_Info.Timeout_ms = 0;
     Reset_Info.CF.Flags.DS1_has_been_Reset = FALSE;
@@ -340,26 +339,26 @@ void Initialise_CF_Reset_Monitor(void)
     DS_Section_Mode.Flags.Remote_Preparatory_State =  TRUE;
     US_Section_Mode.Flags.Remote_Reset_Applied =  FALSE;
     US_Section_Mode.Flags.Remote_Preparatory_State =  TRUE;
-    DS_Section_Mode.Local_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+    DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
     if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C)
         {
-         DS_Section_Mode.Remote_Unit = (BYTE)DP3_MODE;
+         DS_Section_Mode.Remote_Unit = DP3_MODE;
         }
     else if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D)
         {
-         DS_Section_Mode.Remote_Unit = (BYTE)DP3_MODE;
+         DS_Section_Mode.Remote_Unit = DP3_MODE;
         }
     else
         {
-         DS_Section_Mode.Remote_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+         DS_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
         }
-    US_Section_Mode.Local_Unit = (BYTE)WAITING_FOR_RESET_MODE;
-    US_Section_Mode.Remote_Unit = (BYTE)WAITING_FOR_RESET_MODE;
+    US_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
+    US_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
 
 }
 /*********************************************************************
@@ -426,7 +425,7 @@ Algorithm           :1.Initialize the EF system where in the system waits for re
 ************************************************************************/
 void Initialise_EF_Reset_Monitor(void)
 {
-    Reset_Button_Info.State = (BYTE) RESET_BUTTON_POLLING_NOT_STARTED;
+    Reset_Button_Info.State =  RESET_BUTTON_POLLING_NOT_STARTED;
     Reset_Button_Info.Timeout_ms = 0;
     Reset_Info.EF.Flags.US1_has_been_Reset = FALSE;
     Reset_Info.EF.Flags.US2_has_been_Reset = FALSE;
@@ -495,7 +494,7 @@ void Start_SF_Reset_Monitor(void)
    Reset_Button2_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
     if (Status.Flags.Local_Reset_Done2 == SM_RESET_PENDING)
     {
-     Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
+     Reset_Button2_Info.State = WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
     }
 
 }
@@ -506,7 +505,7 @@ void Start_LCWS_Reset_Monitor(void)
    Reset_Button2_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
     if (Status.Flags.Local_Reset_Done2 == SM_RESET_PENDING)
     {
-     Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
+     Reset_Button2_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
     }
 
 }
@@ -518,7 +517,7 @@ void Start_DE_Reset_Monitor(void)
    Reset_Button2_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
     if (Status.Flags.Local_Reset_Done2 == SM_RESET_PENDING)
     {
-     Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
+     Reset_Button2_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
     }
 
 }
@@ -590,8 +589,8 @@ void Start_CF_Reset_Monitor(void)
     if (Status.Flags.Local_Reset_Done == SM_RESET_PENDING ||
         Status.Flags.Local_Reset_Done2 == SM_RESET_PENDING)
     {
-        Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
-        Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;  /* Start reset button polling */
+        Reset_Button_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
+        Reset_Button2_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;  /* Start reset button polling */
     }
  }
 /*********************************************************************
@@ -656,7 +655,7 @@ void Start_EF_Reset_Monitor(void)
     Reset_Button_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
     if (Status.Flags.Local_Reset_Done == SM_RESET_PENDING)
     {
-        Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
+        Reset_Button_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
     }
 }
 
@@ -765,7 +764,7 @@ void Update_LCWS_Reset_Monitor_State(void)
         {
              Clear_Reset_Info();
              Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-             Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+             Reset_Info.SF.DS_State =  SF_WAIT_FOR_RESET;
              DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
              DS_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              DS_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
@@ -834,7 +833,7 @@ void Update_DE_Reset_Monitor_State(void)
         {
              Clear_Reset_Info();
              Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-             Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+             Reset_Info.SF.DS_State =  SF_WAIT_FOR_RESET;
              DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
              DS_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              DS_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
@@ -999,7 +998,7 @@ void Update_SF_Reset_Monitor_State(void)
         {
              Clear_Reset_Info();
              Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-             Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+             Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
              DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
              DS_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              DS_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
@@ -1016,33 +1015,33 @@ void Update_SF_Reset_Monitor_State(void)
             if (Reset_Info.SF.Flags.DS1_has_been_Reset == SM_HAS_RESETTED_SYSTEM &&
                 Reset_Info.SF.Flags.DS2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.SF.DS_State =  SF_WAIT_FOR_PEER_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.SF.Flags.DS1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_DS2_TO_RESET;
+                Reset_Info.SF.DS_State = SF_WAIT_FOR_DS2_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.SF.Flags.DS2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_DS1_TO_RESET;
+                Reset_Info.SF.DS_State = SF_WAIT_FOR_DS1_TO_RESET;
                 
             }
             break;
         case SF_WAIT_FOR_DS1_TO_RESET:
             if (Reset_Info.SF.Flags.DS1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.SF.DS_State = SF_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
         case SF_WAIT_FOR_DS2_TO_RESET:
             if (Reset_Info.SF.Flags.DS2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.SF.DS_State = SF_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
@@ -1100,7 +1099,7 @@ Derived Requirements:
 ************************************************************************/
 void SF_Reset_Sequence_Complete(void)
 {
- Reset_Info.SF.DS_State = (BYTE) SF_RESET_SEQUENCE_COMPLETED;
+ Reset_Info.SF.DS_State = SF_RESET_SEQUENCE_COMPLETED;
          
 }
 
@@ -1170,26 +1169,26 @@ void LCWS_Wait_for_Local_Reset(void)
 {
     if (Reset_Button2_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
         {
-           Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
+           Reset_Button2_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
 
 
            if (Reset_Allowed_For_LCWS())
                 {
                 /* Preparatory reset at Runtime */
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
+                  Reset_Info.SF.DS_State = SF_WAIT_FOR_PEER_TO_RESET;
                   // Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   // Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
                          
-                  {__asm__ volatile ("reset");} // RESET();             /* Reset the System */
+                  {asm("reset");} // RESET();             /* Reset the System */
                   return;
                  }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
                 {
                     /* Preparatory reset at start-up */
                   Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
-                  DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+                  Reset_Info.SF.DS_State =  SF_WAIT_FOR_PEER_TO_RESET;
+                  DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
                          
                  }
             }
@@ -1201,26 +1200,26 @@ void DE_Wait_for_Local_Reset(void)
 {
     if (Reset_Button2_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
         {
-           Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
+           Reset_Button2_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
 
 
            if (Reset_Allowed_For_DE())
                 {
                 /* Preparatory reset at Runtime */
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
+                  Reset_Info.SF.DS_State = SF_WAIT_FOR_PEER_TO_RESET;
                   // Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   // Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
                          
-                  {__asm__ volatile ("reset");} // RESET();             /* Reset the System */
+                  {asm("reset");} // RESET();             /* Reset the System */
                   return;
                  }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
                 {
                     /* Preparatory reset at start-up */
                   Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_PEER_TO_RESET;
-                  DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+                  Reset_Info.SF.DS_State =  SF_WAIT_FOR_PEER_TO_RESET;
+                  DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
                          
                  }
             }
@@ -1290,26 +1289,26 @@ void SF_Wait_for_Local_Reset(void)
 {
     if (Reset_Button2_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
         {
-           Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
+           Reset_Button2_Info.State =  WAIT_FOR_RESET_BUTTON_PRESS;      /* Start reset button polling */
 
 
            if (Reset_Allowed_For_DS())
                 {
                 /* Preparatory reset at Runtime */
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_DS_TO_RESET;
+                  Reset_Info.SF.DS_State = SF_WAIT_FOR_DS_TO_RESET;
                   Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
                          
-                  {__asm__ volatile ("reset");} // RESET();             /* Reset the System */
+                  {asm("reset");} // RESET();             /* Reset the System */
                   return;
                  }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
                 {
                     /* Preparatory reset at start-up */
                   Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-                  Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_DS_TO_RESET;
-                  DS_Section_Mode.Local_Unit = (BYTE)RESET_APPLIED_MODE;
+                  Reset_Info.SF.DS_State =  SF_WAIT_FOR_DS_TO_RESET;
+                  DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
                          
                  }
             }
@@ -1449,7 +1448,7 @@ void Update_CF_Reset_Monitor_State(void)
              Reset_Info.CF.Flags.DS1_has_been_Reset = FALSE;
              Reset_Info.CF.Flags.DS2_has_been_Reset = FALSE;
              Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
-             Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
+             Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
              DS_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              DS_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
              DS_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
@@ -1462,7 +1461,7 @@ void Update_CF_Reset_Monitor_State(void)
              Reset_Info.CF.Flags.US1_has_been_Reset = FALSE;
              Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
              Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-             Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+             Reset_Info.CF.US_State = CF_US_WAIT_FOR_RESET;
              US_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              US_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
              US_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
@@ -1482,27 +1481,27 @@ void Update_CF_Reset_Monitor_State(void)
             }
             if (Reset_Info.CF.Flags.DS1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS2_TO_RESET;
+                Reset_Info.CF.DS_State = CF_WAIT_FOR_DS2_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.CF.Flags.DS2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS1_TO_RESET;
+                Reset_Info.CF.DS_State = CF_WAIT_FOR_DS1_TO_RESET;
                 
             }
             break;
         case CF_WAIT_FOR_DS1_TO_RESET:
             if (Reset_Info.CF.Flags.DS1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
         case CF_WAIT_FOR_DS2_TO_RESET:
             if (Reset_Info.CF.Flags.DS2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
@@ -1524,26 +1523,26 @@ void Update_CF_Reset_Monitor_State(void)
             if (Reset_Info.CF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM &&
                 Reset_Info.CF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.CF.US_State =  CF_US_WAIT_FOR_PEER_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.CF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.US_State = (BYTE) CF_WAIT_FOR_US2_TO_RESET;
+                Reset_Info.CF.US_State = CF_WAIT_FOR_US2_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.CF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.US_State = (BYTE) CF_WAIT_FOR_US1_TO_RESET;
+                Reset_Info.CF.US_State =  CF_WAIT_FOR_US1_TO_RESET;
                 
             }
             break;
         case CF_WAIT_FOR_US1_TO_RESET:
             if (Reset_Info.CF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.CF.US_State = CF_US_WAIT_FOR_PEER_TO_RESET;
                 
                 break;
             }
@@ -1551,7 +1550,7 @@ void Update_CF_Reset_Monitor_State(void)
         case CF_WAIT_FOR_US2_TO_RESET:
             if (Reset_Info.CF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.CF.US_State = CF_US_WAIT_FOR_PEER_TO_RESET;
                 
                 break;
             }
@@ -1622,7 +1621,7 @@ Derived Requirements:
 ************************************************************************/
 void CF_DS_Reset_Sequence_Complete(void)
 {
-  Reset_Info.CF.DS_State = (BYTE) CF_DS_RESET_SEQUENCE_COMPLETED;
+  Reset_Info.CF.DS_State = CF_DS_RESET_SEQUENCE_COMPLETED;
   Reset_Button2_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_CF ||
       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF ||
@@ -1696,7 +1695,7 @@ Algorithm           :Once the CF up stream sequence is completed than check for
 ************************************************************************/
 void CF_US_Reset_Sequence_Complete(void)
 {
-    Reset_Info.CF.US_State = (BYTE) CF_US_RESET_SEQUENCE_COMPLETED;
+    Reset_Info.CF.US_State =  CF_US_RESET_SEQUENCE_COMPLETED;
     Reset_Button_Info.Timeout_300s = COOPERATIVE_RESET_MAX_TIMEOUT;
     if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_CF ||
        DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF ||
@@ -1783,13 +1782,13 @@ void CF_Wait_for_Local_Reset(void)
            DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
            DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D)
         {
-         Process_D4_Reset_Command();
+            Process_D4_Reset_Command();
         }
         else
         {
-         Process_CF_DS_Reset_Command();
+            Process_CF_DS_Reset_Command();
         }
-        Reset_Button2_Info.State  = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
+        Reset_Button2_Info.State  = WAIT_FOR_RESET_BUTTON_PRESS; /* Start reset button polling */
       }
     if(Reset_Button_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
     {
@@ -1798,7 +1797,7 @@ void CF_Wait_for_Local_Reset(void)
          DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF)
        {
         Process_CF_US_Reset_Command();
-        Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
+        Reset_Button_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
         }
     }
 }
@@ -1919,8 +1918,8 @@ void Process_D3_Reset_Command(void)
      {
         Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
         Status.Flags.Local_Reset_Done2= SM_HAS_RESETTED_SYSTEM;
-        Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS_TO_RESET;
-        Reset_Info.CF.US_State = (BYTE) CF_WAIT_FOR_US_TO_RESET;
+        Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
         
         DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
         DS_Section_Mode.Remote_Unit = DP3_MODE;
@@ -1934,10 +1933,10 @@ void Process_D3_Reset_Command(void)
         Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-        Reset_Info.CF.DS_State = (BYTE)CF_WAIT_FOR_DS_TO_RESET;
-        Reset_Info.CF.US_State = (BYTE)CF_WAIT_FOR_US_TO_RESET;
+        Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
               
-        {__asm__ volatile ("reset");} // RESET();               /* Reset the System */
+        {asm("reset");} // RESET();               /* Reset the System */
      }
 }
 
@@ -2058,8 +2057,8 @@ void Process_D4_Reset_Command(void)
      {
         Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
         Status.Flags.Local_Reset_Done2= SM_HAS_RESETTED_SYSTEM;
-        Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS_TO_RESET;
-        Reset_Info.CF.US_State = (BYTE) CF_WAIT_FOR_US_TO_RESET;
+        Reset_Info.CF.DS_State =  CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.US_State =  CF_WAIT_FOR_US_TO_RESET;
         
         DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
         DS_Section_Mode.Remote_Unit = DP3_MODE;
@@ -2073,10 +2072,10 @@ void Process_D4_Reset_Command(void)
         Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-        Reset_Info.CF.DS_State = (BYTE)CF_WAIT_FOR_DS_TO_RESET;
-        Reset_Info.CF.US_State = (BYTE)CF_WAIT_FOR_US_TO_RESET;
+        Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
               
-        {__asm__ volatile ("reset");} // RESET();               /* Reset the System */
+        {asm("reset");} // RESET();               /* Reset the System */
      }
 }
 
@@ -2197,7 +2196,7 @@ void Process_CF_DS_Reset_Command(void)
     if(Reset_Info.CF.DS_State == CF_DS_WAIT_FOR_RESET)
        {
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
-        Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.DS_State =  CF_WAIT_FOR_DS_TO_RESET;
         DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
         
         return;
@@ -2206,7 +2205,7 @@ void Process_CF_DS_Reset_Command(void)
     /* reset at run-time */
     uch_A_State = Get_Relay_A_State();
     uch_B_State = Get_Relay_B_State();
-    if(uch_A_State == DAC_DEFECTIVE && uch_B_State == DAC_DEFECTIVE)
+    if(uch_A_State == (BYTE)DAC_DEFECTIVE && uch_B_State == (BYTE)DAC_DEFECTIVE)
        {
           /*reset is accepted */
           Reset_Info.CF.Flags.DS1_has_been_Reset = FALSE;
@@ -2215,10 +2214,10 @@ void Process_CF_DS_Reset_Command(void)
           Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
           Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
           Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1= FALSE;
-          Reset_Info.CF.DS_State =(BYTE) CF_WAIT_FOR_DS_TO_RESET;
-          Reset_Info.CF.US_State =(BYTE) CF_US_WAIT_FOR_RESET;
+          Reset_Info.CF.DS_State =CF_WAIT_FOR_DS_TO_RESET;
+          Reset_Info.CF.US_State =CF_US_WAIT_FOR_RESET;
                    
-          {__asm__ volatile ("reset");} // RESET();                   /* Reset the System */
+          {asm("reset");} // RESET();                   /* Reset the System */
           return;
        }
    if(Reset_Allowed_For_DS())
@@ -2226,7 +2225,7 @@ void Process_CF_DS_Reset_Command(void)
         Reset_Info.CF.Flags.DS1_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.DS2_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-        Reset_Info.CF.DS_State = (BYTE) CF_WAIT_FOR_DS_TO_RESET;
+        Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
         Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_PENDING;
         DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
@@ -2350,7 +2349,7 @@ void Process_CF_US_Reset_Command(void)
     if(Reset_Info.CF.US_State == CF_US_WAIT_FOR_RESET)
        {
           Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
-          Reset_Info.CF.US_State = (BYTE) CF_WAIT_FOR_US_TO_RESET;
+          Reset_Info.CF.US_State =  CF_WAIT_FOR_US_TO_RESET;
                  
           US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
           return;
@@ -2358,7 +2357,7 @@ void Process_CF_US_Reset_Command(void)
     /* reset at run-time */
     uch_A_State = Get_Relay_A_State();
     uch_B_State = Get_Relay_B_State();
-    if(uch_A_State == DAC_DEFECTIVE && uch_B_State == DAC_DEFECTIVE)
+    if(uch_A_State == (BYTE)DAC_DEFECTIVE && uch_B_State == (BYTE)DAC_DEFECTIVE)
        {
          /*reset is accepted  */
            Reset_Info.CF.Flags.DS1_has_been_Reset = FALSE;
@@ -2367,10 +2366,10 @@ void Process_CF_US_Reset_Command(void)
            Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
            Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
            Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1= FALSE;
-           Reset_Info.CF.US_State = (BYTE)CF_WAIT_FOR_US_TO_RESET;
-           Reset_Info.CF.DS_State = (BYTE)CF_DS_WAIT_FOR_RESET;
+           Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
+           Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
                  
-           {__asm__ volatile ("reset");} // RESET();            /* Reset the System */
+           {asm("reset");} // RESET();            /* Reset the System */
            return;
         }
    if(Reset_Allowed_For_US())
@@ -2378,7 +2377,7 @@ void Process_CF_US_Reset_Command(void)
         Reset_Info.CF.Flags.US1_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.US2_has_been_Reset = FALSE;
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset = FALSE;
-        Reset_Info.CF.US_State = (BYTE)CF_WAIT_FOR_US_TO_RESET;
+        Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
         Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
         Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_PENDING;
         US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
@@ -2490,7 +2489,7 @@ void Update_EF_Reset_Monitor_State(void)
         {
              Clear_Reset_Info();
              Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
-             Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_RESET;
+             Reset_Info.EF.US_State =  EF_WAIT_FOR_RESET;
              US_Section_Mode.Flags.Remote_Reset_Applied = FALSE;
              US_Section_Mode.Flags.Remote_Preparatory_State = TRUE;
              US_Section_Mode.Local_Unit = WAITING_FOR_RESET_MODE;
@@ -2507,33 +2506,33 @@ void Update_EF_Reset_Monitor_State(void)
             if (Reset_Info.EF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM &&
                 Reset_Info.EF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.EF.US_State = EF_WAIT_FOR_PEER_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.EF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_US2_TO_RESET;
+                Reset_Info.EF.US_State = EF_WAIT_FOR_US2_TO_RESET;
                 
                 break;
             }
             if (Reset_Info.EF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_US1_TO_RESET;
+                Reset_Info.EF.US_State = EF_WAIT_FOR_US1_TO_RESET;
                 
             }
             break;
         case EF_WAIT_FOR_US1_TO_RESET:
             if (Reset_Info.EF.Flags.US1_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.EF.US_State = EF_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
         case EF_WAIT_FOR_US2_TO_RESET:
             if (Reset_Info.EF.Flags.US2_has_been_Reset == SM_HAS_RESETTED_SYSTEM)
             {
-                Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_PEER_TO_RESET;
+                Reset_Info.EF.US_State = EF_WAIT_FOR_PEER_TO_RESET;
                 
             }
             break;
@@ -2599,7 +2598,7 @@ Algorithm           :Indicate that the reset sequence is completed for EF
 ************************************************************************/
 void EF_Reset_Sequence_Complete(void)
 {
-  Reset_Info.EF.US_State = (BYTE) EF_RESET_SEQUENCE_COMPLETED;
+  Reset_Info.EF.US_State = EF_RESET_SEQUENCE_COMPLETED;
          
 }
 
@@ -2671,24 +2670,24 @@ void EF_Wait_for_Local_Reset(void)
 {
     if (Reset_Button_Info.State == RESET_BUTTON_PRESS_ACCEPTED)
     {
-        Reset_Button_Info.State  = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;    /* Start reset button polling */
+        Reset_Button_Info.State  = WAIT_FOR_RESET_BUTTON_PRESS;    /* Start reset button polling */
         if (Reset_Allowed_For_US())
         {
             /* Preparatory reset at Runtime */
-            Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_US_TO_RESET;
+            Reset_Info.EF.US_State = EF_WAIT_FOR_US_TO_RESET;
             /* Preparatory reset is accepted only once */
             Reset_Info.EF.Flags.US1_has_been_Reset = FALSE;
             Reset_Info.EF.Flags.US2_has_been_Reset = FALSE;
             Reset_Info.EF.Flags.Peer_CPU_has_been_Reset = FALSE;
                  /* Update CheckSum  */
-            {__asm__ volatile ("reset");} // RESET();               /* Reset the System */
+            {asm("reset");} // RESET();               /* Reset the System */
             return;
         }
         if(Reset_Info.EF.US_State == EF_WAIT_FOR_RESET)
         {
             /* Preparatory reset at start-up */
             Status.Flags.Local_Reset_Done  = SM_HAS_RESETTED_SYSTEM;
-            Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_US_TO_RESET;
+            Reset_Info.EF.US_State = EF_WAIT_FOR_US_TO_RESET;
             US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
             
         }
@@ -2770,33 +2769,33 @@ void Update_Reset_Button_State(void)
         case WAIT_FOR_RESET_BUTTON_PRESS:
             if (A1_RST_BUTTON_PORT == FALSE && A2_RST_BUTTON_PORT == TRUE)
             {
-                Reset_Button_Info.State = (BYTE) RESET_BUTTON_PRESSED_MIN_WAIT;
+                Reset_Button_Info.State = RESET_BUTTON_PRESSED_MIN_WAIT;
                 Reset_Button_Info.Timeout_ms = RESET_BUTTON_MIN_TIMEOUT;
             }
             break;
         case RESET_BUTTON_PRESSED_MIN_WAIT:
             if (Reset_Button_Info.Timeout_ms == TIMEOUT_EVENT)
             {
-                Reset_Button_Info.State = (BYTE) RESET_BUTTON_PRESSED_MAX_WAIT;
+                Reset_Button_Info.State = RESET_BUTTON_PRESSED_MAX_WAIT;
                 Reset_Button_Info.Timeout_ms = RESET_BUTTON_MAX_TIMEOUT;
                 break;
             }
             if (A1_RST_BUTTON_PORT == TRUE && A2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;
+                Reset_Button_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;
                 Reset_Button_Info.Timeout_ms = 0;
             }
             break;
         case RESET_BUTTON_PRESSED_MAX_WAIT:
             if (A1_RST_BUTTON_PORT == TRUE && A2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button_Info.State = (BYTE) RESET_BUTTON_PRESS_ACCEPTED;
+                Reset_Button_Info.State = RESET_BUTTON_PRESS_ACCEPTED;
                 Reset_Button_Info.Timeout_ms = 0;
                 break;
             }
             if (Reset_Button_Info.Timeout_ms == TIMEOUT_EVENT)
             {
-                Reset_Button_Info.State = (BYTE) RESET_BUTTON_STUCK;
+                Reset_Button_Info.State = RESET_BUTTON_STUCK;
             }
             break;
         case RESET_BUTTON_PRESS_ACCEPTED:
@@ -2808,12 +2807,12 @@ void Update_Reset_Button_State(void)
         case RESET_BUTTON_STUCK:
             if (A1_RST_BUTTON_PORT == TRUE && A2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;
+                Reset_Button_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;
                 Reset_Button_Info.Timeout_ms = 0;
             }
             break;
         default:
-            Reset_Button_Info.State = (BYTE) RESET_BUTTON_STUCK;
+            Reset_Button_Info.State = RESET_BUTTON_STUCK;
             Reset_Button_Info.Timeout_ms = 0;
             break;
     }
@@ -2889,33 +2888,33 @@ void Update_Reset_Button2_State(void)
         case WAIT_FOR_RESET_BUTTON_PRESS:
             if (B1_RST_BUTTON_PORT == FALSE && B2_RST_BUTTON_PORT == TRUE)
             {
-                Reset_Button2_Info.State = (BYTE) RESET_BUTTON_PRESSED_MIN_WAIT;
+                Reset_Button2_Info.State = RESET_BUTTON_PRESSED_MIN_WAIT;
                 Reset_Button2_Info.Timeout_ms = RESET_BUTTON_MIN_TIMEOUT;
             }
             break;
         case RESET_BUTTON_PRESSED_MIN_WAIT:
             if (Reset_Button2_Info.Timeout_ms == TIMEOUT_EVENT)
             {
-                Reset_Button2_Info.State = (BYTE) RESET_BUTTON_PRESSED_MAX_WAIT;
+                Reset_Button2_Info.State = RESET_BUTTON_PRESSED_MAX_WAIT;
                 Reset_Button2_Info.Timeout_ms = RESET_BUTTON_MAX_TIMEOUT;
                 break;
             }
             if (B1_RST_BUTTON_PORT == TRUE && B2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;
+                Reset_Button2_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;
                 Reset_Button2_Info.Timeout_ms = 0;
             }
             break;
         case RESET_BUTTON_PRESSED_MAX_WAIT:
             if (B1_RST_BUTTON_PORT == TRUE && B2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button2_Info.State = (BYTE) RESET_BUTTON_PRESS_ACCEPTED;
+                Reset_Button2_Info.State = RESET_BUTTON_PRESS_ACCEPTED;
                 Reset_Button2_Info.Timeout_ms = 0;
                 break;
             }
             if (Reset_Button2_Info.Timeout_ms == TIMEOUT_EVENT)
             {
-                Reset_Button2_Info.State = (BYTE) RESET_BUTTON_STUCK;
+                Reset_Button2_Info.State = RESET_BUTTON_STUCK;
             }
             break;
         case RESET_BUTTON_PRESS_ACCEPTED:
@@ -2927,7 +2926,7 @@ void Update_Reset_Button2_State(void)
         case RESET_BUTTON_STUCK:
             if (B1_RST_BUTTON_PORT == TRUE && B2_RST_BUTTON_PORT == FALSE)
             {
-                Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;
+                Reset_Button2_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;
                 Reset_Button2_Info.Timeout_ms = 0;
             }
             break;
@@ -3107,9 +3106,9 @@ void Clear_Reset_Info(void)
             break;
     }
     Reset_Button_Info.Timeout_ms = 0;
-    Reset_Button_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
+    Reset_Button_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;   /* Start reset button polling */
     Reset_Button2_Info.Timeout_ms = 0;
-    Reset_Button2_Info.State = (BYTE) WAIT_FOR_RESET_BUTTON_PRESS;  /* Start reset button polling */
+    Reset_Button2_Info.State = WAIT_FOR_RESET_BUTTON_PRESS;  /* Start reset button polling */
 
 }
 /*********************************************************************
@@ -4553,7 +4552,7 @@ void Update_DS_Section_Remote_Reset(void)
 {
    if(DS_Section_Mode.Flags.Remote_Reset_Applied == FALSE)
       {
-        DS_Section_Mode.Remote_Unit = (BYTE)RESET_APPLIED_MODE;
+        DS_Section_Mode.Remote_Unit = RESET_APPLIED_MODE;
         DS_Section_Mode.Flags.Remote_Reset_Applied = SET_HIGH;
         DS_Section_Mode.Flags.Remote_Preparatory_State = SET_LOW;
       }
@@ -4613,7 +4612,7 @@ void Update_DS_Section_Remote_Preparatory(void)
 {
    if(DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
     {
-     DS_Section_Mode.Remote_Unit = (BYTE)WAIT_FOR_PILOT_TRAIN_MODE;
+     DS_Section_Mode.Remote_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
      DS_Section_Mode.Flags.Remote_Preparatory_State = SET_HIGH;
     }
 }
@@ -4673,7 +4672,7 @@ void Update_US_Section_Remote_Reset(void)
 {
    if(US_Section_Mode.Flags.Remote_Reset_Applied == FALSE)
       {
-        US_Section_Mode.Remote_Unit = (BYTE)RESET_APPLIED_MODE;
+        US_Section_Mode.Remote_Unit = RESET_APPLIED_MODE;
         US_Section_Mode.Flags.Remote_Reset_Applied = SET_HIGH;
         US_Section_Mode.Flags.Remote_Preparatory_State = SET_LOW;
       }
@@ -4733,7 +4732,7 @@ void Update_US_Section_Remote_Preparatory(void)
 {
    if(DIP_Switch_Info.Flags.ATC_Enabled != TRUE)
     {
-     US_Section_Mode.Remote_Unit = (BYTE)WAIT_FOR_PILOT_TRAIN_MODE;
+     US_Section_Mode.Remote_Unit = WAIT_FOR_PILOT_TRAIN_MODE;
      US_Section_Mode.Flags.Remote_Preparatory_State = SET_HIGH;
     }
 }
@@ -4815,12 +4814,12 @@ BYTE Update_System_Mode(void)
     switch (DIP_Switch_Info.DAC_Unit_Type)
     {
         case DAC_UNIT_TYPE_SF:
-              DS_Mode_Byte = Update_DS_Section_Mode(DS_Section_Mode.Remote_Unit,DS_Section_Mode.Local_Unit);
+              DS_Mode_Byte = Update_DS_Section_Mode((BYTE)DS_Section_Mode.Remote_Unit,(BYTE)DS_Section_Mode.Local_Unit);
               Mode = (BYTE)(Mode | DS_Mode_Byte);
              break;
 
        case DAC_UNIT_TYPE_EF:
-             US_Mode_Byte = Update_US_Section_Mode(US_Section_Mode.Remote_Unit,US_Section_Mode.Local_Unit);
+             US_Mode_Byte = Update_US_Section_Mode((BYTE)US_Section_Mode.Remote_Unit,(BYTE)US_Section_Mode.Local_Unit);
              US_Mode_Byte = (BYTE)(US_Mode_Byte << 4);
              Mode = (BYTE)(Mode | US_Mode_Byte);
             break;
@@ -4830,8 +4829,8 @@ BYTE Update_System_Mode(void)
         case DAC_UNIT_TYPE_D3_A:
         case DAC_UNIT_TYPE_D3_B:
         case DAC_UNIT_TYPE_D3_C:
-            DS_Mode_Byte = Update_DS_Section_Mode(DS_Section_Mode.Remote_Unit,DS_Section_Mode.Local_Unit);
-            US_Mode_Byte = Update_US_Section_Mode(US_Section_Mode.Remote_Unit,US_Section_Mode.Local_Unit);
+            DS_Mode_Byte = Update_DS_Section_Mode((BYTE)DS_Section_Mode.Remote_Unit,(BYTE)DS_Section_Mode.Local_Unit);
+            US_Mode_Byte = Update_US_Section_Mode((BYTE)US_Section_Mode.Remote_Unit,(BYTE)US_Section_Mode.Local_Unit);
             US_Mode_Byte = (BYTE)(US_Mode_Byte << 4);
             Mode = (BYTE)(Mode | US_Mode_Byte);
             Mode = (BYTE)(Mode | DS_Mode_Byte);
@@ -4853,16 +4852,16 @@ BYTE Update_System_Mode(void)
         case DAC_UNIT_TYPE_D4_B:
         case DAC_UNIT_TYPE_D4_C:
         case DAC_UNIT_TYPE_D4_D:
-            DS_Mode_Byte = Update_DS_Section_Mode(DS_Section_Mode.Remote_Unit,DS_Section_Mode.Local_Unit);
+            DS_Mode_Byte = Update_DS_Section_Mode((BYTE)DS_Section_Mode.Remote_Unit,(BYTE)DS_Section_Mode.Local_Unit);
             Mode = (BYTE)(Mode | DS_Mode_Byte);
            break;
         case DAC_UNIT_TYPE_LCWS:
         case DAC_UNIT_TYPE_LCWS_DL:
-              DS_Mode_Byte = Update_DS_Section_Mode(DS_Section_Mode.Local_Unit,DS_Section_Mode.Local_Unit); /* There is no remote unit */
+              DS_Mode_Byte = Update_DS_Section_Mode((BYTE)DS_Section_Mode.Local_Unit,(BYTE)DS_Section_Mode.Local_Unit); /* There is no remote unit */
               Mode = (BYTE)(Mode | DS_Mode_Byte);
              break;
         case DAC_UNIT_TYPE_DE:
-              DS_Mode_Byte = Update_DS_Section_Mode(DS_Section_Mode.Local_Unit,DS_Section_Mode.Local_Unit); /* There is no remote unit */
+              DS_Mode_Byte = Update_DS_Section_Mode((BYTE)DS_Section_Mode.Local_Unit,(BYTE)DS_Section_Mode.Local_Unit); /* There is no remote unit */
               Mode = (BYTE)(Mode | DS_Mode_Byte);
              break;
        default:
@@ -4920,7 +4919,7 @@ Algorithm           :1.Update the Downstream Section status by reading the DAC s
 BYTE Update_DS_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode)
 {
   BYTE uchMode = 0;
-  if(ds_remote_mode <= NO_OF_REMOTE_UNIT_STATES && ds_local_mode <= NO_OF_LOCAL_UNIT_STATES)
+  if(ds_remote_mode < NO_OF_REMOTE_UNIT_STATES && ds_local_mode < NO_OF_LOCAL_UNIT_STATES)
     {
      uchMode = uchDAC_Status_Table[ds_remote_mode][ds_local_mode];
     }
@@ -4975,7 +4974,7 @@ Algorithm           :1.Update the Upstream Section status by reading the DAC sta
 BYTE Update_US_Section_Mode(BYTE us_remote_mode,BYTE us_local_mode)
 {
   BYTE uchMode = 0;
-   if(us_remote_mode <= NO_OF_REMOTE_UNIT_STATES && us_local_mode <= NO_OF_LOCAL_UNIT_STATES)
+   if(us_remote_mode < NO_OF_REMOTE_UNIT_STATES && us_local_mode < NO_OF_LOCAL_UNIT_STATES)
     {
      uchMode = uchDAC_Status_Table[us_remote_mode][us_local_mode];
     }
@@ -5152,7 +5151,7 @@ void Clear_Reset_State(void)
         case DAC_UNIT_TYPE_LCWS_DL:
         case DAC_UNIT_TYPE_SF:
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.SF.DS_State = (BYTE) SF_WAIT_FOR_RESET;
+            Reset_Info.SF.DS_State = SF_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
@@ -5161,32 +5160,32 @@ void Clear_Reset_State(void)
         case DAC_UNIT_TYPE_3D_EF:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State =  CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State =  CF_US_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
         case DAC_UNIT_TYPE_D3_A:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State = CF_US_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
         case DAC_UNIT_TYPE_D3_B:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State = CF_US_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
         case DAC_UNIT_TYPE_D3_C:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State = CF_US_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
@@ -5196,14 +5195,14 @@ void Clear_Reset_State(void)
         case DAC_UNIT_TYPE_D4_D:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
             Status.Flags.Local_Reset_Done2 = SM_RESET_PENDING;
-            Reset_Info.CF.DS_State = (BYTE) CF_DS_WAIT_FOR_RESET;
-            Reset_Info.CF.US_State = (BYTE) CF_US_WAIT_FOR_RESET;
+            Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
+            Reset_Info.CF.US_State = CF_US_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;
         case DAC_UNIT_TYPE_EF:
             Status.Flags.Local_Reset_Done  = SM_RESET_PENDING;
-            Reset_Info.EF.US_State = (BYTE) EF_WAIT_FOR_RESET;
+            Reset_Info.EF.US_State =  EF_WAIT_FOR_RESET;
             
             Clear_Reset_Info();
             break;

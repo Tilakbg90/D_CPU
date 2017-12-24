@@ -294,12 +294,12 @@ extern void Initialise_Sys_Mon(void);                    //Defined in SYS_MON.c
 extern void Update_Sys_Mon_State(void);                  //Defined in SYS_MON.c
 
 extern void Start_Sys_Mon_Decrement_50msTmr(void);       //Defined in SYS_MON.c
-extern void Start_FeedBack_Check(feedBack_ID);           //Defined in SYS_MON.c
-extern void Stop_FeedBack_Check(feedBack_ID);            //Defined in SYS_MON.c
-extern void Update_US_Power_Status(bitadrb_t,bitadrb_t); //Defined in SYS_MON.c
-extern void Update_DS_Power_Status(bitadrb_t,bitadrb_t); //Defined in SYS_MON.c
-extern void Update_US_Track_Status(bitadrb_t);           //Defined in SYS_MON.c
-extern void Update_DS_Track_Status(bitadrb_t);           //Defined in SYS_MON.c
+extern void Start_FeedBack_Check(feedBack_ID uchID);           //Defined in SYS_MON.c
+extern void Stop_FeedBack_Check(feedBack_ID uchID);            //Defined in SYS_MON.c
+extern void Update_US_Power_Status(bitadrb_t DAC_Config,bitadrb_t Flags1); //Defined in SYS_MON.c
+extern void Update_DS_Power_Status(bitadrb_t DAC_Config,bitadrb_t Flags1); //Defined in SYS_MON.c
+extern void Update_US_Track_Status(bitadrb_t Flags);           //Defined in SYS_MON.c
+extern void Update_DS_Track_Status(bitadrb_t Flags);           //Defined in SYS_MON.c
 extern void Clear_US_Power_Status(void);                 //Defined in SYS_MON.c
 extern void Clear_DS_Power_Status(void);                 //Defined in SYS_MON.c
 extern void Clear_Comm_US_Failures(void);                //Defined in SYS_MON.c

@@ -45,18 +45,17 @@
 #include "COMM_US.h"
 #include "CRC16.h"
 #include "RESET.h"
-#include "RLYA_MGR.h"
 #include "SYS_MON.h"
 #include "ERROR.h"
 #include "AES.h"
 #include "RLYD4_MGR.h"
 
-UINT16 Remote_Count_US;
+
 
 extern  /*near*/  dac_status_t Status;                        /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;          /* from DAC_MAIN.c */
 extern checksum_info_t Checksum_Info;                   /* from DAC_MAIN.c */
-extern ds_section_mode DS_Section_Mode;                 /*from DAC_MAIN.c*/
+
 extern us_section_mode US_Section_Mode;                 /*from DAC_MAIN.c*/
 const UINT16 uiCOM1_BalanceTicks_Table[2][2] = {
                         /*
@@ -91,17 +90,17 @@ void Receive_COM1_Message(void);
 void Process_US_Message(void);
 void Process_US_Reset_Info_Message(void);
 void Process_US_Axle_Count_Message(void);
-void Process_US_AxleCount(bitadrb_t,UINT16,UINT16);
-void Process_3S_US_AxleCount(bitadrb_t,UINT16,UINT16); /* added for 3D3S configuration */
-void Process_US_Direction(bitadrb_t,BYTE,UINT16);
+void Process_US_AxleCount(bitadrb_t SrcAdr,UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);    
+void Process_3S_US_AxleCount(bitadrb_t SrcAdr,UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount); /* added for 3D3S configuration */
+void Process_US_Direction(bitadrb_t SrcAdr, BYTE uchDirection,UINT16 axle_Count);
 void Decrement_Comm_US_CountDown(void);
 void Set_US_Sch_Idle(void);
 void Build_US_Message(void);
 void Build_US_Reset_Info_Message(void);
 void Build_US_Axle_Count_Message(void);
-void Synchronise_US_Sch(bitadrb_t);
-void Reset_US_CountDown(bitadrb_t,bitadrb_t);
-void Check_US_Unit_Status(bitadrb_t);
+void Synchronise_US_Sch(bitadrb_t SrcAdr);
+void Reset_US_CountDown(bitadrb_t SrcAdr,bitadrb_t MsgFlags);
+void Check_US_Unit_Status(bitadrb_t Buffer);
 
 void US_LED_Error_Service_1mS(void);
 void Clear_COM1_Errors(void);
@@ -190,7 +189,7 @@ Algorith            :1.Set the communication baud rate as per the selected dip s
 **********************************************************************/
 void SetupCOM1BaudRate(void)
 {
-  if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
+  if(DIP_Switch_Info.COM1_Mode == (comm_type)FSK_COMMUNICATION)
    {
         U1BRG = 3332;
     }
@@ -336,12 +335,12 @@ Algorithm           :1.Set the communication transmit state as "NO_MSG_TO_XMIT" 
 **********************************************************************/
 void Initialise_US_CommSch(void)
 {
-    BYTE uchCnt =0;
+    BYTE uchCnt;
 
     Com1XmitObject.State = NO_MSG_TO_XMIT;
     Com1XmitObject.Index = 0;
     Com1XmitObject.Msg_Length  = COMM_MESSAGE_LENGTH;
-    Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
+    Com1RecvObject.State = (BYTE)COM_RECV_BUFFER_EMPTY;
     Com1RecvObject.Index = 0;
     Com1RecvObject.Timeout_ms = 0;
     Com1RecvObject.Consecutive_Error_Count = 0;
@@ -353,7 +352,7 @@ void Initialise_US_CommSch(void)
     {
       Com1XmitObject.Msg_Buffer[uchCnt] = (BYTE) 0;
     }
-    if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
+    if(DIP_Switch_Info.COM1_Mode == (comm_type)FSK_COMMUNICATION)
     {
      Com1XmitObject.BytePeriod = BYTE_PERIOD_9MS;
      Com1RecvObject.BytePeriod = BYTE_PERIOD_9MS;
@@ -380,7 +379,7 @@ void Initialise_US_CommSch(void)
             break;
         }
     }
-    Com1XmitObject.Transmission_Time = (Com1XmitObject.Msg_Length + (BYTE) 2) * Com1XmitObject.BytePeriod;
+    Com1XmitObject.Transmission_Time = (BYTE)((Com1XmitObject.Msg_Length + (BYTE) 2) * Com1XmitObject.BytePeriod);
     Comm_Modem_A.State = MODEM_IDLE;
     Comm_Modem_A.Timeout_ms = 0;
 }
@@ -633,10 +632,10 @@ void Update_US_Sch_State(void)
 
     Receive_COM1_Message();
 
-    if (Com1RecvObject.State == COM_VALID_MESSAGE)
+    if (Com1RecvObject.State == (BYTE)COM_VALID_MESSAGE)
     {
         Process_US_Message();       /* Valid Message received, process it */
-        Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
+        Com1RecvObject.State = (BYTE)COM_RECV_BUFFER_EMPTY;
     }
 
     switch (US_Sch_Info.State)
@@ -682,7 +681,7 @@ void Update_US_Sch_State(void)
             }
             break;
         case SET_MODEM_TX_MODE:
-            if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
+            if(DIP_Switch_Info.COM1_Mode == (comm_type)FSK_COMMUNICATION)
             {
               if(MODEM_A_CD == FALSE)
                {
@@ -699,17 +698,17 @@ void Update_US_Sch_State(void)
             }
             else
             {
-            Clear_US_Transmit_Buffer();
-            Build_US_Message();
-            US_Sch_Info.State = WAIT_FOR_DATA_ENCRYPT;
-            US_Sch_Info.Timeout_ms = TRANSMIT_WAIT_TIME;
-            Start_US_Data_Encryption();
+                Clear_US_Transmit_Buffer();
+                Build_US_Message();
+                US_Sch_Info.State = WAIT_FOR_DATA_ENCRYPT;
+                US_Sch_Info.Timeout_ms = TRANSMIT_WAIT_TIME;
+                Start_US_Data_Encryption();
             }
             break;
         case WAIT_FOR_DATA_ENCRYPT:
             Update_US_Data_Encode();
             uchEncipher_State = Get_US_Encryption_State();
-            if(uchEncipher_State == ENCRYPTION_COMLETED)
+            if(uchEncipher_State == (BYTE)ENCRYPTION_COMLETED)
             {
              Set_US_Encryption_Idle();
              US_Sch_Info.State = WAIT_FOR_CARRIER_STABALISE;
@@ -884,73 +883,75 @@ void Receive_COM1_Message(void)
 
     if(U1STAbits.URXDA == 1)
     {
-        uchData = U1RXREG;
+        uchData = (BYTE)U1RXREG;
         Com1RecvObject.Timeout_ms = COM_INVALID_MESSAGE_TIMEOUT;
         switch (Com1RecvObject.State)
         {
             case COM_RECV_BUFFER_EMPTY:
                 Com1RecvObject.Msg_Buffer[0] = uchData;
                 Com1RecvObject.Index = 1;
-                Com1RecvObject.State = COM_RECV_SRC_ADDR;
+                Com1RecvObject.State = (BYTE)COM_RECV_SRC_ADDR;
                 break;
             case COM_RECV_SRC_ADDR:
                 Com1RecvObject.Msg_Buffer[Com1RecvObject.Index] = uchData;
                 Com1RecvObject.Index = Com1RecvObject.Index + 1;
-                Com1RecvObject.State = COM_RECV_DATA_ID;
+                Com1RecvObject.State = (BYTE)COM_RECV_DATA_ID;
                 break;
             case COM_RECV_DATA_ID:
                 Com1RecvObject.Msg_Buffer[Com1RecvObject.Index] = uchData;
                 Com1RecvObject.Index = Com1RecvObject.Index + 1;
-                Com1RecvObject.State = COM_RECV_DATA_BYTES;
+                Com1RecvObject.State = (BYTE)COM_RECV_DATA_BYTES;
                 break;
             case COM_RECV_DATA_BYTES:
                 Com1RecvObject.Msg_Buffer[Com1RecvObject.Index] = uchData;
                 Com1RecvObject.Index = Com1RecvObject.Index + 1;
                 if (Com1RecvObject.Index >= COMM_MESSAGE_LENGTH )
                 {
-                    Com1RecvObject.State = COM_DECRYPT_DATA_BYTES;
+                    Com1RecvObject.State = (BYTE)COM_DECRYPT_DATA_BYTES;
                     Start_US_Data_Decryption();
                 }
+                break;
+            default:
                 break;
             }
     }
 
-    if (Com1RecvObject.State == COM_DECRYPT_DATA_BYTES)
+    if (Com1RecvObject.State == (BYTE)COM_DECRYPT_DATA_BYTES)
     {
       Update_US_Data_Decode();
       uchDecipher_State = Get_US_Decryption_State();
-        if(uchDecipher_State == DECRYPTION_COMPLETED)
+        if(uchDecipher_State == (BYTE)DECRYPTION_COMPLETED)
         {
          Set_US_Decryption_Idle();
-         Com1RecvObject.State = COM_CHECK_CRC16;
+         Com1RecvObject.State = (BYTE)COM_CHECK_CRC16;
         }
 
     }
-    if (Com1RecvObject.State == COM_CHECK_CRC16)
+    if (Com1RecvObject.State == (BYTE)COM_CHECK_CRC16)
     {
 
         Crc16_Return_Value = Crc16(COM1_RX,COMM_MESSAGE_LENGTH);
         if (Crc16_Return_Value != 0)
         {
-            Com1RecvObject.State = COM_INVALID_MESSAGE;
+            Com1RecvObject.State = (BYTE)COM_INVALID_MESSAGE;
             Status.Flags.Modem_A_Err_Toggle_Bit = !(Status.Flags.Modem_A_Err_Toggle_Bit);
             COM_US_pkt_error_cnt++;
             return;     /* Invalid CRC-16 Checksum */
         }
-        Com1RecvObject.State = COM_VALID_MESSAGE;
+        Com1RecvObject.State = (BYTE)COM_VALID_MESSAGE;
         //COM_US_pkt_error_cnt = 0;
         return;
     }
-    if (Com1RecvObject.State != COM_RECV_BUFFER_EMPTY)
+    if (Com1RecvObject.State != (BYTE)COM_RECV_BUFFER_EMPTY)
     {
         /* Message is not in expected format/incomplete, probably it is out of SYNC */
         if (Com1RecvObject.Timeout_ms == TIMEOUT_EVENT)
         {
         //    COM_US_pkt_error_cnt++;
-            Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
+            Com1RecvObject.State = (BYTE)COM_RECV_BUFFER_EMPTY;
         }
     }
-    if (Com1RecvObject.State == COM_INVALID_MESSAGE)
+    if (Com1RecvObject.State == (BYTE)COM_INVALID_MESSAGE)
     {
         /*
          * Message can be invalid for following reasons:
@@ -960,7 +961,7 @@ void Receive_COM1_Message(void)
          */
         //COM_US_pkt_error_cnt++;
         /* No Carrier Detected, so clear the Buffer */
-        Com1RecvObject.State = COM_RECV_BUFFER_EMPTY;
+        Com1RecvObject.State = (BYTE)COM_RECV_BUFFER_EMPTY;
     }
 }
 /***************************************************************************
@@ -1030,7 +1031,7 @@ void Set_US_Sch_Idle(void)
             uiTmp = US_Sch_Info.ElapsedTime;
         }
         US_Sch_Info.Timeout_ms = US_Sch_Info.ScanPeriod - uiTmp;
-        if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
+        if(DIP_Switch_Info.COM1_Mode == (comm_type)FSK_COMMUNICATION)
         {
          MODEM_A_M0 = SET_LOW;
          MODEM_A_M1 = SET_HIGH;
@@ -1288,7 +1289,7 @@ void Build_US_Message(void)
     if (U1STAbits.FERR)
     {
         /* Framing Error! Clear the error */
-        uchData = U1RXREG;
+        uchData = (BYTE)U1RXREG;
         U1STAbits.FERR = 0;
         //U1STAbits.UTXEN   = SET_LOW;
         //U1STAbits.UTXEN = SET_HIGH;
@@ -1416,7 +1417,7 @@ void Build_US_Reset_Info_Message(void)
     /* Byte 3 Command */
     Com1XmitObject.Msg_Buffer[COM_DATA_ID_FIELD_OFFSET]  = READ_RESET_INFO;
     /* Byte 4 Configuration details */
-    Flags.Byte   = DIP_Switch_Info.DAC_Unit_Type;               /* DAC Type */
+    Flags.Byte   = (BYTE)DIP_Switch_Info.DAC_Unit_Type;               /* DAC Type */
     Flags.Bit.b5 = SET_LOW;                             /* Message over COM1 */
     Flags.Bit.b4 = DIP_Switch_Info.Flags.Is_DAC_CPU1;       /* CPU1 or CPU2 */
 
@@ -1586,7 +1587,7 @@ void Build_US_Axle_Count_Message(void)
     Com1XmitObject.Msg_Buffer[COM_DATA_ID_FIELD_OFFSET] = READ_AXLE_COUNT;
     /* Byte 4 Configuration details */
     Flags.Byte = 0;
-    Flags.Byte = DIP_Switch_Info.DAC_Unit_Type;             /* DAC Type */
+    Flags.Byte = (BYTE)DIP_Switch_Info.DAC_Unit_Type;             /* DAC Type */
     Flags.Bit.b5 = SET_LOW;                             /* Message over COM1 */
     Flags.Bit.b4 = DIP_Switch_Info.Flags.Is_DAC_CPU1;       /* CPU1 or CPU2 */
 
@@ -1763,7 +1764,7 @@ Algorithm           :1.Call the Process US Axle count message if the message id 
 ********************************************************************************/
 void Process_US_Message(void)
 {
-    BYTE uchCommand =0;
+    BYTE uchCommand;
 
     uchCommand = Com1RecvObject.Msg_Buffer[COM_DATA_ID_FIELD_OFFSET];
 
@@ -1897,21 +1898,21 @@ void Process_US_Reset_Info_Message(void)
     }
     if (SrcMsgAdr.Byte == 0)
     {
-        SPI_Failure.US_Failure = 1;
+        SPI_Failure.fail_bits.US_Failure = 1;
         Declare_DAC_Defective_US();
         Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
         return;         /* Message does not belong to our network */
     }
     if (DestMsgAdr.Byte == SrcMsgAdr.Byte)
     {
-        SPI_Failure.US_Failure = 1;
+        SPI_Failure.fail_bits.US_Failure = 1;
         Declare_DAC_Defective_US();
         Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
         return;         /* Source address and Destination addresses are same */
     }
     if (DAC_Config.Bit.b5 != SET_HIGH)
     {
-        SPI_Failure.US_Failure = 1;
+        SPI_Failure.fail_bits.US_Failure = 1;
         Declare_DAC_Defective_US();
         Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
         return;         /*  Message should come from COM1 port of remote unit */
@@ -1920,10 +1921,10 @@ void Process_US_Reset_Info_Message(void)
     {
         if(Flags2.Bit.b4 == FALSE)
         {
-        SPI_Failure.US_Failure = 1;
-        Declare_DAC_Defective_US();
-        Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
-        return;         /* In Remote Unit Auto Clear Bit is not set */
+            SPI_Failure.fail_bits.US_Failure = 1;
+            Declare_DAC_Defective_US();
+            Set_Error_Status_Bit(INOPERATIVE_CONFIGURATION_ERROR_NUM);
+            return;         /* In Remote Unit Auto Clear Bit is not set */
         }
     }
     Update_US_Power_Status(DAC_Config,Flags1);
@@ -1932,29 +1933,20 @@ void Process_US_Reset_Info_Message(void)
     Reset_US_CountDown(SrcMsgAdr,Flags1);
      if(Flags2.Bit.b1 != NORMAL )
        {
-         SPI_Failure.US_Failure = 1;
-         if(1)//DIP_Switch_Info.DAC_Unit_Type <= DAC_UNIT_TYPE_CF || DIP_Switch_Info.DAC_Unit_Type >= DAC_UNIT_TYPE_3D_SF)
-          {
-           US_Section_Mode.Remote_Unit = SYSTEM_ERROR_MODE;
-          }
+            SPI_Failure.fail_bits.US_Failure = 1;
+            US_Section_Mode.Remote_Unit = SYSTEM_ERROR_MODE;
        }
      else
      {
-         SPI_Failure.US_Failure = 0;
+         SPI_Failure.fail_bits.US_Failure = 0;
      }
      if(Flags1.Bit.b6 == SM_HAS_RESETTED_SYSTEM)
        {
-         if(1)//DIP_Switch_Info.DAC_Unit_Type <= DAC_UNIT_TYPE_CF || DIP_Switch_Info.DAC_Unit_Type >= DAC_UNIT_TYPE_3D_SF)
-           {
             Update_US_Section_Remote_Reset();
-           }
        }
      else
        {
-         if(1)//DIP_Switch_Info.DAC_Unit_Type <= DAC_UNIT_TYPE_CF || DIP_Switch_Info.DAC_Unit_Type >= DAC_UNIT_TYPE_3D_SF)
-           {
             US_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
-           }
        }
     if (DAC_Config.Bit.b4)
     {
@@ -2122,7 +2114,7 @@ void Process_US_Axle_Count_Message(void)
     wordtype_t Axle_CountValue;
     bitadrb_t  SrcMsgAdr,DestMsgAdr,Buffer;
     bitadrb_t  DAC_Config,Flags1,Flags2;
-    BYTE uchDirection =0;
+    BYTE uchDirection;
     BYTE uchState =0;
 
 
@@ -2194,17 +2186,17 @@ void Process_US_Axle_Count_Message(void)
         uchState = Get_Relay_A_State();
         }
     if (Status.Flags.Preparatory_Reset_US == PREPARATORY_RESET_PENDING ||
-        uchState == DAC_RESET_PROGRESS)
+        uchState == (BYTE)DAC_RESET_PROGRESS)
     {
             if (DAC_Config.Bit.b4)
             {
             /* Sender is CPU1 */
-            Post_US1_has_been_Reset((BYTE) Flags1.Bit.b1);
+                Post_US1_has_been_Reset((BYTE) Flags1.Bit.b1);
             }
             else
             {
             /* Sender is CPU2 */
-            Post_US2_has_been_Reset((BYTE) Flags1.Bit.b1);
+                Post_US2_has_been_Reset((BYTE) Flags1.Bit.b1);
             }
            return;
     }
@@ -2212,7 +2204,7 @@ void Process_US_Axle_Count_Message(void)
      (DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B)||
      (DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C))
     {
-     if(uchState == ATC_WAIT_FOR_REMOTE_CLEAR)
+     if(uchState == (BYTE)ATC_WAIT_FOR_REMOTE_CLEAR)
         {
              if (DAC_Config.Bit.b4)
                 {
@@ -2232,7 +2224,7 @@ void Process_US_Axle_Count_Message(void)
      (DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C)||
      (DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D))
     {
-     if(uchState == ATC_WAIT_FOR_REMOTE_CLEAR)
+     if(uchState == (BYTE)ATC_WAIT_FOR_REMOTE_CLEAR)
         {
              if (DAC_Config.Bit.b4)
                 {
@@ -2249,7 +2241,7 @@ void Process_US_Axle_Count_Message(void)
     }
     else
      {
-        if(uchState == ATC_WAIT_FOR_REMOTE_CLEAR)
+        if(uchState == (BYTE)ATC_WAIT_FOR_REMOTE_CLEAR)
         {
             if (DAC_Config.Bit.b4)
             {
@@ -2288,7 +2280,7 @@ void Process_US_Axle_Count_Message(void)
     Axle_CountValue.Byte.Lo = Com1RecvObject.Msg_Buffer[COM_AXLE_COUNT_LO_OFFSET];
     Axle_CountValue.Byte.Hi = Com1RecvObject.Msg_Buffer[COM_AXLE_COUNT_HI_OFFSET];
 
-    Remote_Count_US = Axle_CountValue.Word;
+
 
     Update_SM_US_Remote_Axle_Counts(Axle_CountValue.Byte.Lo,Axle_CountValue.Byte.Hi);
 
@@ -2299,134 +2291,134 @@ void Process_US_Axle_Count_Message(void)
             case DAC_UNIT_TYPE_EF:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Process_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
+                    Process_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_CF:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Process_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
+                    Process_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_D3_A:
                 if(SrcMsgAdr.Byte > DestMsgAdr.Byte)
                 {
-                Buffer.Byte = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Process_D3_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D3_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    Buffer.Byte = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Process_D3_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D3_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_D3_B:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Buffer.Byte   = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Process_D3_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D3_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    Buffer.Byte   = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Process_D3_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D3_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_D3_C:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Buffer.Byte   = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Process_D3_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D3_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    Buffer.Byte   = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Process_D3_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D3_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_D4_A:
                 if(SrcMsgAdr.Byte > DestMsgAdr.Byte)
                 {
-                Buffer.Byte = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Buffer.Bit.b3 = DAC_Config.Bit.b3;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
-                //A will recv C remote data and will always recieve CPU1 data
-                SrcMsgAdr.Byte = 1;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
-                //Axle Count
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,FORWARD_DIRECTION,R_Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
+                    Buffer.Byte = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Buffer.Bit.b3 = DAC_Config.Bit.b3;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    //A will recv C remote data and will always recieve CPU1 data
+                    SrcMsgAdr.Byte = 1;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
+                    //Axle Count
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,(BYTE)FORWARD_DIRECTION,R_Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_C,(BYTE)REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
                 }
                 break;
             case DAC_UNIT_TYPE_D4_B:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Buffer.Byte   = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Buffer.Bit.b3 = DAC_Config.Bit.b3;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
-                //B will recv D remote data and will always recieve CPU1 data
-                SrcMsgAdr.Byte = 1;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
-                //Axle Count
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,FORWARD_DIRECTION,R_Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
+                    Buffer.Byte   = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Buffer.Bit.b3 = DAC_Config.Bit.b3;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    //B will recv D remote data and will always recieve CPU1 data
+                    SrcMsgAdr.Byte = 1;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
+                    //Axle Count
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,(BYTE)FORWARD_DIRECTION,R_Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_D,(BYTE)REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
                 }
                 break;
             case DAC_UNIT_TYPE_D4_C:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Buffer.Byte   = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Buffer.Bit.b3 = DAC_Config.Bit.b3;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
-                //C will recv A remote data and will always recieve CPU1 data
-                SrcMsgAdr.Byte = 1;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,R_Fwd_CountValue.Word,R_Rev_CountValue.Word);                
-                //Axle Count
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,FORWARD_DIRECTION,R_Fwd_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,REVERSE_DIRECTION,R_Rev_CountValue.Word);                
+                    Buffer.Byte   = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Buffer.Bit.b3 = DAC_Config.Bit.b3;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    //C will recv A remote data and will always recieve CPU1 data
+                    SrcMsgAdr.Byte = 1;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,R_Fwd_CountValue.Word,R_Rev_CountValue.Word);                
+                    //Axle Count
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,(BYTE)FORWARD_DIRECTION,R_Fwd_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_A,(BYTE)REVERSE_DIRECTION,R_Rev_CountValue.Word);                
                 }
                 break;
             case DAC_UNIT_TYPE_D4_D:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                Buffer.Byte   = (BYTE) 0;
-                Buffer.Bit.b0 = DAC_Config.Bit.b0;
-                Buffer.Bit.b1 = DAC_Config.Bit.b1;
-                Buffer.Bit.b2 = DAC_Config.Bit.b2;
-                Buffer.Bit.b3 = DAC_Config.Bit.b3;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,Buffer.Byte,uchDirection,Axle_CountValue.Word);
-                //D will recv B remote data and will always recieve CPU1 data
-                SrcMsgAdr.Byte = 1;
-                Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
-                //Axle Count
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,FORWARD_DIRECTION,R_Rev_CountValue.Word);
-                Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
+                    Buffer.Byte   = (BYTE) 0;
+                    Buffer.Bit.b0 = DAC_Config.Bit.b0;
+                    Buffer.Bit.b1 = DAC_Config.Bit.b1;
+                    Buffer.Bit.b2 = DAC_Config.Bit.b2;
+                    Buffer.Bit.b3 = DAC_Config.Bit.b3;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,(SSDAC_Unit_Type)Buffer.Byte,uchDirection,Axle_CountValue.Word);
+                    //D will recv B remote data and will always recieve CPU1 data
+                    SrcMsgAdr.Byte = 1;
+                    Process_D4_Remote_AxleCount(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,R_Rev_CountValue.Word,R_Fwd_CountValue.Word);                
+                    //Axle Count
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,(BYTE)FORWARD_DIRECTION,R_Rev_CountValue.Word);
+                    Process_D4_Remote_Direction(SrcMsgAdr,DAC_UNIT_TYPE_D4_B,(BYTE)REVERSE_DIRECTION,R_Fwd_CountValue.Word);                
                 }
                 break;
             case DAC_UNIT_TYPE_3D_SF:
                 if(SrcMsgAdr.Byte > DestMsgAdr.Byte)
                 {
-                 Process_3S_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
-                 Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
+                    Process_3S_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             case DAC_UNIT_TYPE_3D_EF:
                 if(SrcMsgAdr.Byte < DestMsgAdr.Byte)
                 {
-                 Process_3S_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
-                 Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
+                    Process_3S_US_AxleCount(SrcMsgAdr,Fwd_CountValue.Word,Rev_CountValue.Word);
+                    Process_US_Direction(SrcMsgAdr,uchDirection,Axle_CountValue.Word);
                 }
                 break;
             default:
@@ -2888,16 +2880,16 @@ void Check_US_Unit_Status(bitadrb_t Buffer)
 {
     if(Buffer.Bit.b0 == 0 || Buffer.Bit.b1 == 0 )
     {
-    /*Downside DAC failed so drop the relay */
-    Declare_DAC_Defective_US();
-    Set_Error_Status_Bit(US_ERROR_NUM);
+        /*Downside DAC failed so drop the relay */
+        Declare_DAC_Defective_US();
+        Set_Error_Status_Bit(US_ERROR_NUM);
     }
 }
 
 
 void Configure_Modem_A (void)
 {
- if(DIP_Switch_Info.COM1_Mode == FSK_COMMUNICATION)
+ if(DIP_Switch_Info.COM1_Mode == (comm_type)FSK_COMMUNICATION)
    {
      switch(Comm_Modem_A.State)
         {
@@ -2976,17 +2968,9 @@ BYTE Get_Modem_A_State(void)
 void Clear_US_Transmit_Buffer(void)
 {
  BYTE count;
- for(count = 0; count <= COMM_MESSAGE_LENGTH; count++)
-    {
+ for(count = 0; count < COMM_MESSAGE_LENGTH; count++)
+ {
     Com1XmitObject.Msg_Buffer[count] = 0x00;
-    }
+ }
 }
-
-//15/07/10
-//UINT16 Get_US_Remote_AxleCount(void)
-//{
-//   UINT16 uicount = 0;
-//   uicount = (UINT16) Remote_Count_US;
-//  return(uicount);
-//}
 

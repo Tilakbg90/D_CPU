@@ -29,9 +29,9 @@
 
 extern void Initialise_Relay_D4_Mgr(void);                  //Defined in RLYD4_MGR.c
 extern void Update_Relay_D4_State(void);                    //Defined in RLYD4_MGR.c
-extern void Set_Relay_D4_DAC_Defective(void);               //Defined in RLYD4_MGR.c
-extern void Process_D4_Local_AxleCount (UINT16,UINT16);     //Defined in RLYD4_MGR.c
-extern void Process_D4_Local_Direction(BYTE,UINT16);        //Defined in RLYD4_MGR.c
+
+extern void Process_D4_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount);    //Defined in RLYD4_MGR.c
+extern void Process_D4_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount);        //Defined in RLYD4_MGR.c
 
 extern relay_d4_info_t Relay_D4_Info;
 #endif

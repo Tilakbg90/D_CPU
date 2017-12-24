@@ -49,16 +49,11 @@
 *****************************************************************************/
 
 #include <xc.h>
-#include <stdio.h>
 
 #include "COMMON.h"
 #include "SYS_MON.h"
 #include "ERROR.h"
 #include "COMM_SM.h"
-#include "RELAYDRV.h"
-#include "RLYA_MGR.h"
-#include "RLYB_MGR.h"
-#include "RESET.h"
 
 extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
@@ -73,8 +68,8 @@ feedback_info_t FeedBack_Info[MAXIMUM_TYPES_OF_FEEDBACKS];
 feedback_error FeedBack_Error;
 track_status_info Track_Status_Info;
 
-void Update_FeedBack_State(BYTE);
-void Read_FeedBack_Signal_Port(BYTE);
+void Update_FeedBack_State(BYTE uchID);
+void Read_FeedBack_Signal_Port(BYTE uchID);
 void Check_Communication_Links(void);
 void Check_Communication_Links_SF1(void);
 void Check_Communication_Links_SF2(void);
@@ -83,10 +78,7 @@ void Check_Communication_US_CF2(void);
 void Check_Communication_DS_CF1(void);
 void Check_Communication_DS_CF2(void);
 void Check_Communication_Links_EF1(void);
-void Check_Comm_Links_1C1E_CPU1(void);
-void Check_Comm_Links_1C1E_CPU2(void);
 void Check_Communication_Links_EF2(void);
-void Check_Communication_Links_DE(void);
 void Check_Inter_Processor_Link(void);
 
 void Check_Power_Status(void);
@@ -237,7 +229,7 @@ Algorithm           :1.It shall check the presence of all the hardware modules i
 *******************************************************************************/
 void Update_Sys_Mon_State(void)
 {
-    static BYTE uchFB_Index;
+    static BYTE uchFB_Index = 0;
 
 
     Decrement_Sys_Mon_50msTmr();
@@ -1141,6 +1133,8 @@ void Read_FeedBack_Signal_Port(BYTE uchID)
                 }
             }
             break;
+        default:
+            break;
     }
 }
 /******************************************************************************
@@ -1222,8 +1216,8 @@ void Check_Communication_Links(void)
     BYTE Relay_VP_A_State;
     BYTE Relay_VP_B_State;
 
-    if(DIP_Switch_Info.Configuration == G39_DAC)
-    {
+
+    
         switch (DIP_Switch_Info.DAC_Unit_Type)
         {
             case DAC_UNIT_TYPE_SF:
@@ -1251,8 +1245,8 @@ void Check_Communication_Links(void)
              case DAC_UNIT_TYPE_3D_EF:
                 Relay_VP_A_State = Get_Relay_A_State();
                 Relay_VP_B_State = Get_Relay_B_State();
-                if(Relay_VP_A_State != DAC_RESET_PROGRESS &&
-                   Relay_VP_A_State >= WAIT_FOR_PILOT_TRAIN)
+                if(Relay_VP_A_State != (BYTE)DAC_RESET_PROGRESS &&
+                   Relay_VP_A_State >= (BYTE)WAIT_FOR_PILOT_TRAIN)
                 {
                     if (DIP_Switch_Info.Flags.Is_DAC_CPU1)
                     {
@@ -1263,8 +1257,8 @@ void Check_Communication_Links(void)
                      Check_Communication_US_CF2();
                     }
                 }
-                if(Relay_VP_B_State != DAC_RESET_PROGRESS &&
-                   Relay_VP_B_State >= WAIT_FOR_PILOT_TRAIN)
+                if(Relay_VP_B_State != (BYTE)DAC_RESET_PROGRESS &&
+                   Relay_VP_B_State >= (BYTE)WAIT_FOR_PILOT_TRAIN)
                 {
                     if (DIP_Switch_Info.Flags.Is_DAC_CPU1)
                     {
@@ -1330,8 +1324,7 @@ void Check_Communication_Links(void)
             default:
                 break;
         }
-    return;
-    }
+    
 
 }
 /******************************************************************************

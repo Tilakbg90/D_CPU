@@ -74,8 +74,8 @@ typedef struct {
 extern INT16 Get_Relay_Energising_Key(void);        //Defined in RELAYDRV.c
 extern void Energise_Preparatory_Relay_A(void);     //Defined in RELAYDRV.c
 extern void Energise_Preparatory_Relay_B(void);     //Defined in RELAYDRV.c
-extern void Energise_Vital_Relay_A(INT16);          //Defined in RELAYDRV.c
-extern void Energise_Vital_Relay_B(INT16);          //Defined in RELAYDRV.c
+extern void Energise_Vital_Relay_A(INT16 iKey);          //Defined in RELAYDRV.c
+extern void Energise_Vital_Relay_B(INT16 iKey);          //Defined in RELAYDRV.c
 extern void DeEnergise_Preparatory_Relay_A(void);   //Defined in RELAYDRV.c
 extern void DeEnergise_Preparatory_Relay_B(void);   //Defined in RELAYDRV.c
 extern void DeEnergise_Vital_Relay_A(void);         //Defined in RELAYDRV.c

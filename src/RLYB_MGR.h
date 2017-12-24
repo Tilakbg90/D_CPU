@@ -24,8 +24,8 @@
 
 extern void Initialise_Relay_B_Mgr(void);                   //Defined in RLYB_MGR.c
 extern void Update_Relay_B_State(void);                     //Defined in RLYB_MGR.c
-extern void Process_Relay_B_Local_AxleCount(UINT16,UINT16); //Defined in RLYB_MGR.c
-extern void Process_Relay_B_Local_Direction(BYTE,UINT16);   //Defined in RLYB_MGR.c
+extern void Process_Relay_B_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount); //Defined in RLYB_MGR.c
+extern void Process_Relay_B_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount);   //Defined in RLYB_MGR.c
 extern void Update_3S_Relay_B_State(void);                  //Defined in RLYB_MGR.c
 
 #endif

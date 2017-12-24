@@ -288,8 +288,8 @@ typedef struct
 extern void Initialise_Error(void);                 //Defined in ERROR.c
 extern void Update_Display_Error(void);             //Defined in ERROR.c
 extern void Decrement_Err_display_50msTmr(void);    //Defined in ERROR.c
-extern void Set_Error_Status_Byte(BYTE,BYTE);       //Defined in ERROR.c
-extern void Set_Error_Status_Bit(BYTE);             //Defined in ERROR.c
+extern void Set_Error_Status_Byte ( BYTE  Major_Err_Id, BYTE status_byte);       //Defined in ERROR.c
+extern void Set_Error_Status_Bit (BYTE Error_No);             //Defined in ERROR.c
 extern void Clear_Error_Display(void);              //Defined in ERROR.c
 extern void Update_Error_Code(void);                //Defined in ERROR.c
 extern void Clear_DS_Error_Code(void);              //Defined in ERROR.c

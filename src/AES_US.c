@@ -1,7 +1,4 @@
-#include <xc.h>
-
 #include "COMMON.h"
-#include "COMM_US.h"
 #include "AES.h"
 
 
@@ -72,7 +69,7 @@ void Update_US_Data_Encode(void)
 void Load_Encrypt_Key(void)
 {
  BYTE count;
- for(count = 0; count <= BLOCKSIZE; count++)
+ for(count = 0; count < BLOCKSIZE; count++)
     {
     US_Ciper_Message_Info.Encrypt_key[count] = E_Key[count];
     }
@@ -235,7 +232,7 @@ void Update_US_Data_Decode(void)
 void Load_Decrypt_Key(void)
 {
  BYTE count;
- for(count = 0; count <= BLOCKSIZE; count++)
+ for(count = 0; count < BLOCKSIZE; count++)
     {
     US_Ciper_Message_Info.Decrypt_key[count] = D_Key[count];
     }
@@ -244,9 +241,6 @@ void Load_Decrypt_Key(void)
 void US_Decode_Key_Addition()
 {
     BYTE i;
-
-    /* reconstruct key */
-    i=1;
 
     US_rcon = 0x36;
 
@@ -391,11 +385,11 @@ void Decrement_US_Crypto_msTmr(void)
 {
     if(US_Enciper_Info.Timeout_ms > 0)
     {
-    US_Enciper_Info.Timeout_ms = US_Enciper_Info.Timeout_ms - 1;
+        US_Enciper_Info.Timeout_ms = US_Enciper_Info.Timeout_ms - 1;
     }
     if(US_Deciper_Info.Timeout_ms > 0)
     {
-    US_Deciper_Info.Timeout_ms = US_Deciper_Info.Timeout_ms - 1;
+        US_Deciper_Info.Timeout_ms = US_Deciper_Info.Timeout_ms - 1;
     }
 }
 
@@ -413,7 +407,7 @@ BYTE Get_US_Encryption_State(void)
 {
  BYTE uchState;
 
- uchState = US_Enciper_Info.State;
+ uchState = (BYTE)US_Enciper_Info.State;
  return(uchState);
 }
 
@@ -431,6 +425,6 @@ BYTE Get_US_Decryption_State(void)
 {
  BYTE uchState;
 
- uchState = US_Deciper_Info.State;
+ uchState = (BYTE)US_Deciper_Info.State;
  return(uchState);
 }

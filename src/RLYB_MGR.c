@@ -51,8 +51,6 @@
                     void Clear_Relay_B_Counts(void)
 
 ******************************************************************************/
-#include <xc.h>
-
 #include "COMMON.h"
 #include "RELAYDRV.h"
 #include "RLYB_MGR.h"
@@ -64,20 +62,20 @@ extern  /*near*/  dac_status_t Status;                    /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
 relay_b_info_t Relay_B_Info;
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
-extern us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
+
 
 extern relay_a_info_t Relay_A_Info;
 
 void Clear_Relay_B_Counts(void);
 
 
-void Update_B_LU1_Fwd_Count(UINT16);
-void Update_B_LU2_Fwd_Count(UINT16);
-void Update_B_LU1_Rev_Count(UINT16);
-void Update_B_LU2_Rev_Count(UINT16);
-void Update_B_LU1_Direction(BYTE);
-void Update_B_LU2_Direction(BYTE);
-void Update_B_Local_AxleCount(UINT16);
+void Update_B_LU1_Fwd_Count(UINT16 uiCount);
+void Update_B_LU2_Fwd_Count(UINT16 uiCount);
+void Update_B_LU1_Rev_Count(UINT16 uiCount);
+void Update_B_LU2_Rev_Count(UINT16 uiCount);
+void Update_B_LU1_Direction(BYTE Direction);
+void Update_B_LU2_Direction(BYTE Direction);
+void Update_B_Local_AxleCount(UINT16 uiCount);
 BOOL Reset_Allowed_For_LCWS(void);
 BOOL Reset_Allowed_For_DE(void);
 
@@ -404,7 +402,7 @@ Algorithm           :1. If the system is configured to ATC configuration then th
 *******************************************************************************/
 void Update_Relay_B_State(void)
 {
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
 
     switch (Relay_B_Info.State)
     {
@@ -433,10 +431,10 @@ void Update_Relay_B_State(void)
             }
             break;
         case PILOT_TRAIN_IN_SECTION:
-            if(Relay_B_Info.DS1_Direction  == REVERSE_DIRECTION&&
-               Relay_B_Info.DS2_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)REVERSE_DIRECTION&&
+               Relay_B_Info.DS2_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
             {
                 if(Relay_B_Info.DS_Local_Count > Relay_B_Info.DS1_Axle_Count ||
                    Relay_B_Info.DS_Local_Count > Relay_B_Info.DS2_Axle_Count )
@@ -450,10 +448,10 @@ void Update_Relay_B_State(void)
             if ((Relay_B_Info.LU1_Fwd_Count  < 2 ||  Relay_B_Info.LU2_Fwd_Count <2) &&
                 (Relay_B_Info.LU1_Rev_Count  < 2 ||  Relay_B_Info.LU2_Rev_Count <2) )
              {
-              if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-                 Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-                 Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-                 Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+              if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+                 Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+                 Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+                 Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
                 {
                  /* no in-counts, only out-counts,system goes to error state*/
                  Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -487,10 +485,10 @@ void Update_Relay_B_State(void)
                    break;
                 }
             }
-            if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
               {
                 /* no in-counts, only out-counts,system goes to error state*/
                 Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -526,10 +524,10 @@ void Update_Relay_B_State(void)
         case TRAIN_IN_SECTION:
              if(Get_DS_Local_Counts_Clearing_Status())
                 {
-                 if(Relay_B_Info.DS1_Direction  == REVERSE_DIRECTION&&
-                    Relay_B_Info.DS2_Direction  == REVERSE_DIRECTION &&
-                    Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-                    Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+                 if(Relay_B_Info.DS1_Direction  == (BYTE)REVERSE_DIRECTION&&
+                    Relay_B_Info.DS2_Direction  == (BYTE)REVERSE_DIRECTION &&
+                    Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+                    Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
                      {
                         if(Relay_B_Info.DS_Local_Count > 0 )
                          {
@@ -540,10 +538,10 @@ void Update_Relay_B_State(void)
                          }
                      }
                   }
-            if(Relay_B_Info.DS1_Direction  == REVERSE_DIRECTION&&
-               Relay_B_Info.DS2_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)REVERSE_DIRECTION&&
+               Relay_B_Info.DS2_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
             {
                 if(Relay_B_Info.DS_Local_Count > Relay_B_Info.DS1_Axle_Count ||
                    Relay_B_Info.DS_Local_Count > Relay_B_Info.DS2_Axle_Count )
@@ -575,10 +573,10 @@ void Update_Relay_B_State(void)
                    break;
                  }
             }
-            if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
               {
                 /* no in-counts, only out-counts,system goes to error state*/
                 Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -598,7 +596,7 @@ void Update_Relay_B_State(void)
 //15_03_10
 void Update_3S_Relay_B_State(void)
 {
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
 
     switch (Relay_B_Info.State)
     {
@@ -627,10 +625,10 @@ void Update_3S_Relay_B_State(void)
             }
             break;
         case PILOT_TRAIN_IN_SECTION:
-            if(Relay_B_Info.DS1_Direction  == FORWARD_DIRECTION&&
-               Relay_B_Info.DS2_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)FORWARD_DIRECTION&&
+               Relay_B_Info.DS2_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
             {
                 if(Relay_B_Info.DS_Local_Count > Relay_B_Info.DS1_Axle_Count ||
                    Relay_B_Info.DS_Local_Count > Relay_B_Info.DS2_Axle_Count )
@@ -644,10 +642,10 @@ void Update_3S_Relay_B_State(void)
             if ((Relay_B_Info.LU1_Fwd_Count  < 2 ||  Relay_B_Info.LU2_Fwd_Count <2) &&
                 (Relay_B_Info.LU1_Rev_Count  < 2 ||  Relay_B_Info.LU2_Rev_Count <2) )
              {
-              if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-                 Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-                 Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-                 Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+              if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+                 Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+                 Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+                 Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
                 {
                  /* no in-counts, only out-counts,system goes to error state*/
                  Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -681,10 +679,10 @@ void Update_3S_Relay_B_State(void)
                    break;
                 }
             }
-            if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
               {
                 /* no in-counts, only out-counts,system goes to error state*/
                 Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -720,10 +718,10 @@ void Update_3S_Relay_B_State(void)
         case TRAIN_IN_SECTION:
              if(Get_DS_Local_Counts_Clearing_Status())
                 {
-                 if(Relay_B_Info.DS1_Direction  == FORWARD_DIRECTION &&
-                    Relay_B_Info.DS2_Direction  == FORWARD_DIRECTION &&
-                    Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-                    Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+                 if(Relay_B_Info.DS1_Direction  == (BYTE)FORWARD_DIRECTION &&
+                    Relay_B_Info.DS2_Direction  == (BYTE)FORWARD_DIRECTION &&
+                    Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+                    Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
                      {
                         if(Relay_B_Info.DS_Local_Count > 0 )
                          {
@@ -734,10 +732,10 @@ void Update_3S_Relay_B_State(void)
                          }
                      }
                   }
-            if(Relay_B_Info.DS1_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.DS2_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.DS2_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
             {
                 if(Relay_B_Info.DS_Local_Count > Relay_B_Info.DS1_Axle_Count ||
                    Relay_B_Info.DS_Local_Count > Relay_B_Info.DS2_Axle_Count )
@@ -769,10 +767,10 @@ void Update_3S_Relay_B_State(void)
                    break;
                  }
             }
-            if(Relay_B_Info.DS1_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.DS2_Direction  == DIRECTION_NOT_DEFINED &&
-               Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-               Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+            if(Relay_B_Info.DS1_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.DS2_Direction  == (BYTE)DIRECTION_NOT_DEFINED &&
+               Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+               Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
               {
                 /* no in-counts, only out-counts,system goes to error state*/
                 Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
@@ -855,18 +853,18 @@ BOOL Reset_Allowed_For_DS(void)
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
     }
-    if(Relay_B_Info.DS1_Direction  == REVERSE_DIRECTION &&
-       Relay_B_Info.DS2_Direction  == REVERSE_DIRECTION &&
-       Relay_B_Info.LU1_Direction  == REVERSE_DIRECTION &&
-       Relay_B_Info.LU2_Direction  == REVERSE_DIRECTION )
+    if(Relay_B_Info.DS1_Direction  == (BYTE)REVERSE_DIRECTION &&
+       Relay_B_Info.DS2_Direction  == (BYTE)REVERSE_DIRECTION &&
+       Relay_B_Info.LU1_Direction  == (BYTE)REVERSE_DIRECTION &&
+       Relay_B_Info.LU2_Direction  == (BYTE)REVERSE_DIRECTION )
     {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);
     }
-    if(Relay_B_Info.DS1_Direction  == FORWARD_DIRECTION &&
-       Relay_B_Info.DS2_Direction  == FORWARD_DIRECTION &&
-       Relay_B_Info.LU1_Direction  == FORWARD_DIRECTION &&
-       Relay_B_Info.LU2_Direction  == FORWARD_DIRECTION )
+    if(Relay_B_Info.DS1_Direction  == (BYTE)FORWARD_DIRECTION &&
+       Relay_B_Info.DS2_Direction  == (BYTE)FORWARD_DIRECTION &&
+       Relay_B_Info.LU1_Direction  == (BYTE)FORWARD_DIRECTION &&
+       Relay_B_Info.LU2_Direction  == (BYTE)FORWARD_DIRECTION )
     {
         ReturnValue = (BOOL) TRUE;
         return(ReturnValue);

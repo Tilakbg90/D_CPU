@@ -21,7 +21,7 @@
     Functions   :   UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
 
 *****************************************************************************/
-#include <xc.h>
+
 #include "COMMON.h"
 #include "COMM_SM.h"
 #include "CRC16.h"
@@ -171,6 +171,7 @@ UINT16 Crc16(CRC16_PACK Pack, INT16 iMsgLen)
                 uchIndex = uchCRCHi ^ Com1XmitObject.Msg_Buffer[uchIndex2]; /* calculate the CRC */                
                 break;
             default:
+                uchIndex =  0;
                 break;
         }
 

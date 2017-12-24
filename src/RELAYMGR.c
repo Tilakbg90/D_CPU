@@ -40,7 +40,6 @@
 #include "RLYB_MGR.h"
 #include "RLYD3_MGR.h"
 #include "RLYD4_MGR.h"
-#include "RLYDE_MGR.h"
 #include "RESET.h"
 #include "SYS_MON.h"
 #include "ERROR.h"
@@ -52,15 +51,15 @@ extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
 extern us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
-extern relay_a_info_t Relay_A_Info;
 
-extern relay_b_info_t Relay_B_Info;
-extern relay_a_info_t Relay_A_Info;
-extern BYTE Relay_A_State;
+
+
+
+
 extern BYTE Relay_B_State;
 
-void A_Sec_Led_drive(Led_State);
-void B_Sec_Led_drive(Led_State);
+
+
 extern void Clear_DS_AxleCount_1(void);
 extern void Clear_DS_AxleCount_2(void);
 extern void Clear_DS_AxleCount_3(void);
@@ -128,6 +127,7 @@ void Initialise_Relay_Mgr(void)
     Initialise_Relay_A_Mgr();
     Initialise_Relay_B_Mgr();
     Initialise_Relay_D3_Mgr();
+    Initialise_Relay_D4_Mgr();
 }
 /**************************************************************************
 Component name      :RELAYMGR
@@ -230,7 +230,7 @@ extern BYTE Relay_B_PR_State;
 void Update_LCWS_Relay_State(void)
 {
     BYTE Enable_Relay_1, Enable_Relay_2;
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
 
     BYTE Enable_Variables_Clear;
 
@@ -276,7 +276,14 @@ void Update_LCWS_Relay_State(void)
     }
 
 // Forward Direction
-    if(((Track_Info_2.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count) || (Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count) || (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count ) || ((Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_2.LCWS_Total_Fwd_Count) && (Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count)) || ((Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_3.LCWS_Total_Fwd_Count) && (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_2.LCWS_Total_Fwd_Count) && (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count))))
+    if(((Track_Info_2.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count) || 
+            (Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count) || 
+            (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count ) || 
+            ((Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_2.LCWS_Total_Fwd_Count) && 
+            (Track_Info_3.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count)) || 
+            ((Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_3.LCWS_Total_Fwd_Count) && 
+            (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_2.LCWS_Total_Fwd_Count) && 
+            (Track_Info_4.LCWS_Total_Fwd_Count > Track_Info_1.LCWS_Total_Fwd_Count))))
     {
         Enable_Relay_1 = 0;
         Enable_Relay_2 = 0;
@@ -578,12 +585,12 @@ void Update_LCWS_Relay_State(void)
 
 
 BYTE Ready_to_clear_13_fwd =  0, Ready_to_clear_13_rev =  0, Ready_to_clear_24_fwd =  0 , Ready_to_clear_24_rev =  0;
-BYTE Count_13_fwd = 0,Count_13_rev = 0, Count_24_fwd = 0, Count_24_rev = 0;
+UINT16 Count_13_fwd = 0,Count_13_rev = 0, Count_24_fwd = 0, Count_24_rev = 0;
 BYTE Lane_13;
 void Update_LCWS_DL_Relay_State(void)
 {
     BYTE Enable_Relay_1, Enable_Relay_2;
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
 
     BYTE Enable_Variables_Clear;
     Lane_13 =0;
@@ -960,25 +967,25 @@ void Update_LCWS_DL_Relay_State(void)
     {
         if(Lane_13 == 0)
         {
-        if(Enable_Variables_Clear == 1)
-        {
-            Track_Info_1.LCWS_Count = 0;
-            Track_Info_2.LCWS_Count = 0;
-            Track_Info_3.LCWS_Count = 0;
-            Track_Info_4.LCWS_Count = 0;
+            if(Enable_Variables_Clear == 1)
+            {
+                Track_Info_1.LCWS_Count = 0;
+                Track_Info_2.LCWS_Count = 0;
+                Track_Info_3.LCWS_Count = 0;
+                Track_Info_4.LCWS_Count = 0;
 
-            Track_Info_1.LCWS_Fwd_Count = 0;
-            Track_Info_1.LCWS_Rev_Count = 0;
+                Track_Info_1.LCWS_Fwd_Count = 0;
+                Track_Info_1.LCWS_Rev_Count = 0;
 
-            Track_Info_2.LCWS_Fwd_Count = 0;
-            Track_Info_2.LCWS_Rev_Count = 0;
+                Track_Info_2.LCWS_Fwd_Count = 0;
+                Track_Info_2.LCWS_Rev_Count = 0;
 
-            Track_Info_3.LCWS_Fwd_Count = 0;
-            Track_Info_3.LCWS_Rev_Count = 0;
+                Track_Info_3.LCWS_Fwd_Count = 0;
+                Track_Info_3.LCWS_Rev_Count = 0;
 
-            Track_Info_4.LCWS_Fwd_Count = 0;
-            Track_Info_4.LCWS_Rev_Count = 0;
-        }
+                Track_Info_4.LCWS_Fwd_Count = 0;
+                Track_Info_4.LCWS_Rev_Count = 0;
+            }
 
             if(Relay_B_State != 1)
             {
@@ -987,25 +994,25 @@ void Update_LCWS_DL_Relay_State(void)
                 Energise_Vital_Relay_B(uiAuthorisationKey);
                 //Relay_B_Info.State = NO_TRAIN_IN_SECTION;
             }
-        if(FeedBack_Info[FB_VITAL_RELAY_B_ON_ID].State == FB_CHECK_IDLE) // If the requested F/B is already under check, no need to do anything
-        {
-            Start_FeedBack_Check(FB_VITAL_RELAY_B_ON_ID);
-        }
+            if(FeedBack_Info[FB_VITAL_RELAY_B_ON_ID].State == FB_CHECK_IDLE) // If the requested F/B is already under check, no need to do anything
+            {
+                Start_FeedBack_Check(FB_VITAL_RELAY_B_ON_ID);
+            }
 
-        if(FeedBack_Info[DS_TRACK_STATUS_CHECK_ID].State == FB_CHECK_IDLE) // If the requested F/B is already under check, no need to do anything
-        {
-            Start_FeedBack_Check(DS_TRACK_STATUS_CHECK_ID);
-        }
-//            Start_FeedBack_Check(DS_TRACK_STATUS_CHECK_ID);
-        DS_Section_Mode.Local_Unit = SYSTEM_CLEAR_MODE;
+            if(FeedBack_Info[DS_TRACK_STATUS_CHECK_ID].State == FB_CHECK_IDLE) // If the requested F/B is already under check, no need to do anything
+            {
+                Start_FeedBack_Check(DS_TRACK_STATUS_CHECK_ID);
+            }
+    //            Start_FeedBack_Check(DS_TRACK_STATUS_CHECK_ID);
+            DS_Section_Mode.Local_Unit = SYSTEM_CLEAR_MODE;
 
-        Clear_DS_AxleCount_1();
-        Clear_DS_AxleCount_2();
-        Clear_DS_AxleCount_3();
-        Clear_DS_AxleCount_4();
+            Clear_DS_AxleCount_1();
+            Clear_DS_AxleCount_2();
+            Clear_DS_AxleCount_3();
+            Clear_DS_AxleCount_4();
 
-        LCWS_Section_TimeOut = LCWS_SECTION_OCCUPIED_TIMEOUT;
-        B_Sec_Led_drive(ON);
+            LCWS_Section_TimeOut = LCWS_SECTION_OCCUPIED_TIMEOUT;
+            B_Sec_Led_drive(ON);
         }
     }
     else
@@ -1092,7 +1099,7 @@ void Update_LCWS_DL_Relay_State(void)
 void Update_DE_Relay_State(void)
 {
     BYTE Enable_Relay_1;
-    UINT16 uiAuthorisationKey;
+    INT16 uiAuthorisationKey;
 
 
     if (Status.Flags.System_Status != NORMAL)
@@ -1398,7 +1405,7 @@ void Update_Relay_D4_Counts(void)
 }
 
 //15_03_10
-extern track_info_t Track_Info;
+
 void Update_3S_Relay_Counts(void)
 {
  switch(DIP_Switch_Info.DAC_Unit_Type)
@@ -1485,11 +1492,11 @@ void Update_SF_Track_Status(void)
     BYTE Rlyb_State;
 
     Rlyb_State = Get_Relay_B_State();
-    if(Rlyb_State <= WAIT_FOR_PILOT_TRAIN)
+    if(Rlyb_State <= (BYTE)WAIT_FOR_PILOT_TRAIN)
     {
       return;
     }
-    if(Rlyb_State == NO_TRAIN_IN_SECTION)
+    if(Rlyb_State == (BYTE)NO_TRAIN_IN_SECTION)
     {
       B_Sec_Led_drive(ON);
     }
@@ -1564,7 +1571,7 @@ void Update_CF_Track_Status(void)
     Rlya_State = Get_Relay_A_State();
     Rlyb_State = Get_Relay_B_State();
 
-    if(Rlyb_State == NO_TRAIN_IN_SECTION)
+    if(Rlyb_State == (BYTE)NO_TRAIN_IN_SECTION)
     {
       B_Sec_Led_drive(ON);
     }
@@ -1572,7 +1579,7 @@ void Update_CF_Track_Status(void)
     {
       B_Sec_Led_drive(OFF);
     }
-    if(Rlya_State == NO_TRAIN_IN_SECTION)
+    if(Rlya_State == (BYTE)NO_TRAIN_IN_SECTION)
     {
       A_Sec_Led_drive(ON);
     }
@@ -1641,11 +1648,11 @@ void Update_EF_Track_Status(void)
     BYTE Rlya_State;
 
     Rlya_State = Get_Relay_A_State();
-    if(Rlya_State <= WAIT_FOR_PILOT_TRAIN)
+    if(Rlya_State <= (BYTE)WAIT_FOR_PILOT_TRAIN)
     {
       return;
     }
-    if(Rlya_State == NO_TRAIN_IN_SECTION)
+    if(Rlya_State == (BYTE)NO_TRAIN_IN_SECTION)
     {
       A_Sec_Led_drive(ON);
     }
@@ -1711,8 +1718,8 @@ References          :
 Derived Requirements:
 
 ********************************************************************************/
-unsigned char led_a_status=OFF;
-unsigned char led_b_status=OFF;
+Led_State led_a_status=OFF;
+Led_State led_b_status=OFF;
 
 void B_Sec_Led_drive(Led_State Led_status)
 {
@@ -1755,11 +1762,13 @@ void A_Sec_Led_drive(Led_State Led_status)
         case OFF:
             if(led_a_status != OFF)
             {
-            SECTION_A_LED_OCCUPIED_PORT = SET_LOW;
+                SECTION_A_LED_OCCUPIED_PORT = SET_LOW;
               SECTION_A_LED_CLEAR_PORT = SET_HIGH;
               led_a_status = OFF;
             }
              break;
+        default:
+            break;
     }
 }
 /**************************************************************************
@@ -1874,8 +1883,8 @@ void Declare_DAC_Defective(void)
     Stop_US_Axle_Counting();
     Stop_DS_Axle_Counting();
 
-    if(DIP_Switch_Info.Configuration == G39_DAC)
-    {
+    
+    
      Clear_DS_Remote_Reset_Flag();
      Clear_US_Remote_Reset_Flag();
      Clear_ATC_Local_Relay_A_State();
@@ -1947,7 +1956,7 @@ void Declare_DAC_Defective(void)
             default:
                 break;
         }
-    }
+    
 
 }
 //01/09/10

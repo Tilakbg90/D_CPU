@@ -1,7 +1,6 @@
 #include <xc.h>
 
 #include "COMMON.h"
-#include "COMM_DS.h"
 #include "AES.h"
 
 
@@ -72,16 +71,15 @@ void Update_DS_Data_Encode(void)
 
 void Load_DS_Encrypt_Key(void)
 {
- BYTE count;
- for(count = 0; count <= BLOCKSIZE; count++)
+    BYTE count;
+    for(count = 0; count < BLOCKSIZE; count++)
     {
-    DS_Ciper_Message_Info.Encrypt_key[count] = E_Key[count];
+       DS_Ciper_Message_Info.Encrypt_key[count] = E_Key[count];
     }
 }
 
 void DS_Encode_Key_Addition(void)
 {
-
     BYTE i;
     /* initiate round counter = 10 */
     DS_roundCounter = 10;
@@ -238,7 +236,7 @@ void Update_DS_Data_Decode(void)
 void Load_DS_Decrypt_Key(void)
 {
  BYTE count;
- for(count = 0; count <= BLOCKSIZE; count++)
+ for(count = 0; count < BLOCKSIZE; count++)
     {
     DS_Ciper_Message_Info.Decrypt_key[count] = D_Key[count];
     }
@@ -247,9 +245,6 @@ void Load_DS_Decrypt_Key(void)
 void DS_Decode_Key_Addition(void)
 {
     BYTE i;
-
-    /* reconstruct key */
-    i=1;
 
     DS_rcon = 0x36;
 
@@ -417,7 +412,7 @@ BYTE Get_DS_Encryption_State(void)
 {
  BYTE uchState;
 
- uchState = DS_Enciper_Info.State;
+ uchState = (BYTE)DS_Enciper_Info.State;
  return(uchState);
 }
 
@@ -433,8 +428,8 @@ void Set_DS_Decryption_Idle(void)
 
 BYTE Get_DS_Decryption_State(void)
 {
- BYTE uchState;
+    BYTE uchState;
 
- uchState = DS_Deciper_Info.State;
- return(uchState);
+    uchState = (BYTE)DS_Deciper_Info.State;
+    return(uchState);
 }
