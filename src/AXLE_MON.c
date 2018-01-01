@@ -1,16 +1,16 @@
 /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   AXLE_MON
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    AXLE_MON
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -115,8 +115,8 @@ void Convert_Timer_Value_To_Speed(void);
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Initialise_AxleMon(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -264,8 +264,8 @@ void Initialise_AxleMon(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Validate_PD_Signals(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -279,9 +279,15 @@ Abstract            :Validate the PD signals.First monitor the supervisory signa
                      two cards and determine the Track status.Monitor the wheel pulses
                      and check for the PD failures
 
+Allocated Requirements	: 	(SSDAC_SWRS_0001), (SSDAC_SWRS_0109), 
+							(SSDAC_SWRS_0162),(SSDAC_SWRS_0163),(SSDAC_SWRS_0164),(SSDAC_SWRS_0165),
+							(SSDAC_SWRS_0166),(SSDAC_SWRS_0167),(SSDAC_SWRS_0168),(SSDAC_SWRS_0169),
+							(SSDAC_SWRS_0170), (SSDAC_SWRS_0171),(SSDAC_SWRS_0172),(SSDAC_SWRS_0173),
+							(SSDAC_SWRS_0174),(SSDAC_SWRS_0175),(SSDAC_SWRS_0176),(SSDAC_SWRS_0177),
+							(SSDAC_SWRS_0178),(SSDAC_SWRS_0179),(SSDAC_SWRS_0127),(SSDAC_SWRS_0128)
 
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5250
 
 
 Interfaces
@@ -389,8 +395,8 @@ void Validate_PD_Signals(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Monitor_Supervisory_Pulse(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -402,8 +408,9 @@ Abstract            :Monitor the incoming supervisory signal pluse transitions
                      from the phase detector cards to detect the entry/exit of
                      a wheel axle at the phase detectors
 
+Allocated Requirements	: 	(SSDAC_SWRS_0001)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5251
 
 Interfaces
     Calls           :   Nil
@@ -673,8 +680,8 @@ void Convert_Timer_Value_To_Speed(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Monitor_Wheel_Pulse(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -838,8 +845,8 @@ void Monitor_Wheel_Pulse( bitadrb_t Temp_IO)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Determine_TrackState(BYTE uchPD_IO_Value)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -869,7 +876,16 @@ Abstract            :Determine the track state on the entry of an axle
                      0------> 5------>6------>7----->0
 
 
-Design Requirements     :
+Allocated Requirements	: 	(SSDAC_SWRS_0162),(SSDAC_SWRS_0163),(SSDAC_SWRS_0164),(SSDAC_SWRS_0165),
+							(SSDAC_SWRS_0166),(SSDAC_SWRS_0167),(SSDAC_SWRS_0168),(SSDAC_SWRS_0169),
+							(SSDAC_SWRS_0170), (SSDAC_SWRS_0171),(SSDAC_SWRS_0172),(SSDAC_SWRS_0173),
+							(SSDAC_SWRS_0174),(SSDAC_SWRS_0175),(SSDAC_SWRS_0176),(SSDAC_SWRS_0177),
+							(SSDAC_SWRS_0178),(SSDAC_SWRS_0179),(SSDAC_SWRS_0127),(SSDAC_SWRS_0128)
+							(SSDAC_SWRS_0129), (SSDAC_SWRS_0181),(SSDAC_SWRS_0182),(SSDAC_SWRS_0183),
+							(SSDAC_SWRS_0184),(SSDAC_SWRS_0185),(SSDAC_SWRS_0186),(SSDAC_SWRS_0187),
+							(SSDAC_SWRS_0130),(SSDAC_SWRS_0131)
+
+Design Requirements		: SSDAC_DR_5253
 
 
 Interfaces
@@ -1072,8 +1088,8 @@ void Determine_TrackState(BYTE uchPD_IO_Value)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Analyse_Supervisory_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1084,11 +1100,17 @@ Modification History:
 Abstract            :Analyse the supervisory signal(falling/ rising edges) and thereby
                      determine the type of the wheel detected at the phase detectors
 
+Allocated Requirements	: 	(SSDAC_SWRS_0162),(SSDAC_SWRS_0163),(SSDAC_SWRS_0164),(SSDAC_SWRS_0165),
+							(SSDAC_SWRS_0166),(SSDAC_SWRS_0167),(SSDAC_SWRS_0168),(SSDAC_SWRS_0169),
+							(SSDAC_SWRS_0170), (SSDAC_SWRS_0171),(SSDAC_SWRS_0172),(SSDAC_SWRS_0173),
+							(SSDAC_SWRS_0174),(SSDAC_SWRS_0175),(SSDAC_SWRS_0176),(SSDAC_SWRS_0177),
+							(SSDAC_SWRS_0178),(SSDAC_SWRS_0179),(SSDAC_SWRS_0127),(SSDAC_SWRS_0128)
+							(SSDAC_SWRS_0129), (SSDAC_SWRS_0181),(SSDAC_SWRS_0182),(SSDAC_SWRS_0183),
+							(SSDAC_SWRS_0184),(SSDAC_SWRS_0185),(SSDAC_SWRS_0186),(SSDAC_SWRS_0187),
+							(SSDAC_SWRS_0130),(SSDAC_SWRS_0131)
 
 
-Design Requirements     :
-Design Requirements     :
-
+Design Requirements		:  SSDAC_DR_5254
 
 Interfaces
     Calls           :   Nil
@@ -1157,8 +1179,8 @@ void Analyse_Supervisory_Sequence(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Detect_PD_Failures(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1169,9 +1191,13 @@ Modification History:
 Abstract            :Check for PD errors.If any error is there set for
                      particular error bit and declare it as DAC defective
 
+Allocated Requirements	: (SSDAC_SWRS_0190),(SSDAC_SWRS_0191),(SSDAC_SWRS_0192),(SSDAC_SWRS_0193),(SSDAC_SWRS_0194)
+						  (SSDAC_SWRS_0829),(SSDAC_SWRS_0830),(SSDAC_SWRS_0831), (SSDAC_SWRS_0195), (SSDAC_SWRS_0196)
+						  (SSDAC_SWRS_0197),(SSDAC_SWRS_0109),(SSDAC_SWRS_0411), (SSDAC_SWRS_0415)
+						  (SSDAC_SWRS_0211),(SSDAC_SWRS_0511), (SSDAC_SWRS_0612), (SSDAC_SWRS_0711)
+						  (SSDAC_SWRS_0311) 
 
-
-Design Requirements     :
+Design Requirements		: 	SSDAC_DR_5255
 
 Interfaces
     Calls           :   AXLE_MON.c  -   Clear_PD1_Supervisory_Count()
@@ -1500,8 +1526,8 @@ void Detect_PD_Failures(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Increment_DS_Forward_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1513,10 +1539,9 @@ Abstract            :Increment the Down stream forward axle count.If Down
                      stream Forward axle count is greater than 9999 assign 0
                      to it else increment the forward axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-
-Design Requirements     :
-
+Design Requirements		: SSDAC_DR_5256
 
 Interfaces
     Calls           :   Nil
@@ -1564,8 +1589,8 @@ void Increment_DS_Forward_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_DS_Forward_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1577,9 +1602,9 @@ Abstract            :Decrement the Down stream forward axle count.If Down stream
                      Forward axle count is less than 0 assign 9999 to it else
                      decrement the forward axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-Design Requirements     :
-
+Design Requirements		: 	SSDAC_DR_5257
 
 Interfaces
     Calls           :   Nil
@@ -1629,8 +1654,8 @@ void Decrement_DS_Forward_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Increment_DS_Reverse_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1642,6 +1667,9 @@ Abstract            :Increment the Down stream reverse axle count.If Down
                      stream reverse axle count is greater than 9999 assign 0
                      to it else increment the reverse axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
+
+Design Requirements		: 	SSDAC_DR_5258
 
 Design Requirements     :
 
@@ -1691,8 +1719,8 @@ void Increment_DS_Reverse_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_DS_Reverse_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1704,12 +1732,9 @@ Abstract            :Decrement the Down stream reverse axle count.If Down
                      stream reverse axle count is less than 0 assign 9999 to
                      it else decrement the reverse axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-
-
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5259
 
 Interfaces
     Calls           :  Nil
@@ -1758,8 +1783,8 @@ void Decrement_DS_Reverse_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Increment_US_Forward_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1771,9 +1796,9 @@ Abstract            :Increment the up stream forward axle count.If Up stream
                      forward axle count is greater than 9999 assign 0 to it
                      else increment the forward axle count
 
+Allocated Requirements	: (SSDAC_SWRS_0188)	
 
-Design Requirements     :
-
+Design Requirements		: 	SSDAC_DR_5260
 
 Interfaces
     Calls           :   Nil
@@ -1822,8 +1847,8 @@ void Increment_US_Forward_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_US_Forward_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1835,9 +1860,9 @@ Abstract            :Decrement the up stream forward axle count.If Up stream
                      forward axle count is less than 0 assign 9999 to it else
                      decrement the forward axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-Design Requirements     :
-
+Design Requirements		: 	SSDAC_DR_5261
 
 Interfaces
     Calls           :   Nil
@@ -1886,8 +1911,8 @@ void Decrement_US_Forward_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Increment_US_Reverse_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1899,11 +1924,9 @@ Abstract            :Increment the up stream reverse axle count.If Up stream
                      reverse axle count is greater than 9999 assign 0 to it
                      else increment the reverse axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-
-
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5262
 
 Interfaces
     Calls           :   Nil
@@ -1951,8 +1974,8 @@ void Increment_US_Reverse_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_US_Reverse_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1964,11 +1987,9 @@ Abstract            :Decrement the up stream reverse axle count.If Up stream
                      reverse axle count is less than 0 assign 9999 to it else
                      decrement the reverse axle count
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188)
 
-
-
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5263
 
 Interfaces
     Calls           :   Nil
@@ -2017,8 +2038,8 @@ void Decrement_US_Reverse_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Register_PD1212_Transition(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2032,7 +2053,7 @@ Abstract            :Register the correct PD transition in the forward direction
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5264
 
 
 Interfaces
@@ -2124,8 +2145,8 @@ void Register_PD1212_Transition(void)
 /**************************************************************************
 Component name      :AXLE_MON
 Module Name         :void Register_PD2121_Transition(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2138,7 +2159,7 @@ Abstract            :Register the correct PD transition in the reverse direction
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5265
 
 Interfaces
     Calls           :   Nil
@@ -2233,8 +2254,8 @@ void Register_PD2121_Transition(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Chk_for_AxleCount_Completion(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2249,8 +2270,11 @@ Abstract            :Check for the complitation of axle counts at the
                      count error status bit, declare DAC defective
                      bit
 
+Allocated Requirements	: 	(SSDAC_SWRS_0188),(SSDAC_SWRS_0189), (SSDAC_SWRS_0412), (SSDAC_SWRS_0415)
+							(SSDAC_SWRS_0212),(SSDAC_SWRS_0512),(SSDAC_SWRS_0613), (SSDAC_SWRS_0712)
+							(SSDAC_SWRS_0312), SSDAC_SWRS_0113
 
-Design Requirements     :
+Design Requirements		: 	SSDAC_DR_5266
 
 Interfaces
     Calls           :   ERROR.c     -   Set_Error_Status_Bit()
@@ -2314,8 +2338,8 @@ void Chk_for_AxleCount_Completion(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_TrackMon_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2328,7 +2352,7 @@ Abstract            :Decrement the track monitoring 50ms timer
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5267
 
 
 Interfaces
@@ -2401,8 +2425,8 @@ void Decrement_TrackMon_50msTmr(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_US_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2417,7 +2441,7 @@ Abstract            :Clear the Up stream axle counts and direction and
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5268
 
 
 
@@ -2477,8 +2501,8 @@ void Clear_US_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_DS_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2493,7 +2517,7 @@ Abstract            :Clear the down stream axle counts and direction
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5269
 
 
 Interfaces
@@ -2552,8 +2576,8 @@ void Clear_DS_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2566,7 +2590,7 @@ Abstract            :Get the axle count at the Up stream remote unit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5270
 
 
 Interfaces
@@ -2602,8 +2626,8 @@ UINT16 Get_US_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2616,7 +2640,7 @@ Abstract            :Get the axle count at the down stream remote unit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5271
 
 Interfaces
     Calls           :   Nil
@@ -2653,8 +2677,8 @@ UINT16 Get_DS_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BYTE Get_US_AxleDirection(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2667,7 +2691,7 @@ Abstract            :Get the axle direction at Up stream remote unit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5272
 
 
 Interfaces
@@ -2705,8 +2729,8 @@ BYTE Get_US_AxleDirection(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BYTE Get_DS_AxleDirection(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2720,7 +2744,7 @@ Abstract            :Get the axle direction at Down stream remote unit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5273
 
 
 Interfaces
@@ -2761,8 +2785,8 @@ BYTE Get_DS_AxleDirection(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_Fwd_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2776,7 +2800,7 @@ Abstract            :Get the forward axle count at the Up stream remote
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5274
 
 
 
@@ -2815,8 +2839,8 @@ UINT16 Get_US_Fwd_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_Rev_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2830,7 +2854,7 @@ Abstract            : Get the reverse axle count at the Up stream remote
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5275
 
 
 
@@ -2870,8 +2894,8 @@ UINT16 Get_US_Rev_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_Fwd_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2885,7 +2909,7 @@ Abstract            :Get the forward axle count at the down stream remote
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5276
 
 
 
@@ -2926,8 +2950,8 @@ UINT16 Get_DS_Fwd_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_Rev_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2941,7 +2965,7 @@ Abstract            :Get the reverse axle count at the down stream remote
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5277
 
 Interfaces
     Calls           :   Nil
@@ -2979,8 +3003,8 @@ UINT16 Get_DS_Rev_AxleCount(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_DS_Local_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2994,7 +3018,7 @@ Abstract            :Clear the Down stream remote unit forward and reverse axle
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5278
 
 
 
@@ -3035,8 +3059,8 @@ void Clear_DS_Local_Counts(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_US_Local_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3050,7 +3074,7 @@ Abstract            :Clear the Up stream remote unit forward and reverse axle
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5279
 
 
 Interfaces
@@ -3091,8 +3115,8 @@ void Clear_US_Local_Counts(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD1_Supervisory_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3104,7 +3128,7 @@ Abstract            :Clear the Phase detector1 supervisory counts
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5280
 
 
 Interfaces
@@ -3146,8 +3170,8 @@ void Clear_PD1_Supervisory_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD2_Supervisory_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3160,7 +3184,7 @@ Abstract            :Clear the Phase detector2 supervisory counts
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5281
 
 
 Interfaces
@@ -3200,8 +3224,8 @@ void Clear_PD2_Supervisory_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD12_Main_Pulse_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3213,7 +3237,7 @@ Abstract            :Clear the main counts at PD1 and PD2
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5282
 
 
 Interfaces
@@ -3251,8 +3275,8 @@ void Clear_PD12_Main_Pulse_Count(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_Wheel_Type(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3264,7 +3288,7 @@ Abstract            :Clear the wheel type detected at the PDs at remote units
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5283
 
 
 
@@ -3320,8 +3344,8 @@ void Clear_Wheel_Type(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_US_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3333,7 +3357,7 @@ Abstract            :Start the Up stream remote unit axle counting
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5284
 
 
 Interfaces
@@ -3374,8 +3398,8 @@ void Start_US_Axle_Counting(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_DS_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3387,7 +3411,7 @@ Abstract            :Start the Down stream remote unit axle counting
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5285
 
 
 
@@ -3430,8 +3454,8 @@ void Start_DS_Axle_Counting(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_US_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3443,7 +3467,7 @@ Abstract            :Stop the Up stream remote unit axle counting
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5286
 
 Interfaces
     Calls           :   Nil
@@ -3483,8 +3507,8 @@ void Stop_US_Axle_Counting(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_DS_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3496,7 +3520,7 @@ Abstract            :Stop the down stream remote unit axle counting
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5287
 
 
 Interfaces
@@ -3539,8 +3563,8 @@ void Stop_DS_Axle_Counting(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_DS_Local_Counts_Clearing_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3596,8 +3620,8 @@ BOOL Get_DS_Local_Counts_Clearing_Status(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_US_Local_Counts_Clearing_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3654,8 +3678,8 @@ BOOL Get_US_Local_Counts_Clearing_Status(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Chk_For_Track_Occupancy(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |

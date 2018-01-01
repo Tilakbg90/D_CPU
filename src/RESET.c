@@ -1,16 +1,16 @@
  /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   RESET
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RESET
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -31,7 +31,7 @@
                         void SF_Wait_for_Local_Reset(void)
                         void Update_CF_Reset_Monitor_State(void)
                         void CF_DS_Reset_Sequence_Complete(void)
-F                       void CF_US_Reset_Sequence_Complete(void)
+                       void CF_US_Reset_Sequence_Complete(void)
                         void CF_Wait_for_Local_Reset(void)
                         void Process_CF_DS_Reset_Command(void);
                         void Process_CF_US_Reset_Command(void);
@@ -91,7 +91,7 @@ reset_button_info_t Reset_Button_Info;
 reset_button_info_t Reset_Button2_Info;
 extern  ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
 extern  us_section_mode US_Section_Mode;             /*from DAC_MAIN.c*/
-
+extern BYTE Always_true;
 
 const BYTE uchDAC_Status_Table[NO_OF_REMOTE_UNIT_STATES][NO_OF_LOCAL_UNIT_STATES] = {
 {(BYTE)ZERO_MODE, (BYTE)ZERO_MODE,                         (BYTE)ERROR_RESET_APPLIED_AT_LOCAL_UNIT, (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
@@ -103,6 +103,8 @@ const BYTE uchDAC_Status_Table[NO_OF_REMOTE_UNIT_STATES][NO_OF_LOCAL_UNIT_STATES
 {(BYTE)ZERO_MODE, (BYTE)ERROR_LOCAL_UNIT_WAITING_FOR_RESET,(BYTE)ERROR_RESET_APPLIED_AT_LOCAL_UNIT, (BYTE)ZERO_MODE,                            (BYTE)ZERO_MODE,                   (BYTE)ZERO_MODE,                      (BYTE)SECTION_ERROR_AT_BOTH_UNITS},
 {(BYTE)ZERO_MODE, (BYTE)WAITING_FOR_RESET_AT_BOTH_UNITS   ,(BYTE)RESET_APPLIED_AT_LOCAL_UNIT       ,(BYTE)SECTION_WAIT_FOR_PILOT_TRAIN,         (BYTE)SECTION_CLEAR_AT_BOTH_UNITS, (BYTE)SECTION_OCCUPIED_AT_BOTH_UNITS, (BYTE)SECTION_ERROR_AT_BOTH_UNITS}
 };
+
+BYTE Reset_pressed __attribute__((persistent));
 
 void SF_Wait_for_Local_Reset(void);
 void CF_Wait_for_Local_Reset(void);
@@ -134,8 +136,8 @@ void DE_Wait_for_Local_Reset(void);
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Initialise_SF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -145,9 +147,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Initialise SF reset monitor,update checksum
 
+Allocated Requirements	: 	(SSDAC_SWRS_0032)
 
-
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5213
 
 Interfaces
     Calls           :   
@@ -244,8 +246,8 @@ void Initialise_DE_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Initialise_CF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -255,8 +257,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Initialise CF reset monitor,update checksum
 
+Allocated Requirements	: 	(SSDAC_SWRS_0032)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5214
 
 Interfaces
     Calls           :   
@@ -364,8 +367,8 @@ void Initialise_CF_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Initialise_EF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
@@ -376,8 +379,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Initialise EF reset monitor,update checksum
 
+Allocated Requirements	: 	(SSDAC_SWRS_0032)
 
-Design Requirements     :
+Design Requirements		: 	SSDAC_DR_5215
+
 Interfaces
     Calls           :   
 
@@ -440,8 +445,8 @@ void Initialise_EF_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Start_SF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -453,7 +458,7 @@ Abstract            :Start reset button polling for SF
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5217
 
 Interfaces
     Calls           :   Nil
@@ -524,8 +529,8 @@ void Start_DE_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Start_CF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -543,8 +548,9 @@ Modification History:
 
 Abstract            :Start reset button polling for CF
 
+Allocated Requirements	:	(SSDAC_SWRS_0318),(SSDAC_SWRS_0354),(SSDAC_SWRS_0320)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5218
 
 Interfaces
     Calls           :   Nil
@@ -596,8 +602,8 @@ void Start_CF_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Start_EF_Reset_Monitor(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -615,7 +621,7 @@ Abstract            :Start reset button polling for EF
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5219
 
 Interfaces
     Calls           :   Nil
@@ -663,8 +669,8 @@ void Start_EF_Reset_Monitor(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_SF_Reset_Monitor_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -675,13 +681,12 @@ Modification History:
                     Rev No          Date        Description
                      --              --             --
 
-
-
-
 Abstract            :Update_Reset_Button_State, SF_Wait_for_Local_Reset and update the checksum
 
 
-Design Requirements     :
+Allocated Requirements	: 	(SSDAC_SWRS_0222), (SSDAC_SWRS_0226), (SSDAC_SWRS_0223)
+
+Design Requirements		:	SSDAC_DR_5221
 
 
 Interfaces
@@ -897,8 +902,8 @@ void Update_DE_Reset_Monitor_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_SF_Reset_Monitor_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1058,8 +1063,8 @@ void Update_SF_Reset_Monitor_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void SF_Reset_Sequence_Complete(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1071,7 +1076,7 @@ Abstract            :Indicate that the reset sequence is completed for SF
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5222
 
 Interfaces
     Calls           :   
@@ -1107,8 +1112,8 @@ void SF_Reset_Sequence_Complete(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void SF_Wait_for_Local_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1123,8 +1128,10 @@ Modification History:
 
 Abstract            :Accept preparatory reset, update the Check sum,Reset the system
 
+Allocated Requirements	: 	(SSDAC_SWRS_0222), (SSDAC_SWRS_0226)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5223
+ 
 Interfaces
     Calls           :   RLYB_MGR.c          -   Reset_Allowed_For_DS()
                         
@@ -1179,8 +1186,9 @@ void LCWS_Wait_for_Local_Reset(void)
                   // Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   // Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-                         
+                  Reset_pressed = TRUE;       
                   {asm("reset");} // RESET();             /* Reset the System */
+                  while (Always_true == 1);
                   return;
                  }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
@@ -1210,8 +1218,9 @@ void DE_Wait_for_Local_Reset(void)
                   // Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   // Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-                         
+                  Reset_pressed = TRUE;       
                   {asm("reset");} // RESET();             /* Reset the System */
+                  while (Always_true == 1);
                   return;
                  }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
@@ -1227,8 +1236,8 @@ void DE_Wait_for_Local_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void SF_Wait_for_Local_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1299,10 +1308,11 @@ void SF_Wait_for_Local_Reset(void)
                   Reset_Info.SF.Flags.DS1_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.DS2_has_been_Reset = FALSE;
                   Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
-                         
+                  Reset_pressed = TRUE;       
                   {asm("reset");} // RESET();             /* Reset the System */
+                  while (Always_true == 1);
                   return;
-                 }
+                }
              if(Reset_Info.SF.DS_State == SF_WAIT_FOR_RESET)
                 {
                     /* Preparatory reset at start-up */
@@ -1316,8 +1326,8 @@ void SF_Wait_for_Local_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_CF_Reset_Monitor_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1335,9 +1345,15 @@ Modification History:
 
 Abstract            :Update_Reset_Button_State,CF_Wait_for_Local_Reset,Update the Checksum
 
+Allocated Requirements	:(SSDAC_SWRS_0561), (SSDAC_SWRS_0519), (SSDAC_SWRS_0522), (SSDAC_SWRS_0523)
+						 (SSDAC_SWRS_0564), (SSDAC_SWRS_0318), (SSDAC_SWRS_0355), (SSDAC_SWRS_0319)
+						 (SSDAC_SWRS_0320), (SSDAC_SWRS_0360), (SSDAC_SWRS_0619), (SSDAC_SWRS_0718)
+						 (SSDAC_SWRS_0620), (SSDAC_SWRS_0719), (SSDAC_SWRS_0623), (SSDAC_SWRS_0722)
+						(SSDAC_SWRS_0624), (SSDAC_SWRS_0723), (SSDAC_SWRS_0656), (SSDAC_SWRS_0756)
+						(SSDAC_SWRS_0362), (SSDAC_SWRS_0324), (SSDAC_SWRS_0365)
 
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5224
 
 Interfaces
     Calls           :   RESET.c -   Update_Reset_Button_State()
@@ -1568,8 +1584,8 @@ void Update_CF_Reset_Monitor_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void CF_DS_Reset_Sequence_Complete(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1590,7 +1606,7 @@ Abstract            :Once the CF down stream sequence is completed than check fo
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5225
 Interfaces
     Calls           :   
                         RESTORE.c   -   Clear_DS_Checksum_Info()
@@ -1638,8 +1654,8 @@ void CF_DS_Reset_Sequence_Complete(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void CF_US_Reset_Sequence_Complete(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1660,7 +1676,7 @@ Abstract            :Update the Center fed reset state and update the Checksum
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5226
 
 Interfaces
     Calls           :   
@@ -1713,8 +1729,8 @@ void CF_US_Reset_Sequence_Complete(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void CF_Wait_for_Local_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1736,7 +1752,7 @@ Abstract            :For CF configuration when the local system is been reset sy
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5228
 
 Interfaces
     Calls           :   RESET.c -   Process_CF_Reset_Command()
@@ -1804,8 +1820,8 @@ void CF_Wait_for_Local_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Process_D3_Reset_Command(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1935,16 +1951,17 @@ void Process_D3_Reset_Command(void)
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
         Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
         Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
-              
+        Reset_pressed = TRUE;      
         {asm("reset");} // RESET();               /* Reset the System */
+        while (Always_true == 1);
      }
 }
 
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Process_D4_Reset_Command(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2074,16 +2091,17 @@ void Process_D4_Reset_Command(void)
         Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
         Reset_Info.CF.DS_State = CF_WAIT_FOR_DS_TO_RESET;
         Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
-              
+        Reset_pressed = TRUE;      
         {asm("reset");} // RESET();               /* Reset the System */
+        while (Always_true == 1);
      }
 }
 
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Process_CF_DS_Reset_Command(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2216,8 +2234,9 @@ void Process_CF_DS_Reset_Command(void)
           Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1= FALSE;
           Reset_Info.CF.DS_State =CF_WAIT_FOR_DS_TO_RESET;
           Reset_Info.CF.US_State =CF_US_WAIT_FOR_RESET;
-                   
+          Reset_pressed = TRUE;         
           {asm("reset");} // RESET();                   /* Reset the System */
+          while (Always_true == 1);
           return;
        }
    if(Reset_Allowed_For_DS())
@@ -2236,8 +2255,8 @@ void Process_CF_DS_Reset_Command(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Process_CF_US_Reset_Command(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2368,8 +2387,9 @@ void Process_CF_US_Reset_Command(void)
            Reset_Info.CF.Flags.Peer_CPU_has_been_Reset1= FALSE;
            Reset_Info.CF.US_State = CF_WAIT_FOR_US_TO_RESET;
            Reset_Info.CF.DS_State = CF_DS_WAIT_FOR_RESET;
-                 
+           Reset_pressed = TRUE;      
            {asm("reset");} // RESET();            /* Reset the System */
+           while (Always_true == 1);
            return;
         }
    if(Reset_Allowed_For_US())
@@ -2389,8 +2409,8 @@ void Process_CF_US_Reset_Command(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_EF_Reset_Monitor_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2408,7 +2428,9 @@ Abstract            :Call Update_Reset_Button_State(),EF_Wait_for_Local_Reset(),
                      After accepting the reset update the Checksum
 
 
-Design Requirements     :
+Allocated Requirements	: (SSDAC_SWRS_0418), (SSDAC_SWRS_0419)
+
+Design Requirements		:	SSDAC_DR_5230
 
 Interfaces
     Calls           :   RESET.c -   Update_Reset_Button_State()
@@ -2549,8 +2571,8 @@ void Update_EF_Reset_Monitor_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void EF_Reset_Sequence_Complete(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2560,14 +2582,12 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
                     Rev No          Date        Description
                      --              --             --
-                            2           1               24              9-12-05         Refer ATR 24
-                            3           4               80              28-12-05        Refer ATR 80
 
 Abstract            :Update reset state for End Fed and the Checksum
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5231
 
 Interfaces
     Calls           :   
@@ -2605,8 +2625,8 @@ void EF_Reset_Sequence_Complete(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void EF_Wait_for_Local_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2624,7 +2644,7 @@ Abstract            :Start reset button polling.Preparatory reset at
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5232
 
 Interfaces
     Calls           :   RLYA_MGR.c          -   Reset_Allowed_For_US()
@@ -2679,8 +2699,10 @@ void EF_Wait_for_Local_Reset(void)
             Reset_Info.EF.Flags.US1_has_been_Reset = FALSE;
             Reset_Info.EF.Flags.US2_has_been_Reset = FALSE;
             Reset_Info.EF.Flags.Peer_CPU_has_been_Reset = FALSE;
-                 /* Update CheckSum  */
+            Reset_pressed = TRUE;
+            /* Update CheckSum  */
             {asm("reset");} // RESET();               /* Reset the System */
+            while (Always_true == 1);
             return;
         }
         if(Reset_Info.EF.US_State == EF_WAIT_FOR_RESET)
@@ -2697,8 +2719,8 @@ void EF_Wait_for_Local_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_Reset_Button_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2712,12 +2734,17 @@ Modification History:
 
 
 Abstract            :Update the reset button state
+Allocated Requirements	: 	(SSDAC_SWRS_0003), (SSDAC_SWRS_0159), (SSDAC_SWRS_0160),(SSDAC_SWRS_0161)
+							(SSDAC_SWRS_0265), (SSDAC_SWRS_0266), (SSDAC_SWRS_0267),(SSDAC_SWRS_0419)
+							(SSDAC_SWRS_0420), (SSDAC_SWRS_0423), (SSDAC_SWRS_0451),(SSDAC_SWRS_0452)
+							(SSDAC_SWRS_0453), (SSDAC_SWRS_0517), (SSDAC_SWRS_0417),(SSDAC_SWRS_0565)
+							(SSDAC_SWRS_0566), (SSDAC_SWRS_0567), (SSDAC_SWRS_0221), (SSDAC_SWRS_0223)
+							(SSDAC_SWRS_0227), (SSDAC_SWRS_0618), (SSDAC_SWRS_0717)
+							(SSDAC_SWRS_0657), (SSDAC_SWRS_0658), (SSDAC_SWRS_0659)
+							(SSDAC_SWRS_0757), (SSDAC_SWRS_0758), (SSDAC_SWRS_0759)
+							(SSDAC_SWRS_0366), (SSDAC_SWRS_0367), (SSDAC_SWRS_0368)
 
-
-
-
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5236
 
 Interfaces
     Calls           :   Nil
@@ -2820,8 +2847,8 @@ void Update_Reset_Button_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_Reset_Button2_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2839,7 +2866,7 @@ Abstract                :Update the reset button state
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5371
 
 Interfaces
     Calls           :   Nil
@@ -2939,8 +2966,8 @@ void Update_Reset_Button2_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_Reset_Info(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2961,7 +2988,7 @@ Abstract            :Depending on configuration clear the reset info flag
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5237
 
 Interfaces
     Calls           :   
@@ -3114,8 +3141,8 @@ void Clear_Reset_Info(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_Local_Reset_Flag(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3133,7 +3160,7 @@ Abstract            :Clear the local reset flag
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5238
 
 Interfaces
     Calls           :   Nil
@@ -3173,8 +3200,8 @@ void Clear_Local_Reset_Flag(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_Local_Reset2_Flag(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3231,8 +3258,8 @@ void Clear_Local_Reset2_Flag(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Decrement_Reset_msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3250,7 +3277,8 @@ Abstract            :Decremnet the reset timer
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5239
+
 
 Interfaces
     Calls           :   NIL
@@ -3306,8 +3334,8 @@ void Decrement_Reset_msTmr(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Decrement_Reset_300sTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3369,8 +3397,8 @@ void Decrement_Reset_300sTmr(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Decrement_Reset_300sTmr2(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3432,8 +3460,8 @@ void Decrement_Reset_300sTmr2(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_SF_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3441,16 +3469,17 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-                    Rev No          Date        Description
-                     --              --             --
-                            2           1               24              9-12-05         Refer ATR 24
-                            3           4               80              28-12-05        Refer ATR 80
+
+
+
+
+
 
 Abstract            :Get the SF reset state to monitor the system
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5240
 
 Interfaces
     Calls           :   None
@@ -3491,8 +3520,8 @@ BYTE Get_SF_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_SF_DS1_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3549,8 +3578,8 @@ BYTE Get_SF_DS1_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_SF_DS2_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3607,8 +3636,8 @@ BYTE Get_SF_DS2_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_US_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3670,8 +3699,8 @@ BYTE Get_CF_US_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_US1_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3728,8 +3757,8 @@ BYTE Get_CF_US1_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_US2_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3787,8 +3816,8 @@ BYTE Get_CF_US2_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_DS_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3848,8 +3877,8 @@ BYTE Get_CF_DS_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_DS1_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3906,8 +3935,8 @@ BYTE Get_CF_DS1_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_CF_DS2_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3965,8 +3994,8 @@ BYTE Get_CF_DS2_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_EF_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3986,7 +4015,7 @@ Abstract            :Get the EF reset state to monitor the system
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5242
 
 Interfaces
     Calls           :   None
@@ -4025,8 +4054,8 @@ BYTE Get_EF_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_EF_US1_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4083,8 +4112,8 @@ BYTE Get_EF_US1_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Get_EF_US2_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4143,8 +4172,8 @@ BYTE Get_EF_US2_Reset_State(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_DS1_has_been_Reset(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4167,7 +4196,7 @@ Abstract            :If a unit type is CF, system involves co-operative reset
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5244
 
 Interfaces
     Calls           : 
@@ -4205,8 +4234,8 @@ void Post_DS1_has_been_Reset(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_DS2_has_been_Reset(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4227,7 +4256,7 @@ Abstract            :If a unit type is CF, system involves co-operative reset
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5245
 
 Interfaces
     Calls           : 
@@ -4266,8 +4295,8 @@ void Post_DS2_has_been_Reset(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_US1_has_been_Reset(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4288,7 +4317,7 @@ Abstract            :If a unit type is CF, system involves co-operative reset
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5246
 
 Interfaces
     Calls           :   persist_validate() - Complier defined function
@@ -4326,8 +4355,8 @@ void Post_US1_has_been_Reset(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_US2_has_been_Reset(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4347,7 +4376,7 @@ Abstract            :If a unit type is CF, system involves co-operative reset
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5247
 
 Interfaces
     Calls           :   persist_validate() - Complier defined function
@@ -4386,8 +4415,8 @@ void Post_US2_has_been_Reset(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_Peer_CPU_Reset(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4407,7 +4436,7 @@ Abstract            :In unit type CF,reset sequence is completed by resetting th
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5248
 
 Interfaces
     Calls           :   persist_validate() - Complier defined function
@@ -4444,8 +4473,8 @@ void Post_Peer_CPU_Reset(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Post_Peer_CPU_Reset1(BYTE uchData)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4459,7 +4488,7 @@ Abstract            :In unit type CF,reset sequence is completed by resetting th
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5370
 
 Interfaces
     Calls           :   persist_validate() - Complier defined function
@@ -4498,8 +4527,8 @@ void Post_Peer_CPU_Reset1(BYTE uchData)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_DS_Section_Remote_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4560,8 +4589,8 @@ void Update_DS_Section_Remote_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_DS_Section_Remote_Preparatory(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4619,8 +4648,8 @@ void Update_DS_Section_Remote_Preparatory(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_US_Section_Remote_Reset(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4680,8 +4709,8 @@ void Update_US_Section_Remote_Reset(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Update_US_Section_Remote_Preparatory(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4739,8 +4768,8 @@ void Update_US_Section_Remote_Preparatory(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Update_System_Mode(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4872,8 +4901,8 @@ BYTE Update_System_Mode(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Update_DS_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4928,8 +4957,8 @@ BYTE Update_DS_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode)
 /*********************************************************************
 Component name      :RESET
 Module Name         :BYTE Update_US_Section_Mode(BYTE ds_remote_mode,BYTE ds_local_mode)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -4983,8 +5012,8 @@ BYTE Update_US_Section_Mode(BYTE us_remote_mode,BYTE us_local_mode)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_DS_Remote_Reset_Flag(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -5031,8 +5060,8 @@ void Clear_DS_Remote_Reset_Flag(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_US_Remote_Reset_Flag(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -5079,8 +5108,8 @@ void Clear_US_Remote_Reset_Flag(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Clear_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -5090,7 +5119,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Clear all the reset status
 
-Design Requirements     :
+Allocated Requirements	: 	(SSDAC_SWRS_0842),(SSDAC_SWRS_0843),(SSDAC_SWRS_0846),(SSDAC_SWRS_0847),
+							(SSDAC_SWRS_0850),(SSDAC_SWRS_0851)
+
+Design Requirements		:	
 
 Interfaces
     Calls           :persist_validate() - compiler defined function

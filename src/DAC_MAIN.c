@@ -1,16 +1,16 @@
 /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   DAC_MAIN.c
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    DAC_MAIN
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -35,7 +35,6 @@
 
 *****************************************************************************/
 #include <xc.h>
-
 
 //#include <sys.h>
 /*
@@ -91,7 +90,7 @@
 const unsigned char SW_Version_No = 0x01;   /* constant hold the value of software version number to display in reset box*/
 const BYTE BitMask_List[8] = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
  /*near*/  dip_switch_info_t DIP_Switch_Info;     /* Structure to hold DIP switch settings */
- /*near*/  dac_status_t Status;                   /* Status flags of Unit. This will be passed as it is to SM-CPU */
+ /*near*/  dac_status_t Status __attribute__((persistent));                   /* Status flags of Unit. This will be passed as it is to SM-CPU */
  /*near*/  bootup_lock Bootup_Lock;                    /* Structure to hold the value for the bootup timeout variable*/
 checksum_info_t Checksum_Info;              /*structure to hold the CRC values*/
 ds_section_mode DS_Section_Mode;            /*structure to hold the DS section local and remote unit modes */
@@ -142,11 +141,14 @@ extern void Initialise_DE_Reset_Monitor(void);
 extern void Start_DE_Reset_Monitor(void);
 extern void Update_DE_Reset_Monitor_State(void);
 extern void Update_DE_Relay_State(void);
+
+extern unsigned int COM_DS_pkt_error_cnt,COM_US_pkt_error_cnt;
+extern BYTE Reset_pressed __attribute__((persistent));  
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void main(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -234,6 +236,14 @@ int main(void)
     {
         Initialize_Reset();
     }
+    else
+    {
+        if(Reset_pressed == TRUE)
+        {
+            Status.Flags.Local_Power_Status = SET_HIGH;
+        }
+        Reset_pressed = FALSE;
+    }
         
             switch (DIP_Switch_Info.DAC_Unit_Type)
             {
@@ -244,6 +254,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_B_Mgr();                                        /* from rlyb_mgr.c */
                 // Clear_Line_on_LCD((BYTE) 3);
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_SF();
                 break;
             case DAC_UNIT_TYPE_EF:
@@ -253,6 +265,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_A_Mgr();                                        /* from rlya_mgr.c */
                 // Clear_Line_on_LCD((BYTE) 3);
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_EF();
                 break;
             case DAC_UNIT_TYPE_CF:
@@ -260,6 +274,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_PENDING;
                 Start_CF_Reset_Sequence();
                 Status.Flags.Local_Power_Status = SET_HIGH;
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_CF();
                 break;
             case DAC_UNIT_TYPE_D3_A:
@@ -270,6 +286,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_D3_Mgr();                                       /* from rlyd3_mgr.c */
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_D3();
                 break;
             case DAC_UNIT_TYPE_D3_B:
@@ -280,6 +298,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_D3_Mgr();                                       /* from rlyd3_mgr.c */
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_D3();
                 break;
             case DAC_UNIT_TYPE_D3_C:
@@ -290,6 +310,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_D3_Mgr();                                       /* from rlyd3_mgr.c */
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_D3();
                 break;
             case DAC_UNIT_TYPE_3D_SF:
@@ -297,6 +319,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_PENDING;
                 Start_CF_Reset_Sequence();
                 Status.Flags.Local_Power_Status = SET_HIGH;
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_3S();
                 break;
             case DAC_UNIT_TYPE_3D_EF:
@@ -304,6 +328,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_PENDING;
                 Start_CF_Reset_Sequence();
                 Status.Flags.Local_Power_Status = SET_HIGH;
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_3S();
                 break;
             case DAC_UNIT_TYPE_LCWS:
@@ -315,6 +341,8 @@ int main(void)
                 Start_Relay_A_Mgr();
                 Start_Relay_B_Mgr();                                        /* from rlyb_mgr.c */
                 // Clear_Line_on_LCD((BYTE) 3);
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_LCWS();
                 break;
             case DAC_UNIT_TYPE_DE:
@@ -324,6 +352,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_B_Mgr();                                        /* from rlyb_mgr.c */
                 // Clear_Line_on_LCD((BYTE) 3);
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_DE();
                 break;
             case DAC_UNIT_TYPE_D4_A:
@@ -337,6 +367,8 @@ int main(void)
                 Status.Flags.Preparatory_Reset_DS = PREPARATORY_RESET_COMPLETED;
                 Status.Flags.Preparatory_Reset_US = PREPARATORY_RESET_COMPLETED;
                 Start_Relay_D4_Mgr();                                       /* from rlyd3_mgr.c */
+                COM_DS_pkt_error_cnt = 0;
+                COM_US_pkt_error_cnt = 0;
                 Control_DAC_Type_D4();
                 break;
             default:
@@ -350,8 +382,8 @@ int main(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Initialise_System(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -364,9 +396,17 @@ Abstract            :Initialise all I/O ports,timer configuration,port direction
                      Disable Capture/Comparator/PWM  Modules,default status  values,
                      calls all initialisation function modules.
 
+Allocated Requirements	: 	(SSDAC_SWRS_0023), (SSDAC_SWRS_0024), (SSDAC_SWRS_0025), (SSDAC_SWRS_0026)
+							(SSDAC_SWRS_0028), (SSDAC_SWRS_0029), (SSDAC_SWRS_0030), (SSDAC_SWRS_0031)
+							(SSDAC_SWRS_0032), (SSDAC_SWRS_0033), (SSDAC_SWRS_0034), (SSDAC_SWRS_0835)
+							(SSDAC_SWRS_0834), (SSADC_SWRS_0036), (SSADC_SWRS_0037),(SSADC_SWRS_0838)
+							(SSADC_SWRS_0839), (SSDAC_SWRS_0243), (SSDAC_SWRS_0438), (SSDAC_SWRS_0203)
+							(SSDAC_SWRS_0103), (SSDAC_ SWRS_ 0148), (SSDAC_SWRS_0446), (SSDAC_SWRS_0260)
+							(SSDAC_SWRS_0403), (SSDAC_SWRS_0503), (SSDAC_SWRS_0540), (SSDAC_SWRS_0243)
+							(SSDAC_SWRS_0303), (SSDAC_SWRS_0305), (SSDAC_SWRS_0604), (SSDAC_SWRS_0703)
+							(SSDAC_SWRS_0640), (SSDAC_SWRS_0740), (SSDAC_SWRS_0339), (SSDAC_SWRS_0339)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5002
 
 Interfaces
     Calls           :       ERROR.c     -   Initialise_Error()
@@ -403,26 +443,26 @@ Input Variables         Name                                        Type
     Local           :   uchString                                   Array of BYTEs
 
 Output Variables        Name                                    Type
-    Global          :   PORTA                                   8 Bit Bidirectional Port
-                        PORTB                                   8 Bit Bidirectional Port
-                        PORTC                                   8 Bit Bidirectional Port
-                        PORTD                                   8 Bit Bidirectional Port
-                        PORTE                                   8 Bit Bidirectional Port
-                        PORTF                                   8 Bit Bidirectional Port
-                        PORTG                                   8 Bit Bidirectional Port
-                        PORTH                                   8 Bit Bidirectional Port
-                        PORTJ                                   8 Bit Bidirectional Port
-                        TRISA                                   8 Bit directional register
-                        TRISB                                   8 Bit directional register
-                        TRISC                                   8 Bit directional register
-                        TRISD                                   8 Bit directional register
-                        TRISE                                   8 Bit directional register
-                        TRISF                                   8 Bit directional register
-                        TRISG                                   8 Bit directional register
-                        TRISH                                   8 Bit directional register
-                        TRISJ                                   8 Bit directional register
-                        ADCON0                                  8 Bit Control register 0
-                        ADCON1                                  8 Bit Control register 1
+    Global          :   PORTA                                   16 Bit Bidirectional Port
+                        PORTB                                   16 Bit Bidirectional Port
+                        PORTC                                   16 Bit Bidirectional Port
+                        PORTD                                   16 Bit Bidirectional Port
+                        PORTE                                   16 Bit Bidirectional Port
+                        PORTF                                   16 Bit Bidirectional Port
+                        PORTG                                   16 Bit Bidirectional Port
+                        PORTH                                   16 Bit Bidirectional Port
+                        PORTJ                                   16 Bit Bidirectional Port
+                        TRISA                                   16 Bit directional register
+                        TRISB                                   16 Bit directional register
+                        TRISC                                   16 Bit directional register
+                        TRISD                                   16 Bit directional register
+                        TRISE                                   16 Bit directional register
+                        TRISF                                   16 Bit directional register
+                        TRISG                                   16 Bit directional register
+                        TRISH                                   16 Bit directional register
+                        TRISJ                                   16 Bit directional register
+                        ADCON0                                  16 Bit Control register 0
+                        ADCON1                                  16 Bit Control register 1
                         EBDIS                                   MEMCON register bit
                         CMCON                                   Comparator Module control register
                         CCP1CON                                 Enhanced Capture/Compare/PWM Control Register
@@ -435,8 +475,8 @@ Output Variables        Name                                    Type
                         T2CON                                   Timer 2 Control register
                         T3CON                                   Timer 3 Control register
                         T4CON                                   Timer 4 Control register
-                        PR4                                     8 bit period register
-                        PR2                                     8 bit period register
+                        PR4                                     16 bit period register
+                        PR2                                     16 bit period register
                         Status.Byte[0 to 6]                     Array of Bytes
                         Checksum_Info.Byte[0 to 20]             Array of Bytes
                         DIP_Switch_Info.Address                 BYTE
@@ -556,7 +596,6 @@ void Initialise_System(void)
     ErrorCodeForSPI = 255;
     SPI_Failure.Failure_Data = 0;
 
-
     Status.Byte[0] = (BYTE) 0b00000001;
     Status.Byte[1] = (BYTE) 0b00111110;
     Status.Byte[2] = (BYTE) 0b11111111;
@@ -564,7 +603,15 @@ void Initialise_System(void)
     Status.Byte[4] = (BYTE) 0b11111111;
     Status.Byte[5] = (BYTE) 0b00000000;
     Status.Byte[6] = (BYTE) 0b00100011;
-
+    
+//    if(RCONbits.SWR == 1)   // Do this only upon software reset
+//    {
+//        if(Reset_pressed == TRUE)
+//        {
+//            Status.Flags.Local_Power_Status = SET_HIGH;
+//        }
+//        Reset_pressed = FALSE;
+//    }
 
 
     Checksum_Info.Byte[0]  = (BYTE) 0x00;
@@ -719,8 +766,8 @@ void Initialise_System(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_SF_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -730,15 +777,16 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the Start fed reset sequence
                         1.Get the SF reset state
-                        2.Start the Down stream communication schedular
+                        2.Start the Down stream communication scheduler
                         3.Update the reset state
                         4.In error condition update the error display and wait for 6s then reboot the system except
                           for the flash checksum failure
                         5.Update the down stream scehdular state, SPI state, LCD state
 
+Allocated Requirements	: 	(SSDAC_SWRS_0221), (SSDAC_SWRS_0222),(SSDAC_SWRS_0244),(SSDAC_SWRS_0339),
+							(SSDAC_SWRS_0842),(SSDAC_SWRS_0843)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5003
 
 Interfaces
     Calls           :   
@@ -841,6 +889,7 @@ void Start_SF_Reset_Sequence(void)
     {
         Status.Flags.Local_Reset_Done2 = SM_HAS_RESETTED_SYSTEM;
         DS_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
+        DS_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
     }
     Start_SF_Reset_Monitor();
     uchReset_Pending = TRUE;
@@ -925,8 +974,8 @@ void Start_SF_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_CF_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -936,18 +985,19 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the Center fed reset sequence
                         1.Get the CF reset state
-                        2.Start the Down stream communication schedular and Up stream
-                         comminication schedular
+                        2.Start the Down stream communication scheduler and Up stream
+                         comminication scheduler
                         3.Update the reset state
                         4.In error condition update the error display and wait for 6s then reboot the system except
                           for the flash checksum failure
-                        5.Update the down stream schedular, Up stream schedular state,
+                        5.Update the down stream scheduler, Up stream scheduler state,
                          SPI state, LCD state
 
+Allocated Requirements	: (SSDAC_SWRS_0244), (SSDAC_SWRS_0541), (SSDAC_SWRS_0517),(SSDAC_SWRS_0618)
+							(SSDAC_SWRS_0717), (SSDAC_SWRS_0641), (SSDAC_SWRS_0741), (SSDAC_SWRS_0339),
+						  (SSDAC_SWRS_0846),(SSDAC_SWRS_0847)
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5004
 
 Interfaces
     Calls           :   
@@ -1181,8 +1231,8 @@ void Start_CF_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_CF_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1192,12 +1242,12 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the Center fed reset sequence
                         1.Get the CF reset state
-                        2.Start the Down stream communication schedular and Up stream
-                         comminication schedular
+                        2.Start the Down stream communication scheduler and Up stream
+                         comminication scheduler
                         3.Update the reset state
                         4.In error condition update the error display and wait for 6s then reboot the system except
                           for the flash checksum failure
-                        5.Update the down stream schedular, Up stream schedular state,
+                        5.Update the down stream scheduler, Up stream scheduler state,
                          SPI state, LCD state
 
 
@@ -1408,8 +1458,8 @@ void Start_LCWS_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_D3_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1419,16 +1469,16 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the End fed reset sequence
                         1.Get the EF reset state
-                        2.Start the Up stream communication schedular
+                        2.Start the Up stream communication scheduler
                         3.Update the reset state
                         4.In error condition update the error display and wait for 6s then reboot the system except
                           for the flash checksum failure
-                        5.Update the Up stream scehdular state, SPI state, LCD state
+                        5.Update the Up stream scheduler state, SPI state, LCD state
 
+Allocated Requirements	: 	(SSDAC_SWRS_0417), (SSDAC_SWRS_0418), (SSDAC_SWRS_0244),(SSDAC_SWRS_0438)
+						    (SSDAC_SWRS_0339)
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5005
 
 Interfaces
     Calls           :   
@@ -1615,8 +1665,8 @@ void Start_D3_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_D4_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1626,7 +1676,7 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the End fed reset sequence
                         1.Get the EF reset state
-                        2.Start the Up stream communication schedular
+                        2.Start the Up stream communication scheduler
                         3.Update the reset state
                         4.In error condition update the error display and wait for 6s then reboot the system except
                           for the flash checksum failure
@@ -1821,8 +1871,8 @@ void Start_D4_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Start_EF_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1837,9 +1887,10 @@ Abstract            :Start the Dead End reset sequence
                           for the flash checksum failure
                         5.Update SPI state and LCD state
 
-Design Requirements     :
-
-
+Allocated Requirements	: 	(SSDAC_SWRS_0119), (SSDAC_SWRS_0120), (SSDAC_ SWRS_ 0149), (SSDAC_SWRS_0244)
+							(SSDAC_SWRS_0339),(SSDAC_SWRS_0850),(SSDAC_SWRS_0851)
+Design Requirements		:	SSDAC_DR_5006
+						
 
 Interfaces
     Calls           :   
@@ -1943,6 +1994,7 @@ void Start_EF_Reset_Sequence(void)
     {
         Status.Flags.Local_Reset_Done = SM_HAS_RESETTED_SYSTEM;
         US_Section_Mode.Local_Unit = RESET_APPLIED_MODE;
+        US_Section_Mode.Remote_Unit = WAITING_FOR_RESET_MODE;
     }
     Start_EF_Reset_Monitor();
     uchReset_Pending = TRUE;
@@ -2026,8 +2078,8 @@ void Start_EF_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN.c
 Module Name         :void Start_DE_Reset_Sequence(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2219,8 +2271,8 @@ void Start_DE_Reset_Sequence(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_SF(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2238,10 +2290,11 @@ Abstract            :1.Start the down stream axle counting
                      6.Update SPI state & LCD state
                      7.Update itoa state for CF unit type for display
 
+Allocated Requirements	: 	(SSDAC_SWRS_ 0035), (SSDAC_SWRS_0246)
+							(SSDAC_SWRS_0339)
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5008
+						
 Interfaces
     Calls           :   
                         AXLE_MON.c  -   Start_DS_Axle_Counting()
@@ -2360,8 +2413,8 @@ void Control_DAC_Type_SF(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_CF(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2380,7 +2433,9 @@ Abstract            :1.Start the up stream axle counting
                      6.Update SPI state & LCD state
                      7.Update itoa state for EF unit type for display
 
-Design Requirements     :
+Allocated Requirements	: (SSDAC_SWRS_0035), (SSDAC_SWRS_0418), (SSDAC_SWRS_0246), (SSDAC_SWRS_0438)	
+						  (SSDAC_SWRS_0339)
+Design Requirements		:	SSDAC_DR_5009
 
 Interfaces
     Calls           :   
@@ -2556,8 +2611,8 @@ void Control_DAC_Type_CF(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_CF(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2797,8 +2852,8 @@ void Control_DAC_Type_DE(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_EF(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2814,9 +2869,10 @@ Abstract            :1.Start the down stream axle counting
                      5.Update SPI state & LCD state
                      6.Update itoa state for DE unit type for display
 
+Allocated Requirements	: 	(SSDAC_SWRS_0120)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5010
+						
 
 Interfaces
     Calls           :   
@@ -2936,8 +2992,8 @@ void Control_DAC_Type_EF(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_D3(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3075,8 +3131,8 @@ void Control_DAC_Type_D3(void)
 /*********************************************************************************
 Component name      :DAC_MAIN
 Module Name         :void Control_DAC_Type_D4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3095,7 +3151,7 @@ Abstract            :1.Start the up stream axle counting
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5012
 
 
 
@@ -3304,8 +3360,8 @@ void Control_DAC_Type_3S(void)
 /*********************************************************************
 Component name      :RESET
 Module Name         :void Decrement_Bootuplock_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3321,8 +3377,10 @@ Modification History:
 
 Abstract            :Decremnet the bootup timer
 
+Allocated Requirements	: 	SSDAC_SWRS_0841,SSDAC_SWRS_0859,SSDAC_SWRS_0860,SSDAC_SWRS_0861,SSDAC_SWRS_0862
+							SSDAC_SWRS_0863
 
-Design Requirements     :
+Design Requirements		: 	
 
 Interfaces
     Calls           :   NIL

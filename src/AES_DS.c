@@ -1,3 +1,47 @@
+/*****************************************************************************
+
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    AES_DS
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
+    Modification History:
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |             |               |                 |             |                              |
+                    |             |               |                 |             |                              |
+                    |-------------|---------------|-----------------|----------- -|------------------------------|
+    Functions   :   
+                    void Initialise_DS_Crypto_State(void);
+                    void Update_DS_Data_Encode(void);
+                    void Load_DS_Encrypt_Key(void);
+                    void DS_Encode_Key_Addition(void);
+                    void DS_Encode_Data(void);
+                    void DS_EncodeShiftRow(void);
+                    void DS_EncKeySchedule(void);
+                    void Update_DS_Data_Decode(void);
+                    void Load_DS_Decrypt_Key(void);
+                    void DS_Decode_Key_Addition(void);
+                    void DS_Decode_Data(void);
+                    void DS_DecodeShiftRow(void);
+                    void DS_DecKeySchedule(void);
+                    void Decrement_DS_Crypto_msTmr(void);
+                    void Start_DS_Data_Encryption(void);
+                    void Set_DS_Encryption_Idle(void);
+                    BYTE Get_DS_Encryption_State(void);
+                    void Start_DS_Data_Decryption(void);
+                    void Set_DS_Decryption_Idle(void);
+                    BYTE Get_DS_Decryption_State(void);
+
+*****************************************************************************/
+
 #include <xc.h>
 
 #include "COMMON.h"
@@ -93,7 +137,7 @@ void DS_Encode_Key_Addition(void)
     }
 }
 
-void DS_Encode_Data()
+void DS_Encode_Data(void)
 {
 
     /* s table substitution */

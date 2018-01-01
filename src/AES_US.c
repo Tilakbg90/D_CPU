@@ -1,3 +1,46 @@
+/*****************************************************************************
+
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    AES_US
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
+    Modification History:
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |             |               |                 |             |                              |
+                    |             |               |                 |             |                              |
+                    |-------------|---------------|-----------------|----------- -|------------------------------|
+    Functions   :   
+                    void Initialise_US_Crypto_State(void);
+                    void Update_US_Data_Encode(void);
+                    void Load_Encrypt_Key(void);
+                    void US_Encode_Key_Addition(void);
+                    void US_Encode_Data(void);
+                    void US_EncodeShiftRow(void);
+                    void US_EncKeySchedule(void);
+                    void Update_US_Data_Decode(void);
+                    void Load_Decrypt_Key(void);
+                    void US_Decode_Key_Addition(void);
+                    void US_Decode_Data(void);
+                    void US_DecodeShiftRow(void);
+                    void US_DecKeySchedule(void);
+                    void Decrement_US_Crypto_msTmr(void);
+                    void Start_US_Data_Encryption(void);
+                    void Set_US_Encryption_Idle(void);
+                    BYTE Get_US_Encryption_State(void);
+                    void Start_US_Data_Decryption(void);
+                    void Set_US_Decryption_Idle(void);
+                    BYTE Get_US_Decryption_State(void);
+
+*****************************************************************************/
 #include "COMMON.h"
 #include "AES.h"
 
@@ -138,7 +181,7 @@ void US_Encode_Data(void)
         US_roundCounter--;
 }
 
-void US_EncodeShiftRow()
+void US_EncodeShiftRow(void)
 {
     BYTE temp;
 
@@ -167,7 +210,7 @@ void US_EncodeShiftRow()
     Com1XmitObject.Msg_Buffer[7]=temp;
 }
 
-void US_EncKeySchedule()
+void US_EncKeySchedule(void)
 {
     /* column 1 */
     US_Ciper_Message_Info.Encrypt_key[0]^=STable[US_Ciper_Message_Info.Encrypt_key[13]];
@@ -238,7 +281,7 @@ void Load_Decrypt_Key(void)
     }
 }
 
-void US_Decode_Key_Addition()
+void US_Decode_Key_Addition(void)
 {
     BYTE i;
 
@@ -312,7 +355,7 @@ void US_Decode_Data(void)
         US_roundCounter--;
 }
 
-void US_DecodeShiftRow()
+void US_DecodeShiftRow(void)
 {
     BYTE temp;
 
@@ -341,7 +384,7 @@ void US_DecodeShiftRow()
     Com1RecvObject.Msg_Buffer[3]=temp;
 }
 
-void US_DecKeySchedule()
+void US_DecKeySchedule(void)
 {
         /* column 4 */
     US_Ciper_Message_Info.Decrypt_key[12]^=US_Ciper_Message_Info.Decrypt_key[8];

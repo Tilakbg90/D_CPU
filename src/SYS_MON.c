@@ -1,15 +1,15 @@
 /*****************************************************************************
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   SYS_MON
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    SYS_MON
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -88,8 +88,8 @@ void Decrement_Sys_Mon_50msTmr(void);
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Initialise_Sys_Mon(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -99,8 +99,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Routine to initialise system monitor
 
+Allocated Requirements: (SSDAC_SWRS_0032)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5288
 
 Interfaces
     Calls           :None
@@ -165,8 +166,8 @@ void Initialise_Sys_Mon(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_Sys_Mon_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -176,8 +177,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Routine to update the state of system monitor
 
+Allocated Requirements: (SSDAC_SWRS_0813), (SSDAC_SWRS_0107), (SSDAC_SWRS_0108), (SSDAC_SWRS_0111)
+						(SSDAC_SWRS_0828)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5289
 
 Interfaces
     Calls           :SYS_MON.C-Decrement_Sys_Mon_50msTmr()
@@ -275,8 +278,8 @@ void Update_Sys_Mon_State(void)
 /*******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Start_Sys_Mon_Decrement_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -287,9 +290,9 @@ Modification History:
 Abstract            :Routine to start a system monitoring scheduling timer for each system monitor state
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5290
 
 Interfaces
     Calls           :None
@@ -332,8 +335,8 @@ void Start_Sys_Mon_Decrement_50msTmr(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Decrement_Sys_Mon_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -354,9 +357,9 @@ Abstract            :1.Feed back decrement state to idle state which is the init
                        were vital relay B is a repeat relay
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5291
 
 Interfaces
     Calls           :None
@@ -489,8 +492,8 @@ void Decrement_Sys_Mon_50msTmr(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Start_FeedBack_Check(BYTE uchID)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -502,7 +505,9 @@ Abstract            :Routine to start the feedback check on the status of all th
                      remote units
 
 
-Design Requirements:
+Allocated Requirements: (SSDAC_SWRS_0813), (SSDAC_SWRS_0111)
+
+Design Requirements:	SSDAC_DR_5292
 
 Interfaces
     Calls           :None
@@ -632,8 +637,8 @@ void Start_FeedBack_Check(feedBack_ID uchID)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Stop_FeedBack_Check(feedBack_ID uchID)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -644,8 +649,9 @@ Modification History:
 Abstract            :Routine to stop the feedback check on the status of all the relays and the track status at
                      the remote units
 
+Allocated Requirements:(SSDAC_SWRS_0813), (SSDAC_SWRS _0111)
 
-Design Requirements:
+Design Requirements: SSDAC_DR_5293
 
 Interfaces
     Calls           :None
@@ -683,8 +689,8 @@ void Stop_FeedBack_Check(feedBack_ID uchID)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_FeedBack_State(BYTE uchID)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -695,9 +701,10 @@ Modification History:
 Abstract            :Routine to update the feedback status of all the relays and track status at remote units
                      to the feedback information signal port
 
+Allocated Requirements: (SSDAC_SWRS_0813), (SSDAC_SWRS _0111)
 
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5294
+	
 Interfaces
     Calls           :   SYS_MON.c-Read_FeedBack_Signal_Port()
 
@@ -751,8 +758,8 @@ void Update_FeedBack_State(BYTE uchID)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Read_FeedBack_Signal_Port(BYTE uchID)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -764,7 +771,19 @@ Abstract            : Routine to read the feedback status of all the relays and 
                       from the feedback information signal port
 
 
-Design Requirements:
+Allocated Requirements: (SSDAC_SWRS_0005), (SSDAC_SWRS_0813), (SSDAC_SWRS_0814), (SSDAC_SWRS_0111)
+					   (SSDAC_SWRS_0461), (SSDAC_SWRS_0462), (SSDAC_SWRS_0463), (SSDAC_SWRS_0464)
+     				   (SSDAC_SWRS_0465), (SSDAC_SWRS_0486), (SSDAC_SWRS_0410), (SSDAC_SWRS_0489)
+					   (SSDAC_SWRS_0572), (SSDAC_SWRS_0573), (SSDAC_SWRS_0586), (SSDAC_SWRS_0586)
+						(SSDAC_SWRS_0275), (SSDAC_SWRS_0276), (SSDAC_SWRS_0277), (SSDAC_SWRS_0278)
+						(SSDAC_SWRS_0279), (SSDAC_SWRS_0300), (SSDAC_SWRS_0214), (SSDAC_SWRS_0903)
+						(SSDAC_SWRS_0510), (SSDAC_SWRS_0664), (SSDAC_SWRS_0764), (SSDAC_SWRS_0665)
+						(SSDAC_SWRS_0765), (SSDAC_SWRS_0678), (SSDAC_SWRS_0778), (SSDAC_SWRS_0611)
+						(SSDAC_SWRS_0710), (SSDAC_SWRS_0378), (SSDAC_SWRS_0379), (SSDAC_SWRS_0381)
+						(SSDAC_SWRS_0382), (SSDAC_SWRS_0383), (SSDAC_SWRS_0390), (SSDAC_SWRS_0390)
+						(SSDAC_SWRS_0309), (SSDAC_SWRS_0310), (SSDAC_SWRS_0313)
+
+Design Requirements:	SSDAC_DR_5295
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective()
@@ -1140,8 +1159,8 @@ void Read_FeedBack_Signal_Port(BYTE uchID)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1152,9 +1171,9 @@ Modification History:
 Abstract            :Routine to start the checking of communication links of each DAC unit type depending on the dip
                      switch settings ,with the remote units
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5296
 
 Interfaces
     Calls           :   SYS_MON.C-Check_Communication_Links_SF1()
@@ -1330,8 +1349,8 @@ void Check_Communication_Links(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links_SF1(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1342,9 +1361,9 @@ Modification History:
 Abstract            :Routine to check the communication links between the CPU1 of SF unit with both the down stream
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure errors
 
-
-
-Design Requirements:
+Allocated Requirements: (SSDAC_SWRS_0300), (SSDAC_SWRS_0208), (SSDAC_SWRS_0906)
+					  
+Design Requirements:	SSDAC_DR_5297
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective()
@@ -1424,8 +1443,8 @@ void Check_Communication_Links_SF1(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links_SF2(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1437,8 +1456,9 @@ Abstract            :Routine to check the communication links between the CPU2 o
                      remote CPU's(CPU1 & CPU2)and declare any link failure erors
 
 
-
-Design Requirements:
+Allocated Requirements:(SSDAC_SWRS_0300),(SSDAC_SWRS_0208), (SSDAC_SWRS_0906)
+					  
+Design Requirements:	SSDAC_DR_5298
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective()
@@ -1518,8 +1538,8 @@ void Check_Communication_Links_SF2(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_US_CF1(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1530,9 +1550,12 @@ Modification History:
 Abstract            :Routine to check the communication links between the CPU1 of CF unit with both the up stream
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure erors
 
+Allocated Requirements:(SSDAC_SWRS_0586), (SSDAC_SWRS_0509),(SSDAC_SWRS_0592)
+						(SSDAC_SWRS_0678), (SSDAC_SWRS_0778), (SSDAC_SWRS_0610), (SSDAC_SWRS_0709)
+						(SSDAC_SWRS_0684),(SSDAC_SWRS_0784), (SSDAC_SWRS_0390), (SSDAC_SWRS_0308)
+						(SSDAC_SWRS_0396)
 
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5299
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_US()
@@ -1609,8 +1632,8 @@ void Check_Communication_US_CF1(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_US_CF2(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1622,8 +1645,12 @@ Abstract            :Routine to check the communication links between the CPU2 o
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure erors
 
 
+Allocated Requirements:(SSDAC_SWRS_0586),(SSDAC_SWRS_0509),(SSDAC_SWRS_0592)
+							(SSDAC_SWRS_0678), (SSDAC_SWRS_0778)
+							(SSDAC_SWRS_0610), (SSDAC_SWRS_0709),(SSDAC_SWRS_0308)
+							(SSDAC_SWRS_0684),(SSDAC_SWRS_0784), (SSDAC_SWRS_0390), (SSDAC_SWRS_0396)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5300
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_US()
@@ -1702,8 +1729,8 @@ void Check_Communication_US_CF2(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_DS_CF1(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1714,9 +1741,13 @@ Modification History:
 Abstract            :Routine to check the communication links between the CPU1 of CF unit with both the down stream
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure erors
 
+Allocated Requirements:(SSDAC_SWRS_0586),(SSDAC_SWRS_0509),(SSDAC_SWRS_0592)
+						(SSDAC_SWRS_0678), (SSDAC_SWRS_0778), 
+						(SSDAC_SWRS_0610), (SSDAC_SWRS_0709),(SSDAC_SWRS_0308)
+						(SSDAC_SWRS_0684),(SSDAC_SWRS_0784), (SSDAC_SWRS_0390)
+						(SSDAC_SWRS_0396)
 
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5301
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_DS()
@@ -1796,8 +1827,8 @@ void Check_Communication_DS_CF1(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_DS_CF2(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1808,9 +1839,13 @@ Modification History:
 Abstract            :Routine to check the communication links between the CPU2 of CF unit with both the down stream
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure errors
 
+Allocated Requirements:(SSDAC_SWRS_0586),(SSDAC_SWRS_0509),(SSDAC_SWRS_0592)
+						(SSDAC_SWRS_0678), (SSDAC_SWRS_0778)
+						(SSDAC_SWRS_0610), (SSDAC_SWRS_0709), (SSDAC_SWRS_0308)
+						(SSDAC_SWRS_0684),(SSDAC_SWRS_0784), (SSDAC_SWRS_0390)
+						(SSDAC_SWRS_0396)
 
-
-Design Requirements:
+Design Requirements:	SSDAC_DR_5302
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_DS()
@@ -1889,8 +1924,8 @@ void Check_Communication_DS_CF2(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links_EF1(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1902,7 +1937,9 @@ Abstract            :Routine to check the communication links between the CPU1 o
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure erors
 
 
-Design Requirements:
+Allocated Requirements:(SSDAC_SWRS_0486), (SSDAC_SWRS_0409), (SSDAC_SWRS_0415)
+
+Design Requirements:	SSDAC_DR_5303
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective()
@@ -1989,8 +2026,8 @@ void Check_Communication_Links_EF1(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Communication_Links_EF2(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2001,8 +2038,9 @@ Modification History:
 Abstract            :Routine to check the communication links between the CPU2 of EF unit with both the up stream
                      remote unit CPU's(CPU1 & CPU2) and declare any link failure erors
 
+Allocated Requirements:(SSDAC_SWRS_0486), (SSDAC_SWRS_0409)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5304
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective()
@@ -2087,8 +2125,8 @@ void Check_Communication_Links_EF2(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Inter_Processor_Link(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2099,8 +2137,12 @@ Modification History:
 Abstract            :Routine to check the communication link between a CPU with its peer in the same unit and
                      declare any link failure errors
 
-
-Design Requirements:
+Allocated Requirements:(SSDAC_SWRS_ 0819),(SSDAC_ SWRS_0820), (SSDAC_SWRS_0108), (SSDAC_SWRS_0828)
+					  (SSDAC_SWRS_0408), (SSDAC_SWRS_0415), (SSDAC_SWRS_0209), (SSDAC_SWRS_0907)
+					  (SSDAC_SWRS_0508), (SSDAC_SWRS_0591), (SSDAC_SWRS_0609), (SSDAC_SWRS_0708)
+						(SSDAC_SWRS_0683), (SSDAC_SWRS_0783), (SSDAC_SWRS_0307), (SSDAC_SWRS_0395)
+					
+Design Requirements:	SSDAC_DR_5305
 
 
 Interfaces
@@ -2149,8 +2191,8 @@ void Check_Inter_Processor_Link(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_DS_Track_Status(BYTE new_Status)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2161,9 +2203,9 @@ Modification History:
 Abstract            :Routine to update the track status information bit from the down stream remote unit if there
                      is any change
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5306
 
 Interfaces
     Calls           :SYS_MON.C-Start_FeedBack_Check()
@@ -2240,8 +2282,8 @@ void Update_DS_Track_Status(bitadrb_t Flags)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_US_Track_Status(BYTE new_Status)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2252,9 +2294,9 @@ Modification History:
 Abstract            :Routine to update the track status information bit from the up stream remote unit if there
                      is any change
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5307
 
 
 Interfaces
@@ -2330,8 +2372,8 @@ void Update_US_Track_Status(bitadrb_t Flags)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_Power_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2342,9 +2384,9 @@ Modification History:
 Abstract            :Routine to start the checking of the power status information bits from the remote units if there
                      is any change
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5308
 
 Interfaces
     Calls           :SYS_MON.C-Check_US_Power_Status()
@@ -2399,8 +2441,8 @@ void Check_Power_Status(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_DS_Power_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2411,8 +2453,12 @@ Modification History:
 Abstract            :Routine to check the power status information bits from down stream remote units and indicate the errors
                      if there are any
 
+Allocated Requirements:(SSDAC_SWRS_0586), (SSDAC_SWRS_0300), (SSDAC_SWRS_0215), (SSDAC_SWRS_0908)
+					  (SSDAC_SWRS_0513), (SSDAC_SWRS_0593), (SSDAC_SWRS_0678), (SSDAC_SWRS_0778)
+						(SSDAC_SWRS_0614), (SSDAC_SWRS_0685), (SSDAC_SWRS_0713), (SSDAC_SWRS_0785)
+						(SSDAC_SWRS_0390), (SSDAC_SWRS_0314), (SSDAC_SWRS_0397).
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5309
 
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_DS()
@@ -2488,8 +2534,8 @@ void Check_DS_Power_Status(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Check_US_Power_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2500,9 +2546,13 @@ Modification History:
 Abstract            :Routine to check the power status information bits from up stream remote units and indicate the errors
                      if there are any
 
-
-Design Requirements:
-
+Allocated Requirements:(SSDAC_SWRS_0486), (SSDAC_SWRS_0413)
+					  (SSDAC_SWRS_0415), (SSDAC_SWRS_0586)
+					  (SSDAC_SWRS_0513), (SSDAC_SWRS_0593),(SSDAC_SWRS_0314), (SSDAC_SWRS_0397).
+						(SSDAC_SWRS_0678), (SSDAC_SWRS_0778), (SSDAC_SWRS_0390)
+						(SSDAC_SWRS_0614), (SSDAC_SWRS_0685), (SSDAC_SWRS_0713), (SSDAC_SWRS_0785)
+						
+Design Requirements:	SSDAC_DR_5310
 Interfaces
     Calls           :RELAYMGR.C-Declare_DAC_Defective_US()
                      ERROR.C-Set_Error_Status_Bit()
@@ -2578,8 +2628,8 @@ void Check_US_Power_Status(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_US_Power_Status(  bitadrb_t DAC_Config,bitadrb_t Flags1)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2590,9 +2640,9 @@ Modification History:
 Abstract            :Routine to update the power status information bits/flags from up stream remote units indicating
                      the changes
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5311
 
 Interfaces
     Calls           :   None
@@ -2639,8 +2689,8 @@ void Update_US_Power_Status(  bitadrb_t DAC_Config,bitadrb_t Flags1)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Update_US_Power_Status(  bitadrb_t DAC_Config,bitadrb_t Flags1)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2651,9 +2701,9 @@ Modification History:
 Abstract            :Routine to update the power status information bits/flags from up stream remote units indicating
                      the changes
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5312
 
 Interfaces
     Calls           :   None
@@ -2699,8 +2749,8 @@ void Update_DS_Power_Status(  bitadrb_t DAC_Config,bitadrb_t Flags1)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Clear_US_Power_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2711,9 +2761,9 @@ Modification History:
 Abstract            :Routine to clear old power status information bits/flag from up stream remote units before
                      making any changes to the bits/flag
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5313
 
 Interfaces
     Calls           :   None
@@ -2760,8 +2810,8 @@ void Clear_US_Power_Status(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Clear_DS_Power_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2772,9 +2822,9 @@ Modification History:
 Abstract            :Routine to clear old power status information bits/flag from down stream remote units before
                      making any changes to the bits/flag
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5314
 
 Interfaces
     Calls           :   None
@@ -2819,8 +2869,8 @@ void Clear_DS_Power_Status(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Clear_Comm_US_Failures(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2831,9 +2881,9 @@ Modification History:
 Abstract            :Routine to clear the old link failure messages in upstream remote units before making any
                      changes
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5315
 
 Interfaces
     Calls           :   None
@@ -2875,8 +2925,8 @@ void Clear_Comm_US_Failures(void)
 /******************************************************************************
 Component name      :SYS_MON
 Module Name         :void Clear_Comm_DS_Failures(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2887,9 +2937,9 @@ Modification History:
 Abstract            :Routine to clear the old link failure messages in down stream remote units before making any
                      changes
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5316
 
 Interfaces
     Calls           :   None

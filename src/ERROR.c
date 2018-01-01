@@ -1,16 +1,16 @@
 /*****************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   ERROR
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    ERROR
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -75,8 +75,8 @@ extern const BYTE BitMask_List[8];
 /************************************************************
 Component name      :ERROR
 Module Name         :void Initialize_Error()
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -87,10 +87,9 @@ Modification History:
 Abstract            :Initialize the error refresh timeout, display state, major
                      and minor bits and bytes to zero
 
+Allocated Requirements	: 	(SSDAC_SWRS_0032)
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5197
 
 Interfaces
     Calls           :   Nil
@@ -138,8 +137,8 @@ void Initialise_Error(void)
 /***********************************************************************
 Component name      :ERROR
 Module Name         :void Update_Display_Error()
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -150,8 +149,10 @@ Modification History:
 Abstract            :Updates the error status and displays the same on the LCD
 
 
-Design Requirements     :
-
+Allocated Requirements	: 	(SSDAC_SWRS_0217), (SSDAC_SWRS_0218)
+ 
+Design Requirements		:	SSDAC_DR_5198
+ 
 Interfaces
     Calls           :   ERROR.c     -   Update_Error_Code()
 
@@ -291,8 +292,8 @@ void Update_Display_Error(void)
 /****************************************************************
 Component name      :ERROR
 Module Name         :void Set_Error_Status_Byte( BYTE  Major_Err_Id,  BYTE  status_byte)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -304,7 +305,7 @@ Abstract            :Set the error status of Major and Minor bytes
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5200
 
 Interfaces
     Calls           :   Nil
@@ -356,8 +357,8 @@ void Set_Error_Status_Byte ( BYTE  Major_Err_Id, BYTE status_byte)
 /**************************************************************
 Component name      :ERROR
 Module Name         :void Set_Error_Status_Bit (BYTE status_bit)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -369,7 +370,7 @@ Abstract            :Set the error status bit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5201
 
 
 Interfaces
@@ -441,8 +442,8 @@ void Set_Error_Status_Bit (BYTE Error_No)
  /****************************************************************
 Component name      :ERROR
 Module Name         :void Clear_Error_Display(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -456,7 +457,7 @@ Abstract            :Clear the error display by clearing the major and minor err
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5202
 
 
 Interfaces
@@ -515,8 +516,8 @@ void Clear_Error_Display(void)
 /**************************************************************
 Component name      :ERROR
 Module Name         :void Decrement_Err_display_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -530,7 +531,7 @@ Abstract            :Decrements the error display timer 20ms
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5203
 
 Interfaces
     Calls           :   Nil
@@ -585,8 +586,8 @@ void Decrement_LCWS_Health_Relay_Timer(void)
 /**************************************************************
 Component name      :ERROR
 Module Name         :void Update_Error_Code()
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -696,8 +697,8 @@ void Update_Error_Code(void)
 /****************************************************************
 Component name      :ERROR
 Module Name         :BYTE Get_DS_Error_Code(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -751,8 +752,8 @@ BYTE Get_DS_Error_Code(void)
 /****************************************************************
 Component name      :ERROR
 Module Name         :BYTE Get_US_Error_Code(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -804,8 +805,8 @@ BYTE Get_US_Error_Code(void)
 /****************************************************************
 Component name      :ERROR
 Module Name         :void Clear_DS_Error_Code(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -858,8 +859,8 @@ void Clear_DS_Error_Code(void)
 /****************************************************************
 Component name      :ERROR
 Module Name         :void Clear_US_Error_Code(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |

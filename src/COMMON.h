@@ -1,16 +1,16 @@
 /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   COMMON
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    COMMON
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -134,16 +134,16 @@ typedef enum
     /* Enumarator to define LCWS Unit type of DAC system Dual Line*/
               DAC_UNIT_TYPE_LCWS_DL,   // 10
 
-    /* Enumarator to define D3A Unit type of DAC system */
+    /* Enumarator to define D4A Unit type of DAC system */
               DAC_UNIT_TYPE_D4_A, // 11
 
-    /* Enumarator to define D3A Unit type of DAC system */
+    /* Enumarator to define D4B Unit type of DAC system */
               DAC_UNIT_TYPE_D4_B, // 12
 
-    /* Enumarator to define D3A Unit type of DAC system */
+    /* Enumarator to define D4C Unit type of DAC system */
               DAC_UNIT_TYPE_D4_C, // 13
 
-    /* Enumarator to define D3A Unit type of DAC system */
+    /* Enumarator to define D4D Unit type of DAC system */
               DAC_UNIT_TYPE_D4_D // 14
 
              }SSDAC_Unit_Type;
@@ -240,8 +240,8 @@ typedef enum
 /* Maximum communication retries assigned to 3 means 3 times we should check
     for communication established between the units */
 
-#define MAXIMUM_COM_RETRIES             (100)
-
+#define MAXIMUM_COM_RETRIES             (3)
+#define MAXIMUM_OCCUPIED_COM_RETRIES       (100)
     /*  This is the command used for sending/recieving the reset information */
 #define READ_RESET_INFO                 0xAA
 
@@ -545,7 +545,7 @@ typedef enum{
 
 #define COMM_SCHEDULER_SCAN_RATE        (1200)
 
-/* Schedular scan rate for 1200bps */
+/* scheduler scan rate for 1200bps */
 
 
 //  /* 186 for MSM6947, 206 for MSM6927 */
@@ -790,20 +790,20 @@ typedef struct {
 
 /************ Structure to hold message for transsmission/reception **********/
 
-/************ Structure to hold the communictaion schedular states *********/
+/************ Structure to hold the communictaion scheduler states *********/
 
 typedef struct {
 
-    /* State to store the different communication schedular states */
+    /* State to store the different communication scheduler states */
             comm_sch_state_t    State;
 
-    /*  Variable to store the communictaion schedular timeout */
+    /*  Variable to store the communictaion scheduler timeout */
             UINT16  Timeout_ms;
 
-    /*  Variable to store the communiction schedular scan period */
+    /*  Variable to store the communiction scheduler scan period */
             UINT16  ScanPeriod;
 
-    /* Variable to store the communiction schedular Elasp time */
+    /* Variable to store the communiction scheduler Elasp time */
             UINT16  ElapsedTime;
 
 
@@ -816,7 +816,7 @@ typedef struct{
             UINT16  Timeout_ms;
 
         }modem_info_t;
-/************ Structure to hold the communictaion schedular states *********/
+/************ Structure to hold the communictaion scheduler states *********/
 
 
 /**********Structure to hold the US1 to LU1, LU2 and US2 to LU1, LU2

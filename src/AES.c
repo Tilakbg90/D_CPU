@@ -1,3 +1,26 @@
+/*****************************************************************************
+
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    AES
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
+    Modification History:
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |             |               |                 |             |                              |
+                    |             |               |                 |             |                              |
+                    |-------------|---------------|-----------------|----------- -|------------------------------|
+    Functions   :   
+
+*****************************************************************************/
 const unsigned char E_Key[16]={0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
 const unsigned char D_Key[16]={0x13, 0x11, 0x1D, 0x7F, 0xE3, 0x94, 0x4A, 0x17, 0xF3, 0x07, 0xA7, 0x8B, 0x4D, 0x2B, 0x30, 0xC5};
 

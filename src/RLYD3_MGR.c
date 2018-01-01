@@ -1,13 +1,15 @@
 /******************************************************************************
-    Project         :
-    Version         :
-    Revision        :
-    Component name  :   RLYD3_MGR
-    Target MCU      :
-    Compiler        :
-    Author          :
-    Date            :
-    Company Name    :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RLYD3_MGR
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -99,8 +101,8 @@ void Check_For_D3_Direct_Out_Count(void);
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Initialise_Relay_D3_Mgr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -110,7 +112,7 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Initailise Relay D3 Manager
 
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -152,8 +154,8 @@ void Initialise_Relay_D3_Mgr(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Start_Relay_D3_Mgr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -163,7 +165,7 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start Relay D3 Manager
 
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -238,8 +240,8 @@ void Start_Relay_D3_Mgr(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_Relay_D3_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -251,7 +253,7 @@ Abstract            :Update the relay state.DeEnergise Vital relay when train en
                      If any direct outcount, declare DAC defective
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -467,8 +469,8 @@ void Update_Relay_D3_State(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Check_For_D3_Direct_Out_Count(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -478,7 +480,7 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :   Routine to check the direct out counts
 
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -634,8 +636,8 @@ void Check_For_D3_Direct_Out_Count(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :BOOL Reset_Allowed_For_D3()
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -643,7 +645,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -741,8 +743,8 @@ BOOL Reset_Allowed_For_D3(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A1_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -750,7 +752,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -790,8 +792,8 @@ void Update_D3_A1_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A2_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -799,7 +801,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -840,8 +842,8 @@ void Update_D3_A2_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A1_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -849,7 +851,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -889,8 +891,8 @@ void Update_D3_A1_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A2_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -898,7 +900,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -937,8 +939,8 @@ void Update_D3_A2_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B1_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -946,7 +948,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -985,8 +987,8 @@ void Update_D3_B1_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B2_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -994,7 +996,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1034,8 +1036,8 @@ void Update_D3_B2_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B1_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1043,7 +1045,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1082,8 +1084,8 @@ void Update_D3_B1_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B2_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1091,7 +1093,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1129,8 +1131,8 @@ void Update_D3_B2_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C1_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1138,7 +1140,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1177,8 +1179,8 @@ void Update_D3_C1_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C2_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1186,7 +1188,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1224,8 +1226,8 @@ void Update_D3_C2_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C1_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1233,7 +1235,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1272,8 +1274,8 @@ void Update_D3_C1_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C2_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1281,7 +1283,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1320,8 +1322,8 @@ void Update_D3_C2_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_Local_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1329,7 +1331,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1367,8 +1369,8 @@ void Update_D3_Local_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A1_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1376,7 +1378,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1412,8 +1414,8 @@ void Update_D3_A1_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A1_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1421,7 +1423,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1457,8 +1459,8 @@ void Update_D3_A1_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A2_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1466,7 +1468,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1502,8 +1504,8 @@ void Update_D3_A2_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A2_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1511,7 +1513,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1547,8 +1549,8 @@ void Update_D3_A2_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B1_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1556,7 +1558,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1592,8 +1594,8 @@ void Update_D3_B1_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B1_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1601,7 +1603,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1637,8 +1639,8 @@ void Update_D3_B1_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B2_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1646,7 +1648,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1682,8 +1684,8 @@ void Update_D3_B2_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B2_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1691,7 +1693,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1727,8 +1729,8 @@ void Update_D3_B2_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C1_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1736,7 +1738,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1773,8 +1775,8 @@ void Update_D3_C1_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C1_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1782,7 +1784,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1819,8 +1821,8 @@ void Update_D3_C1_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C2_IN_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1828,7 +1830,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1864,8 +1866,8 @@ void Update_D3_C2_IN_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C2_OUT_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1873,7 +1875,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1909,8 +1911,8 @@ void Update_D3_C2_OUT_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A1_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1918,7 +1920,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -1955,8 +1957,8 @@ void Update_D3_A1_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_A2_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1971,7 +1973,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2010,8 +2012,8 @@ void Update_D3_A2_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B1_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2019,7 +2021,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2059,8 +2061,8 @@ void Update_D3_B1_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_B2_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2068,7 +2070,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2107,8 +2109,8 @@ void Update_D3_B2_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C1_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2116,7 +2118,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2155,8 +2157,8 @@ void Update_D3_C1_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_C2_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2164,7 +2166,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2205,8 +2207,8 @@ void Update_D3_C2_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Update_D3_Local_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2214,7 +2216,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2253,8 +2255,8 @@ void Update_D3_Local_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Set_Relay_D3_DAC_Defective(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2262,7 +2264,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2304,8 +2306,8 @@ void Set_Relay_D3_DAC_Defective(void)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Process_D3_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2313,7 +2315,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2426,8 +2428,8 @@ void Process_D3_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Process_D3_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2435,7 +2437,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2546,8 +2548,8 @@ void Process_D3_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Process_D3_Remote_AxleCount(bitadrb_t SrcAdr,DAC_Unit_Type Src_Unit_Type,UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2555,7 +2557,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2672,8 +2674,8 @@ void Process_D3_Remote_AxleCount(bitadrb_t SrcAdr,SSDAC_Unit_Type Src_Unit_Type,
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2681,7 +2683,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -2865,8 +2867,8 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2874,7 +2876,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -3051,8 +3053,8 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,DAC_Unit_Type Src_Unit_Type, BYTE uchDirection)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3060,7 +3062,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 
@@ -3247,8 +3249,8 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
 /******************************************************************************
 Component name      :RLYD3_MGR
 Module Name         :void Decrement_D3_Track_Clearing_Timeout_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -3256,7 +3258,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Allocated Requiremnts:
+Allocated Requirements:
 
 Design Requirements:
 

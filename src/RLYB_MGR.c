@@ -1,15 +1,15 @@
 /******************************************************************************
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   RLYB_MGR
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RLYB_MGR
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -82,8 +82,8 @@ BOOL Reset_Allowed_For_DE(void);
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Initialise_Relay_B_Mgr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -93,9 +93,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Initialise relay B manager
 
+Allocated Requirements: (SSDAC_SWRS_0032)
 
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5108
 
 Interfaces
     Calls           :   None
@@ -127,8 +127,8 @@ void Initialise_Relay_B_Mgr(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Start_Relay_B_Mgr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -138,10 +138,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Start the relay B manager
 
+Allocated Requirements:(SSDAC_SWRS_0223)
 
-
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5109
 Interfaces
     Calls           :   AXLE_MON.C-Clear_DS_AxleCount()
                         AXLE_MON.C-Clear_DS_Local_Counts()
@@ -173,6 +172,9 @@ Macros defined      :                   Macro                   Value
 References          :
 
 Derived Requirements:
+
+
+
 
 
 Algorithm           :1.Clear the down stream axle direction, Supervisory counts, wheel type
@@ -211,8 +213,8 @@ void Start_Relay_B_Mgr(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Set_Relay_B_Reset_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -222,9 +224,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Set relay B reset state
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:SSDAC_DR_5111
 
 Interfaces
     Calls           :   AXLE_MON.C-Clear_DS_Local_Counts()
@@ -275,8 +277,8 @@ void Set_Relay_B_Reset_State(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_Relay_B_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -286,9 +288,18 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the relay B state.
 
+Allocated Requirements: (SSDAC_SWRS_0035), (SSDAC_SWRS_0200),(SSDAC_SWRS_0458), (SSDAC_SWRS_0459),
+						(SSDAC_SWRS_0521),(SSDAC_SWRS_0563), (SSDAC_SWRS_0223), (SSDAC_SWRS_0225),
+						(SSDAC_SWRS_0263), (SSDAC_SWRS_0269), (SSDAC_SWRS_0271), (SSDAC_SWRS_0234),
+						(SSDAC_SWRS_0212), (SSDAC_SWRS_0319), (SSDAC_SWRS_0320), (SSDAC_SWRS_0359)
+						(SSDAC_SWRS_0622), (SSDAC_SWRS_0721), (SSDAC_SWRS_0655),(SSDAC_SWRS_0755)
+						(SSDAC_SWRS_0363), (SSDAC_SWRS_0324), (SSDAC_SWRS_0364), (SSDAC_SWRS_0373)
+						(SSDAC_SWRS_0374), (SSDAC_SWRS_0375), (SSDAC_SWRS_0376), (SSDAC_SWRS_0377)
+						(SSDAC_SWRS_0328), (SSDAC_SWRS_0330), (SSDAC_SWRS_0312), (SSDAC_SWRS_0836)
+				
+					  					   
+Design Requirements:	SSDAC_DR_5112
 
-
-Design Requirements:
 
 Interfaces
     Calls           :   RELAYDRV.C-DeEnergise_Preparatory_Relay()
@@ -790,8 +801,8 @@ void Update_3S_Relay_B_State(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :BOOL Reset_Allowed_For_DS()
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -802,9 +813,9 @@ Modification History:
 Abstract            :Function return TRUE if the system is defective or when it has
                      Forward/Reverse direction of axles which means that you can reset the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5113
 
 
 Interfaces
@@ -898,8 +909,8 @@ BOOL Reset_Allowed_For_DE(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -911,9 +922,9 @@ Abstract            :Update the local unit axle direction in CPU1 if CPU1 flag i
                      else update the direction in CPU2 and update the local axle counts
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5114
 
 Interfaces
     Calls           :   RLYB_MGR.C-Update_B_LU1_Direction()
@@ -958,8 +969,8 @@ void Process_Relay_B_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Process_Relay_B_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -970,9 +981,9 @@ Modification History:
 Abstract            :Update the local unit axle counts (both forward & reverse) in CPU1 if
                      CPU1 flag is HIGH else update the direction in CPU2
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5115
 
 
 Interfaces
@@ -1019,8 +1030,8 @@ void Process_Relay_B_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Process_Peer_Relay_B_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1031,9 +1042,9 @@ Modification History:
 Abstract            :Update the local unit axle counts (both forward & reverse) in CPU2 if
                      CPU2 flag is HIGH else update the direction in CPU1
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5116
 
 Interfaces
     Calls           :   RLYB_MGR.C-Update_B_LU1_Fwd_Count()
@@ -1079,8 +1090,8 @@ void Process_Peer_Relay_B_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void  Process_Peer_Relay_B_Direction( BYTE uchDirection)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1091,9 +1102,9 @@ Modification History:
 Abstract            :Update the local unit axle direction in CPU2 if CPU2 flag is HIGH
                      else update the direction in CPU1
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5117
 
 
 Interfaces
@@ -1137,8 +1148,8 @@ void  Process_Peer_Relay_B_Direction( BYTE uchDirection)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_Previous_Block_State(bitadrb_t SrcAdr, BYTE Prev_Block_Status)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1149,9 +1160,9 @@ Modification History:
 Abstract            :Update next block status in CPU1, if CPU1 flag bit for the remote unit is set high else
                      update it in CPU2
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5118
 
 Interfaces
     Calls           :   None
@@ -1196,8 +1207,8 @@ Derived Requirements:
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS1_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1208,9 +1219,9 @@ Modification History:
 Abstract            :Update Remote unit CPU1 Out count required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5119
 
 Interfaces
     Calls           :   None
@@ -1243,8 +1254,8 @@ void Update_B_DS1_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS2_OUT_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1255,9 +1266,9 @@ Modification History:
 Abstract            :Update Remote unit CPU2 Out count required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5120
 
 Interfaces
     Calls           :   None
@@ -1291,8 +1302,8 @@ void Update_B_DS2_OUT_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU1_Fwd_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1302,9 +1313,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the local unit forward count  in CPU1 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5120
 
 Interfaces
     Calls           :   None
@@ -1339,8 +1350,8 @@ void Update_B_LU1_Fwd_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU2_Fwd_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1350,9 +1361,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the local unit foward count in CPU2 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5122
 
 Interfaces
     Calls           :   None
@@ -1386,8 +1397,8 @@ void Update_B_LU2_Fwd_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU1_Rev_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1398,9 +1409,9 @@ Modification History:
 Abstract            :Update the local unit reverse count in CPU1 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements: SSDAC_DR_5123
 
 Interfaces
     Calls           :   None
@@ -1435,8 +1446,8 @@ void Update_B_LU1_Rev_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU2_Rev_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1446,9 +1457,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the local unit reverse count in CPU2 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements: 	SSDAC_DR_5124
 
 
 Interfaces
@@ -1485,8 +1496,8 @@ void Update_B_LU2_Rev_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_Local_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1496,9 +1507,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the down stream local count
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5125
 
 Interfaces
     Calls           :   None
@@ -1533,8 +1544,8 @@ void Update_B_Local_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS1_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1545,9 +1556,9 @@ Modification History:
 Abstract            :Update the remote unit IN count in CPU1 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5126
 
 Interfaces
     Calls           :   None
@@ -1581,8 +1592,8 @@ void Update_B_DS1_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS2_IN_Count(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1593,9 +1604,9 @@ Modification History:
 Abstract            :Update the remote unit IN counts in CPU2 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5127
 
 Interfaces
     Calls           :   None
@@ -1629,8 +1640,8 @@ void Update_B_DS2_IN_Count(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS1_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1641,9 +1652,9 @@ Modification History:
 Abstract            :Update the down stream counts in CPU1 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5128
 
 Interfaces
     Calls           :   None
@@ -1677,8 +1688,8 @@ void Update_B_DS1_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS2_AxleCount(UINT16 uiCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1689,9 +1700,9 @@ Modification History:
 Abstract            :Update the down stream counts in CPU2 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5129
 
 Interfaces
     Calls           :   None
@@ -1725,8 +1736,8 @@ void Update_B_DS2_AxleCount(UINT16 uiCount)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS1_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1737,9 +1748,9 @@ Modification History:
 Abstract            :Update the remote unit axle direction in CPU1 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5130
 
 Interfaces
     Calls           :   None
@@ -1772,8 +1783,8 @@ void Update_B_DS1_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_DS2_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1783,9 +1794,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the remote unit axle direction in CPU2 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_513
 
 Interfaces
     Calls           :   None
@@ -1820,8 +1831,8 @@ void Update_B_DS2_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU1_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1831,9 +1842,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the local unit axle direction in CPU1 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5132
 
 Interfaces
     Calls           :   None
@@ -1868,8 +1879,8 @@ void Update_B_LU1_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_B_LU2_Direction(BYTE Direction)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1880,9 +1891,9 @@ Modification History:
 Abstract            :Update the local unit axle direction in CPU2 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5380
 
 Interfaces
     Calls           :   None
@@ -1916,8 +1927,8 @@ void Update_B_LU2_Direction(BYTE Direction)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_ATC_Remote1_Relay_B_State(BYTE Remote_state)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1929,9 +1940,9 @@ Abstract            :If the system is configured to ATC configuration, then upda
                      state in CPU1 required to monitor the system
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5381
 
 Interfaces
     Calls           :   None
@@ -1963,8 +1974,8 @@ void Update_ATC_Remote1_Relay_B_State(BYTE Remote_state)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Update_ATC_Remote2_Relay_B_State(BYTE Remote_state)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1975,9 +1986,9 @@ Modification History:
 Abstract            :If the system is configured to ATC configuration, then update the remote unit
                      state in CPU2 required to monitor the system
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5382
 
 Interfaces
     Calls           :   None
@@ -2012,8 +2023,8 @@ void Update_ATC_Remote2_Relay_B_State(BYTE Remote_state)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Set_Relay_B_DAC_Defective(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2024,10 +2035,10 @@ Modification History:
 Abstract            :DeEnergise the Vital relay B and Declare DAC defective if any error
                      in the system
 
+Allocated Requirements: (SSDAC_SWRS_0269)
 
-Design Requirements:
-
-
+Design Requirements:	SSDAC_DR_5383
+	    	
 Interfaces
     Calls           :   RELAYDRV.C-DeEnergise_Vital_Relay_B()
 
@@ -2066,8 +2077,8 @@ void Set_Relay_B_DAC_Defective(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :BYTE Get_Relay_B_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2084,9 +2095,9 @@ Abstract            :Get Relay B state to know wheather
                      6.System is waiting for reset
                      7.To know the status of repeat relay B
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5384
 
 Interfaces
     Calls           :   None
@@ -2127,8 +2138,8 @@ BYTE Get_Relay_B_State(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :BYTE Get_Relay_B_ATC_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2146,9 +2157,9 @@ Abstract            :Get Relay B state for ATC configuration to know wheather
                      7.To know the status of repeat relay B
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5385
 
 Interfaces
     Calls           :   None
@@ -2183,8 +2194,8 @@ BYTE Get_Relay_B_ATC_State(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Clear_ATC_Local_Relay_B_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2196,9 +2207,9 @@ Abstract            :Clear all the states of ATC configuration
                      to indicate that it is not ready to clear
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5386
 
 Interfaces
     Calls           :   None
@@ -2237,8 +2248,8 @@ void Clear_ATC_Local_Relay_B_State(void)
 /******************************************************************************
 Component name      :RLYB_MGR
 Module Name         :void Clear_Relay_B_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2250,9 +2261,9 @@ Abstract            :Clear the local,remote,IN count & OUT counts
 
 
 
-Allocated Requiremnts:
+Allocated Requirements:
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5387
 
 Interfaces
     Calls           :   None

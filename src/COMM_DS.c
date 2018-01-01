@@ -1,16 +1,16 @@
 /**************************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   COMM_DS
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    COMM_DS
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -57,7 +57,7 @@ extern  /*near*/  dac_status_t Status;                    /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
 extern checksum_info_t Checksum_Info;               /* from DAC_MAIN.c */
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
-
+extern track_status_info Track_Status_Info;
 const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
                         /*
                          * Communcation Sequence is LU1-RU1-LU2-RU2
@@ -109,8 +109,8 @@ void Clear_COM2_Errors(void);
 
 Component name      :COMM_DS
 Module Name         :void SetupCOM2BaudRate(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -120,13 +120,12 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Set up Baud Rate for USART communication.Set for Asynchronous mode.
                      Enable the Serial port pins.clear the bitTX92 and RX92 for 8 bit
-                     transmission and reception.Disbale theTransmit and Recieve interrupt,
+                     transmission and reception.Disable theTransmit and Receive interrupt,
                      disable the continuous reception
 
+Allocated Requirements	: 	(SSDAC_SWRS_0025)	
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5045
 
 Interfaces
     Calls           :   Nil
@@ -262,8 +261,8 @@ void SetupCOM2BaudRate(void)
 
 Component name      :COMM_DS
 Module Name         :void Initialise_DS_CommSch(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -275,8 +274,9 @@ Abstract            :Down stream communication scheduler initailisation will be
                      done here (Byte period, Scan period,Transmission time)
 
 
-Design Requirements     :
+Allocated Requirements	: 	(SSDAC_SWRS_0032)	
 
+Design Requirements		:	SSDAC_DR_5046
 
 Interfaces
     Calls           :   NIL
@@ -331,7 +331,7 @@ References          :
 Derived Requirements:
 
 Algorithm           :1.Set the communication transmit state as "NO_MSG_TO_XMIT" and load the transmission length as 14
-                     2.Set the downstream schedular state as "COMM_SCHEDULER_NOT_STARTED" scan period as 2400
+                     2.Set the downstream scheduler state as "COMM_SCHEDULER_NOT_STARTED" scan period as 2400
                      3.Clear the transmission object buffer
                      4.Select the transmission and reception byte period as per the baudrate setted and then calculate the total transmission time
 ************************************************************************/
@@ -389,8 +389,8 @@ void Initialise_DS_CommSch(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :Start_DS_CommSch(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -403,7 +403,7 @@ Abstract            :Assign the communication scheduler time to CPU1 and CPU2.
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5047
 
 
 Interfaces
@@ -464,8 +464,8 @@ void Start_DS_CommSch(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Update_DS_Sch_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -476,9 +476,18 @@ Modification History:
 Abstract            :Update the communication status.calls Receive_COM2_Message().
                      If received message is valid then process it.
 
-
-Design Requirements     :
-
+Allocated Requirements	: 	(SSDAC_SWRS_0261), (SSDAC_SWRS_0262)
+							(SSDAC_SWRS_0582), (SSDAC_SWRS_0586), (SSDAC_SWRS_0902)
+							(SSDAC_SWRS_0904),(SSDAC_SWRS_0909), (SSDAC_SWRS_0588), (SSDAC_SWRS_0589)
+							(SSDAC_SWRS_0594), (SSDAC_SWRS_0518), (SSDAC_SWRS_0653), (SSDAC_SWRS_0753)
+							(SSDAC_SWRS_0562), (SSDAC_SWRS_0654), (SSDAC_SWRS_0754), (SSDAC_SWRS_0674), 
+							(SSDAC_SWRS_0774), (SSDAC_SWRS_0678), (SSDAC_SWRS_0778), 
+							(SSDAC_SWRS_0680), (SSDAC_SWRS_0780)
+							(SSDAC_SWRS_0681), (SSDAC_SWRS_0686), (SSDAC_SWRS_0781), (SSDAC_SWRS_0786)
+							(SSDAC_SWRS_0386), (SSDAC_SWRS_0390), (SSDAC_SWRS_0392), (SSDAC_SWRS_0393)
+							(SSDAC_SWRS_0398), (SSDAC_SWRS_0008)
+								
+Design Requirements		:	SSDAC_DR_5048
 
 Interfaces
     Calls           :   COMM_DS.C   -   Receive_COM2_Message()
@@ -563,9 +572,9 @@ Derived Requirements:
 
 Algorithm           :1.Get the message from the other unit,if it Valid message
                         process it
-                     2.Initailly Down Stream communication schedular will be in
+                     2.Initailly Down Stream communication scheduler will be in
                         Idle state
-                     3.After Down Stream schedular scan time completed,decrement
+                     3.After Down Stream scheduler scan time completed,decrement
                         the Down Stream communication retries by 1 and go to step 4
                      4.Check for communication channel status,if it is free grab
                         the channel and go to step 6
@@ -583,21 +592,21 @@ Algorithm           :1.Get the message from the other unit,if it Valid message
                         go to step 13
                      11.Check for USART transmitter buffer interrupt flag is set
                         means TXREG is empty, load the data to TXREG2 register
-                     12.Check for Down Stream communication schedular timeout, if it
-                        has occured means, make the Down stream schedular ready for
+                     12.Check for Down Stream communication scheduler timeout, if it
+                        has occured means, make the Down stream scheduler ready for
                         Next transmission
-                     13.Check for Down Stream communication schedular timeout, if it
+                     13.Check for Down Stream communication scheduler timeout, if it
                         has occured means,build the second message and go to step 14 to
                         send the second telegram
                      14.If meassage length is greater than Maximum message length(12)
                         go to step 17
                      15.Check for USART transmitter buffer interrupt flag is set means
                         TXREG is empty, load the data to TXREG2 register
-                     16.Check for Down Stream communication schedular timeout, if it
-                        has occured means, make the Down stream schedular ready for
+                     16.Check for Down Stream communication scheduler timeout, if it
+                        has occured means, make the Down stream scheduler ready for
                         Next transmission
-                     17.Check for Down Stream communication schedular timeout, if it
-                        has occured means, make the Down stream schedular ready
+                     17.Check for Down Stream communication scheduler timeout, if it
+                        has occured means, make the Down stream scheduler ready
                         for Next transmission
 ************************************************************************/
 
@@ -761,8 +770,8 @@ void Update_DS_Sch_State(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :Set_DS_Sch_Idle(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -770,13 +779,13 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract            :Make the Down stream schedular ready for Next transmission.
-                     Calculate the remaining time after the transmission of bytes and make the schedular
+Abstract            :Make the Down stream scheduler ready for Next transmission.
+                     Calculate the remaining time after the transmission of bytes and make the scheduler
                       state idle upto the calculated time has to overflow and becomes zero.
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5049
 
 
 Interfaces
@@ -809,8 +818,8 @@ References          :
 
 Derived Requirements:
 
-Algorithm           :1.Set the downstream schedular state as idle
-                     2.Calculate the  schedular timeout
+Algorithm           :1.Set the downstream scheduler state as idle
+                     2.Calculate the  scheduler timeout
                      3.Release the modem channel
 ************************************************************************/
 void Set_DS_Sch_Idle(void)
@@ -837,8 +846,8 @@ void Set_DS_Sch_Idle(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Receive_COM2_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -956,6 +965,98 @@ void Clear_COM2_Errors(void)
 //        U2MODEbits.UARTEN = 1;
     }
 }
+/*********************************************************************
+Component name 		:COMM_DS   	                                                        
+Module Name			:void Receive_COM2_Message(void)
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
+Modification History:
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |   Rev No    |     PR        | ATR             |   Date      | Description                  |
+                    |-------------|---------------|-----------------|-------------|------------------------------|
+                    |             |               |                 |             |                              |
+                    |             |               |                 |             |                              |
+                    |-------------|---------------|-----------------|----------- -|------------------------------|
+								   
+					
+Abstract			:Checks for Overrrun error, framing error and Recieves 
+					 the data.
+
+Allocated Requirements	:	(SSDAC_SWRS_0551), (SSDAC_SWRS_0256), (SSDAC_SWRS_0286), (SSDAC_SWRS_0286)
+							(SSDAC_SWRS_0287), (SSDAC_SWRS_0288), (SSDAC_SWRS_0289), (SSDAC_SWRS_0290)	
+							(SSDAC_SWRS_0291), (SSDAC_SWRS_0292), (SSDAC_SWRS_0293), (SSDAC_SWRS_0294)
+							(SSDAC_SWRS_0295), (SSDAC_SWRS_0296), (SSDAC_SWRS_0298)
+							(SSDAC_SWRS_0648), (SSDAC_SWRS_0748), (SSDAC_SWRS_0348), (SSDAC_SWRS_0007)
+
+Design Requirements		:	SSDAC_DR_5050
+	    	
+Interfaces
+	Calls			:	CRC16.c	-	Crc16()
+
+	Called by		:	COMM_DS.c	-	Update_DS_Sch_State()
+
+Input Variables			Name									Type
+	Global			:	OERR2									RCSTA2 control register bit									
+						FERR2									RCSTA2 control register bit
+						RC2IF									Peripheral Interrupt register bit
+						COM_RECV_BUFFER_EMPTY					Enumerator										
+						COM_RECV_SRC_ADDR						Enumerator
+						Com2RecvObject.Index					BYTE
+						COM_RECV_DATA_ID						Enumerator
+						COM_RECV_DATA_BYTES						Enumerator
+						COM_CHECK_CRC16							Enumerator
+						Com2RecvObject.State					Enumerator
+						COM_INVALID_MESSAGE						Enumerator
+						Status.Flags.Modem_B_Err_Toggle_Bit		Bit
+						COM_VALID_MESSAGE						Enumerator
+					
+	Local			:	Crc16_Return_Value						UINT16
+						uchData									BYTE			
+
+Output Variables		Name									Type
+	Global			:	TXEN2 									TXSTA2 control register bit	
+						CREN2									RCSTA2 control register bit		
+						RCREG2									USART2 receiver buffer register
+						Com2RecvObject.Timeout_ms				UINT16
+						Com2RecvObject.Msg_Buffer				Array of BYTES
+						Com2RecvObject.Index 					BYTE
+						Com2RecvObject.State 					Enumerator
+						Status.Flags.Modem_B_Err_Toggle_Bit		Bit
+						
+			
+	Local			:	None
+Signal Variables
+
+						|---------------------------------|--------------------|------------------------|
+						|			Signal name		      | 	Input/Output   | 	 Portallocated		|
+						|---------------------------------|--------------------|------------------------|
+								MODEM_B_CD							Input					
+						|---------------------------------|--------------------|------------------------|
+
+Macro definitions used:		Macro							Value
+							SET_LOW							0
+							SET_HIGH						1
+							COM_INVALID_MESSAGE_TIMEOUT		18
+							COMM_MESSAGE_LENGTH				14
+							TIMEOUT_EVENT					0
+References			:
+
+Derived Requirements:
+
+Algorithm			:1.Check for overrun error, if it is there clear the error
+					 2.Check for Framing error, if it is there clear the error
+					 3.Until reciever buffer become empty load the recieved data 
+						to reciever message buffer
+					 4.Check for communiction CRC, if it invalid set the recieve 
+						message state to INVALID_MESSAGE
+					 5.Check for recieve message state EMPTY,if message is not 
+						in expected format/incomplete, probably it is out of SYNC
+					 6.Check for invalid message and check for Carrier Detection, 
+						if it is not generated release the buffer
+
+
+************************************************************************/
+
 void Receive_COM2_Message(void)
 {
     UINT16 Crc16_Return_Value = 0;
@@ -1054,8 +1155,8 @@ void Receive_COM2_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Decrement_DS_Sch_msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1063,11 +1164,11 @@ Modification History:
                     |             |               |                 |             |                              |
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
-Abstract            :Decrement the DS schedular timer
+Abstract            :Decrement the DS scheduler timer
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5051
 
 
 
@@ -1105,8 +1206,8 @@ References          :
 
 Derived Requirements:
 
-Algorithm           :1.Decreament the Schedular timer value whenever the 1ms timer overflows.
-                     2.If the schedular is in idle state make the elapsed time as zero otherwise
+Algorithm           :1.Decreament the scheduler timer value whenever the 1ms timer overflows.
+                     2.If the scheduler is in idle state make the elapsed time as zero otherwise
                         increament the elapsed time value by 1.
 
 ************************************************************************/
@@ -1139,8 +1240,8 @@ void Decrement_DS_Sch_msTmr(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Decrement_Comm_DS_CountDown(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1153,7 +1254,7 @@ Abstract            :For every communication cycle decrement the communication
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5052
 
 
 
@@ -1223,8 +1324,8 @@ void Decrement_Comm_DS_CountDown(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Build_DS_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1236,10 +1337,12 @@ Abstract            :In reset mode calls Build_DS_Reset_Info_Message(),
                     normal mode calls Build_DS_Axle_Count_Message(), checks
                     for overrun and framing error.
 
+Allocated Requirements	: 	(SSDAC_SWRS_0261), (SSDAC_SWRS_0262),(SSDAC_SWRS_0549),(SSDAC_SWRS_0550)
+					  	  	(SSDAC_SWRS_0554),(SSDAC_SWRS_0555),(SSDAC_SWRS_0254), (SSDAC_SWRS_0255)
+							(SSDAC_SWRS_0358), (SSDAC_SWRS_0648), (SSDAC_SWRS_0748)
+							(SSDAC_SWRS_0649), (SSDAC_SWRS_0749),(SSDAC_SWRS_0346), (SSDAC_SWRS_0347).
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5053
 
 Interfaces
     Calls           :   COMM_DS.c   -   Build_DS_Reset_Info_Message()
@@ -1315,8 +1418,8 @@ void Build_DS_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Build_DS_Reset_Info_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1327,8 +1430,13 @@ Modification History:
 Abstract            :Builds the reset transmit message buffer to transmit
                      to other unit CPUs
 
+Allocated Requirements	:	(SSDAC_SWRS_0261), (SSDAC_SWRS_0262), (SSDAC_SWRS_0254) 	
+						  	(SSDAC_SWRS_0549), (SSDAC_SWRS_0554), (SSDAC_SWRS_0358)
+						 	(SSDAC_SWRS_0518), (SSDAC_SWRS_0653), (SSDAC_SWRS_0753)	
+							(SSDAC_SWRS_0562), (SSDAC_SWRS_0654), (SSDAC_SWRS_0754)
+							(SSDAC_SWRS_0649), (SSDAC_SWRS_0749), (SSDAC_SWRS_0346)
 
-Design Requirements     :
+Design Requirements		: SSDAC_DR_5054
 
 Interfaces
     Calls           :   CRC16.c  -  Crc16()
@@ -1475,8 +1583,8 @@ void Build_DS_Reset_Info_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Build_DS_Axle_Count_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1487,10 +1595,11 @@ Modification History:
 Abstract            :Build the axle message buffer for transmission to
                      other unit CPUs
 
+Allocated Requirements	:	(SSDAC_SWRS_0550), (SSDAC_SWRS_0554), (SSDAC_SWRS_0261), (SSDAC_SWRS_0262),
+							(SSDAC_SWRS_0255), (SSDAC_SWRS_0648), (SSDAC_SWRS_0748)	
+							(SSDAC_SWRS_0649), (SSDAC_SWRS_0749), (SSDAC_SWRS_0347)
 
-Design Requirements     :
-
-
+Design Requirements		: SSDAC_DR_5055
 
 Interfaces
     Calls           :   AXLE_MON.c  -   Get_DS_AxleDirection()
@@ -1732,8 +1841,8 @@ void Build_DS_Axle_Count_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Process_DS_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1744,9 +1853,10 @@ Modification History:
 Abstract            :If command is for Axle count calls Process_DS_Axle_Count_message()
                      else calls Process_DS_Reset_Info_Message()
 
+Allocated Requirements	: 	(SSDAC_SWRS_0552)	, (SSDAC_SWRS_0257), (SSDAC_SWRS_0357)
+							(SSDAC_SWRS_0648), (SSDAC_SWRS_0748), (SSDAC_SWRS_0349)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5056
 
 Interfaces
     Calls           :   COMM_DS.C   -   Update_DS_Sch_State()
@@ -1798,8 +1908,8 @@ void Process_DS_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Process_DS_Reset_Info_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1809,11 +1919,14 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Process the DS reset massage
 
+Allocated Requirements	:	(SSDAC_SWRS_0552) , (SSDAC_SWRS_0257), (SSDAC_SWRS_0587), (SSDAC_SWRS_0357)
+							(SSDAC_SWRS_0648), (SSDAC_SWRS_0748), (SSDAC_SWRS_0679), (SSDAC_SWRS_0779)
+						 	(SSDAC_SWRS_0349), (SSDAC_SWRS_0391),(SSDAC_SWRS_0840),(SSDAC_SWRS_0844),(SSDAC_SWRS_0845)
+							(SSDAC_SWRS_0848),(SSDAC_SWRS_0853),(SSDAC_SWRS_0854),(SSDAC_SWRS_0855),(SSDAC_SWRS_0856)
+							(SSDAC_SWRS_0857),(SSDAC_SWRS_0858)
 
-Design Requirements     :
-
-
-
+Design Requirements		:	SSDAC_DR_5057, SSDAC_DR_5351, SSDAC_DR_5352, SSDAC_DR_5353
+						
 Interfaces
     Calls           :   RELAYMGR.c  -   Declare_DAC_Defective_DS()
                         ERROR.c     -   Set_Error_Status_Bit()
@@ -1999,8 +2112,8 @@ void Process_DS_Reset_Info_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Process_DS_Axle_Count_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2011,7 +2124,11 @@ Modification History:
 Abstract            :Process the DS axle count message
 
 
-Design Requirements     :
+Allocated Requirements	:	(SSDAC_SWRS_0552) , (SSDAC_SWRS_0257), (SSDAC_SWRS_0587), (SSDAC_SWRS_0357)
+							(SSDAC_SWRS_0648), (SSDAC_SWRS_0748), (SSDAC_SWRS_0679), (SSDAC_SWRS_0779)
+						 	(SSDAC_SWRS_0349), (SSDAC_SWRS_0391)
+
+Design Requirements		:	SSDAC_DR_5057, SSDAC_DR_5351, SSDAC_DR_5352, SSDAC_DR_5353
 
 Interfaces
     Calls           :   COMM_DS.c   -   Synchronise_DS_Sch()
@@ -2461,8 +2578,8 @@ void Process_DS_Axle_Count_Message(void)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Process_DS_AxleCount(bitadrb_t SrcAdr, BYTE uchDirection, UINT16 uiAxleCount)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2475,7 +2592,7 @@ Abstract            :Update the forward and reverse axle counts in Down stream
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5059
 
 
 Interfaces
@@ -2528,8 +2645,8 @@ void Process_DS_AxleCount(bitadrb_t SrcAdr, UINT16 uiFwdAxleCount, UINT16 uiRevA
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Process_DS_Direction(bitadrb_t SrcAdr, BYTE uchDirection)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2542,7 +2659,7 @@ Abstract            :Update direction and axle counts in down stream unit
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5360
 
 Interfaces
     Calls           :   RLYB_MGR.c  -   Update_B_DS1_Direction()
@@ -2639,8 +2756,8 @@ void Process_3S_DS_AxleCount(bitadrb_t SrcAdr, UINT16 uiFwdAxleCount, UINT16 uiR
 /*************************************************************************
 Component name      :COMM_DS
 Module Name         :void Synchronise_DS_Sch(bitadrb_t SrcAdr)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2653,7 +2770,7 @@ Abstract            :Sychronise the communication scheduler to prevent the commu
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5361
 
 
 
@@ -2728,8 +2845,8 @@ void Synchronise_DS_Sch(bitadrb_t SrcAdr)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :void Reset_DS_CountDown(bitadrb_t SrcAdr,bitadrb_t MsgFlags)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2741,7 +2858,7 @@ Abstract            :Resets communication link status for local and remote units
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5362
 
 
 Interfaces
@@ -2803,7 +2920,14 @@ void Reset_DS_CountDown(bitadrb_t SrcAdr, bitadrb_t MsgFlags)
         if (SrcAdr.Bit.b0 == SET_HIGH)
         {
             /* From Remote Unit - CPU1 */
-            Comm_B_CountDown.DS1_to_LU1  = MAXIMUM_COM_RETRIES;
+            if(Track_Status_Info.Bit.Local_DS_Track_Status == TRACK_CLEAR)
+            {
+                Comm_B_CountDown.DS1_to_LU1  = MAXIMUM_COM_RETRIES;
+            }
+            else
+            {
+                Comm_B_CountDown.DS1_to_LU1  = MAXIMUM_OCCUPIED_COM_RETRIES;
+            }
             Status.Flags.DS1_to_LU1_Link = COMMUNICATION_OK;
             Status.Flags.LU1_to_DS1_Link = MsgFlags.Bit.b2;
             Status.Flags.LU2_to_DS1_Link = MsgFlags.Bit.b3;
@@ -2811,7 +2935,14 @@ void Reset_DS_CountDown(bitadrb_t SrcAdr, bitadrb_t MsgFlags)
         else
         {
             /* From Remote Unit - CPU2 */
-            Comm_B_CountDown.DS2_to_LU1  = MAXIMUM_COM_RETRIES;
+            if(Track_Status_Info.Bit.Local_DS_Track_Status == TRACK_CLEAR)
+            {
+                Comm_B_CountDown.DS2_to_LU1  = MAXIMUM_COM_RETRIES;
+            }
+            else
+            {
+                Comm_B_CountDown.DS2_to_LU1  = MAXIMUM_OCCUPIED_COM_RETRIES;
+            }
             Status.Flags.DS2_to_LU1_Link = COMMUNICATION_OK;
             Status.Flags.LU1_to_DS2_Link = MsgFlags.Bit.b4;
             Status.Flags.LU2_to_DS2_Link = MsgFlags.Bit.b5;
@@ -2823,7 +2954,14 @@ void Reset_DS_CountDown(bitadrb_t SrcAdr, bitadrb_t MsgFlags)
         if (SrcAdr.Bit.b0 == SET_HIGH)
         {
             /* From Remote Unit - CPU1 */
-            Comm_B_CountDown.DS1_to_LU2 = MAXIMUM_COM_RETRIES;
+            if(Track_Status_Info.Bit.Local_DS_Track_Status == TRACK_CLEAR)
+            {
+                Comm_B_CountDown.DS1_to_LU2  = MAXIMUM_COM_RETRIES;
+            }
+            else
+            {
+                Comm_B_CountDown.DS1_to_LU2  = MAXIMUM_OCCUPIED_COM_RETRIES;
+            }
             Status.Flags.DS1_to_LU2_Link = COMMUNICATION_OK;
             Status.Flags.LU1_to_DS1_Link =  MsgFlags.Bit.b2;
             Status.Flags.LU2_to_DS1_Link =  MsgFlags.Bit.b3;
@@ -2831,7 +2969,14 @@ void Reset_DS_CountDown(bitadrb_t SrcAdr, bitadrb_t MsgFlags)
         else
         {
             /* From Remote Unit - CPU2 */
-            Comm_B_CountDown.DS2_to_LU2 = MAXIMUM_COM_RETRIES;
+            if(Track_Status_Info.Bit.Local_DS_Track_Status == TRACK_CLEAR)
+            {
+                Comm_B_CountDown.DS2_to_LU2  = MAXIMUM_COM_RETRIES;
+            }
+            else
+            {
+                Comm_B_CountDown.DS2_to_LU2  = MAXIMUM_OCCUPIED_COM_RETRIES;
+            }
             Status.Flags.DS2_to_LU2_Link = COMMUNICATION_OK;
             Status.Flags.LU1_to_DS2_Link =  MsgFlags.Bit.b4;
             Status.Flags.LU2_to_DS2_Link =  MsgFlags.Bit.b5;
@@ -2841,8 +2986,8 @@ void Reset_DS_CountDown(bitadrb_t SrcAdr, bitadrb_t MsgFlags)
 /*********************************************************************
 Component name      :COMM_DS
 Module Name         :Check_DS_Unit_Status(bitadrb_t Buffer)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2854,8 +2999,10 @@ Abstract            :Checks for the DS system status,if any error declare it as
                      DAC defective .Downside DAC failed so drop the relay
                      and set DS_ERROR_NUM error bit
 
+Allocated Requirements	:	(SSDAC_SWRS_0586), (SSDAC_SWRS_0300) 	
+							(SSDAC_SWRS_0678), (SSDAC_SWRS_0778), (SSDAC_SWRS_0390)
 
-Design Requirements     :
+Design Requirements		: 	SSDAC_DR_5363
 
 Interfaces
     Calls           :   RELAYMGR.c  -   Declare_DAC_Defective_DS()

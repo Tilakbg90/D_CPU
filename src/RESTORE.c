@@ -1,16 +1,16 @@
 /******************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   RESTORE
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RESTORE
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -56,8 +56,8 @@ BYTE Get_Board_Details(void);
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Check_DIP_Switches(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -67,9 +67,14 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Read the Dip Switches of Address, Configuration and baud rate
 
+Allocated Requirements: (SSDAC_SWRS_0033),(SSDAC_SWRS_0034),(SSDAC_SWRS_0835), (SSDAC_SWRS_0834)
+						(SSADC_SWRS_0036), (SSADC_SWRS_0037), (SSADC_SWRS_0838),(SSADC_SWRS_0839)
+						(SSDAC_SWRS_0102), (SSDAC_SWRS_0202), (SSDAC_SWRS_0402),(SSDAC_SWRS_0502)
+						(SSDAC_SWRS_0302), (SSDAC_SWRS_0305), (SSDAC_SWRS_0603), (SSDAC_SWRS_0702)
 
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5034
+
 
 
 Interfaces
@@ -484,8 +489,8 @@ void Check_DIP_Switches(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Check_DAC_Boards_runtime(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -497,8 +502,16 @@ Abstract            :Check board presence at the runtime.If any board is
                      missing display the board missing error on LCD and
                      declare DAC defective
 
+Allocated Requirements: (SSDAC_SWRS_0101), (SSDAC_SWRS_0107), (SSDAC_SWRS_0827), (SSDAC_SWRS_0201), 
+					   (SSDAC_SWRS_0401), (SSDAC_SWRS_0405), (SSDAC_SWRS_0407), (SSDAC_SWRS_0415),
+					   (SSDAC_SWRS_0501), (SSDAC_SWRS_0505), (SSDAC_SWRS_0205), (SSDAC_SWRS_0207), 
+    				   (SSDAC_SWRS_0905), (SSDAC_SWRS_0507), (SSDAC_SWRS_0590), (SSDAC_SWRS_0301),
+					   (SSDAC_SWRS_0601), (SSDAC_SWRS_0701), (SSDAC_SWRS_0606), (SSDAC_SWRS_0705)
+						(SSDAC_SWRS_0608), (SSDAC_SWRS_0707), (SSDAC_SWRS_0682), (SSDAC_SWRS_0782)
+						(SSDAC_SWRS_0306), (SSDAC_SWRS_0394), (SSDAC_SWRS_0105)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5035
+
 Interfaces
     Calls           :   RESTORE.c   -   Get_Board_Details()
                         ERROR.c     -   Set_Error_Status_Byte()
@@ -567,8 +580,8 @@ void Check_DAC_Boards_Runtime(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :BYTE Get_Board_Details(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -582,7 +595,10 @@ Abstract            :To get the board details we using the 8 input multiplexer,
                      different boards.
 
 
-Design Requirements:
+Allocated Requirements: 	(SSDAC_SWRS_0101), (SSDAC_SWRS_0107), (SSDAC_SWRS_0201), (SSDAC_SWRS_0401)
+						(SSDAC_SWRS_0905)
+
+Design Requirements:	SSDAC_DR_5036
 
 Interfaces
     Calls           :   Nil
@@ -663,8 +679,8 @@ BYTE Get_Board_Details(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Check_Flash(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -676,8 +692,11 @@ Abstract            :This function is used to detect the ROM corruption.
                      It performs crc32 bit operation on entire rom.
                      It compares the calculated checksum with stored checksum value.
 
+Allocated Requirements:  (SSDAC_SWRS_0103), (SSDAC_SWRS_0203), (SSDAC_SWRS_0403),(SSDAC_SWRS_0503)
+						(SSDAC_SWRS_0303), (SSDAC_SWRS_0604), (SSDAC_SWRS_0703)
 
-Design Requirements:
+Design Requirements:	SSDAC_DR_5037
+
 Interfaces
     Calls           :   flash_read()    - Compiler defined
                         CRC32.c     -   Crc32()
@@ -757,8 +776,8 @@ void Check_Flash(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Check_RAM(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -768,9 +787,11 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :This function is used to detect the RAM corruption.
 
+Allocated Requirements:	(SSDAC_SWRS_0832), (SSDAC_SWRS_0259), (SSDAC_SWRS_0445), 
+					   	(SSDAC_SWRS_0559), (SSDAC_SWRS_0351),(SSDAC_SWRS_0305), (SSDAC_SWRS_0651)
+						(SSDAC_SWRS_0751)
 
-Design Requirements:
-
+Design Requirements:	SSDAC_DR_5318
 
 Interfaces
     Calls           :   ERROR.C-Set_Error_Status_Bit()
@@ -837,8 +858,8 @@ void Check_RAM(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :UINT32 Get_Calculated_Checksum(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -847,7 +868,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To return the calculated flash checksum
-Allocated Requiremnts:
+Allocated Requirements:
 Design Requirements:
 
 
@@ -890,8 +911,8 @@ UINT32 Get_Calculated_Checksum(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :UINT32 Get_Compared_Checksum(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -900,7 +921,7 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To return the compared checksum
-Allocated Requiremnts:
+Allocated Requirements:
 Design Requirements:
 
 
@@ -1028,8 +1049,8 @@ UINT32 Get_Compared_Checksum(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Compare_DS_Checksum(bitadrb_t Config)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1038,8 +1059,9 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To return the status flag for DS compared checksum
+Allocated Requirements:	(SSDAC_SWRS_0840),(SSDAC_SWRS_0844),(SSDAC_SWRS_0845),(SSDAC_SWRS_0848),(SSDAC_SWRS_0853),
+						(SSDAC_SWRS_0854),(SSDAC_SWRS_0855),(SSDAC_SWRS_0856),(SSDAC_SWRS_0857),(SSDAC_SWRS_0858)
 Design Requirements:
-
 
 Interfaces
     Calls           :   ERROR.c     -   Set_Error_Status_Bit()
@@ -1315,8 +1337,8 @@ void Compare_DS_Checksum(bitadrb_t Config)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Compare_US_Checksum(bitadrb_t Config)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1325,7 +1347,9 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To return the status flag for US compared checksum
-Design Requirements:
+Allocated Requirements:	(SSDAC_SWRS_0845),(SSDAC_SWRS_0848),(SSDAC_SWRS_0849),(SSDAC_SWRS_0852),(SSDAC_SWRS_0853)
+						(SSDAC_SWRS_0854),(SSDAC_SWRS_0855),(SSDAC_SWRS_0856),(SSDAC_SWRS_0857),(SSDAC_SWRS_0858)
+Design Requirements:	
 
 
 Interfaces
@@ -1608,8 +1632,8 @@ void Compare_US_Checksum(bitadrb_t Config)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Clear_DS_Checksum_Info(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1618,8 +1642,9 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To clear the Down stream checksum flags
-Design Requirements:
-
+Allocated Requirements:	(SSDAC_SWRS_0840),(SSDAC_SWRS_0844),(SSDAC_SWRS_0845),(SSDAC_SWRS_0848),(SSDAC_SWRS_0853),
+						(SSDAC_SWRS_0854),(SSDAC_SWRS_0855),(SSDAC_SWRS_0856),(SSDAC_SWRS_0857),(SSDAC_SWRS_0858)
+Design Requirements:	
 
 Interfaces
     Calls           :   None
@@ -1694,8 +1719,8 @@ void Clear_DS_Checksum_Info(void)
 /*********************************************************************
 Component name      :RESTORE
 Module Name         :void Clear_US_Checksum_Info(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1704,8 +1729,9 @@ Modification History:
                     |             |               |                 |             |                              |
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :To clear the Up stream checksum flags
-Design Requirements:
-
+Allocated Requirements:	(SSDAC_SWRS_0845),(SSDAC_SWRS_0848),(SSDAC_SWRS_0849),(SSDAC_SWRS_0852),(SSDAC_SWRS_0853)
+						(SSDAC_SWRS_0854),(SSDAC_SWRS_0855),(SSDAC_SWRS_0856),(SSDAC_SWRS_0857),(SSDAC_SWRS_0858)
+Design Requirements:	
 
 Interfaces
     Calls           :   None

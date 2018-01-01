@@ -1,16 +1,16 @@
 /********************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   RELAYMGR
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RELAYMGR
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -71,8 +71,8 @@ void Update_DE_Relay_State(void);
 /***************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Initialise_Relay_Mgr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -83,9 +83,9 @@ Modification History:
 Abstract            :Initialise Relay Manager by calling Deenergise the preporatory
                      relay,initailise the relay A, B, D3 manager functions
 
+Allocated Requirements	: 	(SSDAC_SWRS_0032),(SSDAC_SWRS_0429), (SSDAC_SWRS_0234)
 
-
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5189
 
 
 Interfaces
@@ -132,8 +132,8 @@ void Initialise_Relay_Mgr(void)
 /**************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_Relay_A_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -147,7 +147,7 @@ Abstract            :Get the Up stream axle direction, forward axle count,
 
 Allocated Requirements  :   Update_Relay_A_Counts
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5191, SSDAC_DR_5366, SSDAC_DR_5367, SSDAC_DR_5368, SSDAC_DR_5369
 
 
 Interfaces
@@ -1169,8 +1169,8 @@ void Update_DE_Relay_State(void)
 /*******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_Relay_B_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1183,7 +1183,9 @@ Abstract            :Get the Down stream axle direction, forward axle count,
                      counts and update the Relay B state
 
 
-Design Requirements     :
+Allocated Requirements	: 	(SSDAC_SWRS_0035)
+
+Design Requirements		:	SSDAC_DR_5192, SSDAC_DR_5342, SSDAC_DR_5343,SSDAC_DR_5380
 
 
 Interfaces
@@ -1259,8 +1261,8 @@ void Update_3S_Relay_B_Counts(void)
 /******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_Relay_D3_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1274,7 +1276,7 @@ Abstract            :Get the Down stream axle direction, forward axle count,
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5194
 
 
 Interfaces
@@ -1333,8 +1335,8 @@ void Update_Relay_D3_Counts(void)
 /******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_Relay_D4_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1438,8 +1440,8 @@ void Update_3S_Relay_Counts(void)
 /*******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_SF_Track_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1451,7 +1453,7 @@ Abstract            :Update SF Track status by getting the relay status
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :	SSDAC_DR_5195
 
 Interfaces
     Calls           :   RLYB_MGR.C-Get_Relay_B_State()
@@ -1508,8 +1510,8 @@ void Update_SF_Track_Status(void)
 /*******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_CF_Track_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1519,9 +1521,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the CF track status by getting the both the relay status
 
+Allocated Requirements	:	(SSDAC_SWRS_0568), (SSDAC_SWRS_0527), (SSDAC_SWRS_0660), (SSDAC_SWRS_0760)	
+							(SSDAC_SWRS_0628), (SSDAC_SWRS_0727)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5196				
 
 Interfaces
     Calls           :   RLYA_MGR.C-Get_Relay_A_State()
@@ -1592,8 +1595,8 @@ void Update_CF_Track_Status(void)
 /**********************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Update_EF_Track_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1665,8 +1668,8 @@ void Update_EF_Track_Status(void)
 /******************************************************************************
 Component name      :RELAYMGR
 Module Name         :void B_Sec_Led_drive(Led_State Led_status)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1682,7 +1685,7 @@ Abstract            :This function is used Drive the TRACK CLEAR and OCCUPIED Le
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5193
 
 
 Interfaces
@@ -1774,8 +1777,8 @@ void A_Sec_Led_drive(Led_State Led_status)
 /**************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Declare_DAC_Defective(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1790,8 +1793,11 @@ Abstract            :Set System status,US system status, DS system status flag t
                      or Set_Relay_A_DAC_Defective(),Set_Relay_D3_DAC_Defective() and Set_Relay_DE_DAC_Defective()
                      functions to declare DAC defective in error condition
 
-Design Requirements     :
-
+Allocated Requirements	:(SSDAC_SWRS_0449),(SSDAC_SWRS_0429), (SSDAC_SWRS_0421), (SSDAC_SWRS_0521)
+						 (SSDAC_SWRS_0563), (SSDAC_SWRS_0225), (SSDAC_SWRS_0263), (SSDAC_SWRS_0234)
+						(SSDAC_SWRS_0622), (SSDAC_SWRS_0721), (SSDAC_SWRS_0655),(SSDAC_SWRS_0755)
+						(SSDAC_SWRS_0364), (SSDAC_SWRS_0330), (SSDAC_SWRS_0123)
+Design Requirements		:	SSDAC_DR_5194						
 
 Interfaces
     Calls           :   RELAYMGR.C-Led_drive()
@@ -1964,8 +1970,8 @@ void Declare_DAC_Defective(void)
 /************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Declare_DAC_Defective_US(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1979,7 +1985,11 @@ Abstract            :Turn on the track occupied Led, Clear the Local Reset Flag,
                      and Set_Relay_DE_DAC_Defective() functions to declare DAC defective in error condition.
                      Set System status,US system status, DS system status flag to "CATASTROPHIC_ERROR".
 
-Design Requirements     :
+Allocated Requirements	: (SSDAC_SWRS_0449),(SSDAC_SWRS_0429), (SSDAC_SWRS_0421)
+							(SSDAC_SWRS_0521),(SSDAC_SWRS_0622), (SSDAC_SWRS_0721)
+							(SSDAC_SWRS_0563), (SSDAC_SWRS_0655),(SSDAC_SWRS_0755)
+							(SSDAC_SWRS_0364), (SSDAC_SWRS_0330)
+Design Requirements		:	SSDAC_DR_5195	
 
 Interfaces
     Calls           :   RELAYMGR.C-Led_drive()
@@ -2162,8 +2172,8 @@ void Declare_DAC_Defective_US(void)
 /*****************************************************************************
 Component name      :RELAYMGR
 Module Name         :void Declare_DAC_Defective_DS(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2178,9 +2188,13 @@ Abstract            :Turn on the track occupied Led, Clear the Local Reset Flag,
                      Set System status,US system status, DS system status flag to "CATASTROPHIC_ERROR".
 
 
+Allocated Requirements	: 	(SSDAC_SWRS_0225), (SSDAC_SWRS_0263)
+							(SSDAC_SWRS_0234), (SSDAC_SWRS_0521),(SSDAC_SWRS_0622), (SSDAC_SWRS_0721)
+							(SSDAC_SWRS_0563), (SSDAC_SWRS_0655),(SSDAC_SWRS_0755)
+							(SSDAC_SWRS_0364), (SSDAC_SWRS_0330)
 
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5196
 
 Interfaces
     Calls           :   RELAYMGR.C-Led_drive()

@@ -1,15 +1,15 @@
 /*****************************************************************************
 
-	Project			: 	Single Section Digital Axle Counter
-	Version			: 	2.0
-	Revision		:	5
-	Module Version	:	1.0
-	Component name	: 	RLYDE_MGR
-	Target MCU		: 	PIC 18F872X2
-    Compiler		:
-	Author			:	Vijay Kumar
-	Date			:	09/02/2005
-	Company Name	: 	G G Tronics India Private Limited,Bangalore
+	Project			    : 	Single Section Digital Axle Counter
+	Version			    : 	2.0
+	Revision		    :	5
+	Module Version	    :	1.0
+	Component name	    : 	RLYDE_MGR
+	Target MCU		    : 	PIC24FJ256GB210
+    Compiler            :   XC16 V1.31
+    Author              :   S Venkata Krishna
+    Date                :   15/12/2017
+    Company Name        :   Insys Digital Systems Private Limited, Bangalore
 	Modification History:
 					|-------------|---------------|-----------------|-------------|------------------------------|
 					|	Rev No	  |		PR	 	  |	ATR				|	Date	  |	Description					 |

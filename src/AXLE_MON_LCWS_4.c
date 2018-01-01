@@ -1,16 +1,16 @@
 /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   AXLE_MON
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    AXLE_MON_LCWS_4
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -91,8 +91,8 @@ void Decrement_TrackMon_50msTmr_4(void);
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BYTE Get_Shunting_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -140,8 +140,8 @@ Derived Requirements:
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Initialise_AxleMon(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -298,8 +298,8 @@ void Initialise_AxleMon_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Validate_PD_Signals(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -396,8 +396,8 @@ void Validate_PD_Signals_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Monitor_Supervisory_Pulse(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -566,8 +566,8 @@ void Monitor_Supervisory_Pulse_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Monitor_Wheel_Pulse_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -656,8 +656,8 @@ void Monitor_Wheel_Pulse_4( bitadrb_t Temp_IO)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Determine_TrackState_4(BYTE uchPD_IO_Value)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -888,8 +888,8 @@ void Determine_TrackState_4(BYTE uchPD_IO_Value)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Analyse_Supervisory_Sequence_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -973,8 +973,8 @@ void Analyse_Supervisory_Sequence_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Detect_PD_Failures_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1315,8 +1315,8 @@ void Detect_PD_Failures_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Register_PD1212_Transition_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1429,8 +1429,8 @@ void Register_PD1212_Transition_4(void)
 /**************************************************************************
 Component name      :AXLE_MON
 Module Name         :void Register_PD2121_Transition_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1542,8 +1542,8 @@ void Register_PD2121_Transition_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Chk_for_AxleCount_Completion(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1619,8 +1619,8 @@ void Chk_for_AxleCount_Completion_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Decrement_TrackMon_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1706,8 +1706,8 @@ void Decrement_TrackMon_50msTmr_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_US_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1780,8 +1780,8 @@ void Clear_US_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_DS_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1853,8 +1853,8 @@ void Clear_DS_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1903,8 +1903,8 @@ UINT16 Get_US_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1954,8 +1954,8 @@ UINT16 Get_DS_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BYTE Get_US_AxleDirection(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2006,8 +2006,8 @@ BYTE Get_US_AxleDirection_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BYTE Get_DS_AxleDirection(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2062,8 +2062,8 @@ BYTE Get_DS_AxleDirection_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_Fwd_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2116,8 +2116,8 @@ UINT16 Get_US_Fwd_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_US_Rev_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2171,8 +2171,8 @@ UINT16 Get_US_Rev_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_Fwd_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2227,8 +2227,8 @@ UINT16 Get_DS_Fwd_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :UINT16 Get_DS_Rev_AxleCount(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2281,8 +2281,8 @@ UINT16 Get_DS_Rev_AxleCount_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_US_Local_Counts(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2337,8 +2337,8 @@ void Clear_US_Local_Counts_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD1_Supervisory_Count_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2392,8 +2392,8 @@ void Clear_PD1_Supervisory_Count_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD2_Supervisory_Count_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2446,8 +2446,8 @@ void Clear_PD2_Supervisory_Count_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_PD12_Main_Pulse_Count_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2497,8 +2497,8 @@ void Clear_PD12_Main_Pulse_Count_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Clear_Wheel_Type_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2566,8 +2566,8 @@ void Clear_Wheel_Type_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_US_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2620,8 +2620,8 @@ void Start_US_Axle_Counting_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Start_DS_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2675,8 +2675,8 @@ void Start_DS_Axle_Counting_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_US_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2727,8 +2727,8 @@ void Stop_US_Axle_Counting_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :void Stop_DS_Axle_Counting(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2783,8 +2783,8 @@ void Stop_DS_Axle_Counting_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_DS_Local_Counts_Clearing_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2840,8 +2840,8 @@ Algorithm           :1.If the Downstream local count cleared flag got setted
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Get_US_Local_Counts_Clearing_Status(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -2898,8 +2898,8 @@ BOOL Get_US_Local_Counts_Clearing_Status_4(void)
 /*********************************************************************
 Component name      :AXLE_MON
 Module Name         :BOOL Chk_For_Track_Occupancy_4(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |

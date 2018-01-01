@@ -1,16 +1,16 @@
 /*****************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Component name      :   COMM_SM.c
-    Module Version      :
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Component name      :    COMM_SM.c
+    Module Version      :    1.0
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -73,8 +73,8 @@ extern relay_b_info_t Relay_B_Info;
 
 Component name      :COMM_SM
 Module Name         :void Initialise_SPI(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -84,8 +84,11 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :SPI configuration and SPI scheduler Initilaistion will be done.
 
+Allocated Requirements	: (SSDAC_SWRS_0026),(SSDAC_SWRS_0032), (SSDAC_SWRS_0136), (SSDAC_SWRS_0431)
+						  (SSDAC_SWRS_0531), (SSDAC_SWRS_0235), (SSDAC_SWRS_0632), (SSDAC_SWRS_0731)
+						  (SSDAC_SWRS_0332)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5038
 
 
 Interfaces
@@ -201,8 +204,8 @@ void Initialise_SPI(void)
 /**************************************************************************
 Component name      :COMM_SM
 Module Name         :void Update_SPI_State(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -212,9 +215,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Update the Axle counts,direction.
 
+Allocated Requirements	: 	(SSDAC_SWRS_0139),(SSDAC_SWRS_0431), (SSDAC_SWRS_0531), (SSDAC_SWRS_0235)
+							(SSDAC_SWRS_0632), (SSDAC_SWRS_0731), (SSDAC_SWRS_0332)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5039
 
 Interfaces
     Calls           :   COMM_SM.c   -   Build_Interprocess_Message()
@@ -398,8 +402,8 @@ void Update_SPI_State(void)
 /******************************************************************************
 Component name      :COMM_SM
 Module Name         :void Decrement_SPI_50msTmr(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -411,7 +415,7 @@ Abstract            :For every 50ms,SPI info timeout variable is decremented.
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5040
 
 
 
@@ -460,8 +464,8 @@ void Decrement_SPI_50msTmr(void)
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Clear_SPI_Receive_Buffer(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -473,7 +477,7 @@ Abstract            :Clear the SPI reciever massage buffer
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5041
 
 Interfaces
     Calls           :   Nil
@@ -515,8 +519,8 @@ void Clear_SPI_Receive_Buffer(void)
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Clear_SPI_Transmit_Buffer(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -569,8 +573,8 @@ void Clear_SPI_Transmit_Buffer(void)
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Build_Interprocess_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -580,9 +584,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Build the message buffer for interprocess communication
 
+Allocated Requirements	: 	(SSDAC_SWRS_0137), (SSDAC_SWRS_0140),(SSDAC_SWRS_0431), (SSDAC_SWRS_0531), (SSDAC_SWRS_0235)
+							(SSDAC_SWRS_0632), (SSDAC_SWRS_0731), (SSDAC_SWRS_0332)
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5042
 
 Interfaces
     Calls           :   COMM_SM.c   -   Build_Interprocess_Post_Reset_Message()
@@ -632,8 +637,8 @@ void Build_Interprocess_Message(void)
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Build_Interprocess_Post_Reset_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -643,9 +648,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Build the message buffer for interprocess communication after the system reset has completed
 
+Allocated Requirements	: 	(SSDAC_SWRS_0137), (SSDAC_SWRS_0140A),(SSDAC_SWRS_0431), (SSDAC_SWRS_0531), (SSDAC_SWRS_0235)
+							(SSDAC_SWRS_0632), (SSDAC_SWRS_0731), (SSDAC_SWRS_0332),
 
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5042
 
 Interfaces
     Calls           :   AXLE_MON.c  -   Get_US_Fwd_AxleCount()
@@ -1019,8 +1025,8 @@ void Build_Interprocess_Post_Reset_Message(void)
 /*****************************************************************************
 Component name      :COMM_SM
 Module Name         :void Build_Interprocess_Reset_Info_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1030,8 +1036,10 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Build the message buffer for interprocess communication before the system reset has taken place
 
+Allocated Requirements	: 	(SSDAC_SWRS_0137), (SSDAC_SWRS_0140),(SSDAC_SWRS_0431), (SSDAC_SWRS_0531), (SSDAC_SWRS_0235)
+							(SSDAC_SWRS_0632), (SSDAC_SWRS_0731), (SSDAC_SWRS_0332)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5042
 
 
 Interfaces
@@ -1243,8 +1251,8 @@ void Build_Interprocess_Reset_Info_Message(void)
 /***************************************************************************
 Component name      :COMM_SM
 Module Name         :void Process_Interprocess_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1323,8 +1331,8 @@ void Process_Interprocess_Message(void)
 /***************************************************************************
 Component name      :COMM_SM
 Module Name         :
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -1537,8 +1545,8 @@ void Process_Interprocess_Reset_Info_Message(void)
 /***************************************************************************
 Component name      :COMM_SM
 Module Name         :void Process_Interprocess_Post_Reset_Message(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |

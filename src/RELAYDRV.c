@@ -1,16 +1,16 @@
 /*******************************************************************************
 
-    Project             :
-    Equipment Version   :
-    Version             :
-    Revision            :
-    Module Version      :
-    Component name      :   RELAYDRV
-    Target MCU          :
-    Compiler            :
-    Author              :
-    Date                :
-    Company Name        :
+    Project             :    Single Section Digital Axle Counter
+    Equipment Version   :    D01S001H001
+    Version             :    1.0
+    Revision            :    1
+    Module Version      :    1.0
+    Component name      :    RELAYDRV
+    Target MCU          :    PIC24FJ256GB210
+    Compiler            :    XC16 V1.31
+    Author              :    S Venkata Krishna
+    Date                :    15/12/2017
+    Company Name        :    Insys Digital Systems Private Limited, Bangalore
     Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -57,8 +57,8 @@ BYTE ISO_ctrl_A =0,ISO_ctrl_B=0;
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :INT16 Get_Relay_Energising_Key(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -70,7 +70,7 @@ Abstract            :Get Security Key
 
 Allocated Requirements  :
 
-Design Requirements     :
+Design Requirements     :SSDAC_DR_5177
 
 Interfaces
     Calls           :   None
@@ -104,8 +104,8 @@ INT16 Get_Relay_Energising_Key(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Preparatory_Relay_A(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -194,8 +194,8 @@ void Energise_Preparatory_Relay_A(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Preparatory_Relay_B(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -285,8 +285,8 @@ void Energise_Preparatory_Relay_B(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Vital_Relay_A(INT16 iKey)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -298,9 +298,9 @@ Abstract            :This fuction calls Energise the vital relay A and start Fee
                      check of Vital relay A.This function return TRUE
                      if the Security key is correct else FALSE
 
+Allocated Requirements	:	(SSDAC_SWRS_0456), (SSDAC_SWRS_0327)	
 
-
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5180, SSDAC_DR_5321, SSDAC_DR_5322, SSDAC_DR_5323
 
 Interfaces
     Calls           :   RELAYDRV.C-Energise_Relay_A()
@@ -351,8 +351,8 @@ void Energise_Vital_Relay_A(INT16 iKey)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Vital_Relay_B(INT16 iKey)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -363,10 +363,10 @@ Modification History:
 Abstract            :This fuction calls Energise the vital relay B and start Feedback check of
                      Vital relay B.This function return TRUE if the Security key is correct else FALSE
 
+Allocated Requirements	: 	(SSDAC_SWRS_0270), (SSDAC_SWRS_0377), (SSDAC_SWRS_0328)
 
-
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5181, SSDAC_DR_5324, SSDAC_DR_5325, SSDAC_DR_5326
+						
 
 Interfaces
     Calls           :RELAYDRV.C-Energise_Relay_B()
@@ -420,8 +420,8 @@ void Energise_Vital_Relay_B(INT16 iKey)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Preparatory_Relay_A(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -507,8 +507,8 @@ void DeEnergise_Preparatory_Relay_A(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Preparatory_Relay_B(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -591,8 +591,8 @@ void DeEnergise_Preparatory_Relay_B(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Vital_Relay_A(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -604,10 +604,10 @@ Abstract            :De-energise the Vital relay A, check the feedback signal to
                      vital relay A is in OFF state & also check the status of the US track because
                      vital relay A may be repeat relay of next block
 
+Allocated Requirements	:	(SSDAC_SWRS_0454), (SSDAC_SWRS_0369)
 
-Design Requirements     :
-
-
+Design Requirements		:	SSDAC_DR_5183, SSDAC_DR_5329, SSDAC_DR_5330, SSDAC_DR_5331
+	    	
 Interfaces
     Calls           :   RELAYDRV.C-DeEnergise_Relay_A()
                         SYS_MON.C-Start_FeedBack_Check()
@@ -647,8 +647,8 @@ void DeEnergise_Vital_Relay_A(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Vital_Relay_B(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -660,10 +660,9 @@ Abstract            :De-energise the vital relay B, check the feedback signal to
                      vital relay B is in OFF state & also check the status of the DS track because
                      vital relay B may be repeat relay of next block
 
+Allocated Requirements	: 	(SSDAC_SWRS_0268)
 
-
-Design Requirements     :
-
+Design Requirements		:	SSDAC_DR_5184, SSDAC_DR_5332, SSDAC_DR_5333
 
 Interfaces
     Calls           :   RELAYDRV.C-DeEnergise_Relay_B()
@@ -705,8 +704,8 @@ void DeEnergise_Vital_Relay_B(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Relay_A(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -716,8 +715,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Energise the Vital relay A,Change the SEED and Generate New Key
 
+Allocated Requirements	: 	(SSDAC_SWRS_0006), (SSDAC_SWRS_0274), (SSDAC_SWRS_0426), (SSDAC_SWRS_0327)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5185, SSDAC_DR_5334, SSDAC_DR_5335
 
 Interfaces
     Calls           :   Compiler defined-srand()
@@ -797,8 +797,8 @@ void Energise_Relay_B(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Relay_A(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -808,9 +808,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Deenergise the relay A,Change the SEED and Get New Key,Turn OFF the PWM
 
+Allocated Requirements	: 	(SSDAC_SWRS_0006)
 
-
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5186, SSDAC_DR_5336, SSDAC_DR_5337
 
 Interfaces
     Calls           :   Compiler defined-srand()
@@ -884,8 +884,8 @@ void DeEnergise_Relay_B(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void Energise_Relay_B(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -895,9 +895,13 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :Energise the Vital relay B,Change the SEED and Generate New Key
 
+Allocated Requirements	: 	(SSDAC_SWRS_0006), (SSDAC_SWRS_0132), (SSDAC_SWRS_0526),
+							(SSDAC_SWRS_0527), (SSDAC_SWRS_0426), 
+							(SSDAC_SWRS_0230), (SSDAC_SWRS_0460), (SSDAC_SWRS_0627), (SSDAC_SWRS_0726)
+							(SSDAC_SWRS_0628), (SSDAC_SWRS_0727)
+							(SSDAC_SWRS_0377), (SSDAC_SWRS_0328)
 
-
-Design Requirements     :
+Design Requirements		:	    	SSDAC_DR_5187, SSDAC_DR_5338, SSDAC_DR_5339
 
 Interfaces
     Calls           :   Compiler defined-srand()
@@ -970,8 +974,8 @@ void Energise_Relay_A(void)
 /******************************************************************************
 Component name      :RELAYDRV
 Module Name         :void DeEnergise_Relay_B(void)
-Created By          :
-Date Created        :
+Created By          :S Venkata Krishna
+Date Created        :15/12/2017
 Modification History:
                     |-------------|---------------|-----------------|-------------|------------------------------|
                     |   Rev No    |     PR        | ATR             |   Date      | Description                  |
@@ -981,8 +985,9 @@ Modification History:
                     |-------------|---------------|-----------------|----------- -|------------------------------|
 Abstract            :De-energise the Relay B,Change the SEED,Get New Key,Turn OFF PWM
 
+Allocated Requirements	: 	(SSDAC_SWRS_0006)
 
-Design Requirements     :
+Design Requirements		:	SSDAC_DR_5188, SSDAC_DR_5340, SSDAC_DR_5341    	
 
 Interfaces
     Calls           :   Compiler defined-srand()
