@@ -147,13 +147,13 @@ typedef enum   {
     /*Initailly wheel type is assigned to its not determined */
                  WHEEL_TYPE_NOT_DETERMINED = 0,
 
-    /*Enumarator to identify the train wheel with single sup signal */
+    /*Enumerator to identify the train wheel with single sup signal */
                  TRAIN_WHEEL_WITH_SINGLE_SUP,
 
-    /*Enumarator to identify the train wheel with double sup signal */
+    /*Enumerator to identify the train wheel with double sup signal */
                  TRAIN_WHEEL_WITH_DOUBLE_SUP,
 
-    /*Enumarator to identify the trolley wheel with double sup signal */
+    /*Enumerator to identify the trolley wheel with double sup signal */
                  TROLLEY_WHEEL_WITH_DOUBLE_SUP
                 }different_wheel_types;
 

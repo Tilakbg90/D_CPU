@@ -97,35 +97,35 @@ typedef enum {
 
 typedef enum
             {
-    /* Enumarator to assign feedback decrement state to IDLE */
+    /* Enumerator to assign feedback decrement state to IDLE */
             FEEDBACK_DECREMENT_IDLE =0,
 
-    /* Enumarator to decrement the Timer0 50ms timer */
+    /* Enumerator to decrement the Timer0 50ms timer */
             DECREMENT_FEEDBACK_TIMER0,
 
-    /* Enumarator to decrement the Timer1 50ms timer */
+    /* Enumerator to decrement the Timer1 50ms timer */
             DECREMENT_FEEDBACK_TIMER1,
 
-    /* Enumarator to decrement the Timer2 50ms timer */
+    /* Enumerator to decrement the Timer2 50ms timer */
             DECREMENT_FEEDBACK_TIMER2,
 
-    /* Enumarator to decrement the Timer3 50ms timer */
+    /* Enumerator to decrement the Timer3 50ms timer */
             DECREMENT_FEEDBACK_TIMER3,
 
-    /* Enumarator to decrement the Timer4 50ms timer */
+    /* Enumerator to decrement the Timer4 50ms timer */
             DECREMENT_FEEDBACK_TIMER4,
 
-    /* Enumarator to decrement the Timer5 50ms timer */
+    /* Enumerator to decrement the Timer5 50ms timer */
             DECREMENT_FEEDBACK_TIMER5,
 
-    /* Enumarator to decrement the Timer6 50ms timer */
+    /* Enumerator to decrement the Timer6 50ms timer */
             DECREMENT_FEEDBACK_TIMER6,
 
-    /* Enumarator to decrement the Timer7 50ms timer */
+    /* Enumerator to decrement the Timer7 50ms timer */
             DECREMENT_FEEDBACK_TIMER7,
-    /* Enumarator to decrement the Timer8 50ms timer */
+    /* Enumerator to decrement the Timer8 50ms timer */
             DECREMENT_FEEDBACK_TIMER8,
-    /* Enumarator to decrement the Timer9 50ms timer */
+    /* Enumerator to decrement the Timer9 50ms timer */
             DECREMENT_FEEDBACK_TIMER9
 
             }Timer_Decrement_state;
@@ -136,13 +136,13 @@ typedef enum
 
 typedef enum
             {
-    /* Enumarator to set the feedback checking to IDLE */
+    /* Enumerator to set the feedback checking to IDLE */
              FB_CHECK_IDLE  =0,
 
-    /* Enumarator to activate the feedback checking */
+    /* Enumerator to activate the feedback checking */
              FB_CHECK_DEBOUNCE_WAIT,
 
-    /* Enumarator to read the feedback signals */
+    /* Enumerator to read the feedback signals */
              FB_CHECK_PORT
 
             }feedBack_Check_State;
@@ -152,33 +152,33 @@ typedef enum
 
 typedef enum
             {
-    /*Enumarator to check the preparatory relay status in energize condition*/
+    /*Enumerator to check the preparatory relay status in energize condition*/
              FB_STATUS_RELAY_A_ON_ID = 0,
 
-    /*Enumarator to check the preparatory relay status in Deenergize condition*/
+    /*Enumerator to check the preparatory relay status in Deenergize condition*/
              FB_STATUS_RELAY_A_OFF_ID,
-    /*Enumarator to check the preparatory relay status in energize condition*/
+    /*Enumerator to check the preparatory relay status in energize condition*/
              FB_STATUS_RELAY_B_ON_ID,
 
-    /*Enumarator to check the preparatory relay status in Deenergize condition*/
+    /*Enumerator to check the preparatory relay status in Deenergize condition*/
              FB_STATUS_RELAY_B_OFF_ID,
 
-    /* Enumarator to check the Vital relay A status in energize condition */
+    /* Enumerator to check the Vital relay A status in energize condition */
              FB_VITAL_RELAY_A_ON_ID,
 
-    /* Enumarator to check the Vital relay A status in Deenergize condition */
+    /* Enumerator to check the Vital relay A status in Deenergize condition */
              FB_VITAL_RELAY_A_OFF_ID,
 
-    /* Enumarator to check the Vital relay B status in energize condition */
+    /* Enumerator to check the Vital relay B status in energize condition */
              FB_VITAL_RELAY_B_ON_ID,
 
-    /* Enumarator to check the Vital relay B status in Deenergize condition */
+    /* Enumerator to check the Vital relay B status in Deenergize condition */
              FB_VITAL_RELAY_B_OFF_ID,
 
-    /* Enumarator to check the US track status  */
+    /* Enumerator to check the US track status  */
              US_TRACK_STATUS_CHECK_ID,
 
-    /* Enumarator to check the DS track status */
+    /* Enumerator to check the DS track status */
              DS_TRACK_STATUS_CHECK_ID
 
             }feedBack_ID;

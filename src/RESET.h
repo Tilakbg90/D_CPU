@@ -48,7 +48,7 @@
 
    /* Maximum Time limit for both the system has to be resetted simultaneously   */
 
-#define COOPERATIVE_RESET_MAX_TIMEOUT       (6000)
+#define COOPERATIVE_RESET_MAX_TIMEOUT       (66000UL)
 
 /**********Reset button timeout ***************************************/
 
@@ -306,7 +306,7 @@ typedef struct  {
             reset_button_state_type_t State;
     /*  Timeout */
             UINT16  Timeout_ms;
-            UINT16  Timeout_300s;   /*added for 5min cooperative reset*/
+            UINT32  Timeout_300s;   /*added for 5min cooperative reset*/
 
 } reset_button_info_t;
 

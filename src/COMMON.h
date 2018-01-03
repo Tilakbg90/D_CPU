@@ -56,19 +56,19 @@ typedef signed long INT32;
 typedef unsigned long UINT32;
 /************************Defines the datatype*************************/
 
-/************** Enumarator for direction *********************************/
+/************** Enumerator for direction *********************************/
 typedef enum
         {
-    /* Enumarator to check the forward direction of the axles */
+    /* Enumerator to check the forward direction of the axles */
          FORWARD_DIRECTION =1,
 
-    /* Enumarator to check the reverse direction of the axles */
+    /* Enumerator to check the reverse direction of the axles */
          REVERSE_DIRECTION,
 
-    /* Enumarator to check whether the direction of the axles is not defined */
+    /* Enumerator to check whether the direction of the axles is not defined */
          DIRECTION_NOT_DEFINED
         }Wheel_Direction;
-/************** Enumarator for direction *********************************/
+/************** Enumerator for direction *********************************/
 
 
 /***************Other Macros used **************************************/
@@ -104,46 +104,46 @@ typedef enum
 typedef enum
             {
             DAC_UNIT_TYPE_DE = 0,
-    /* Enumarator to define SF Unit type of DAC system */
+    /* Enumerator to define SF Unit type of DAC system */
               DAC_UNIT_TYPE_SF , // 1
 
-    /* Enumarator to define EF Unit type of DAC system */
+    /* Enumerator to define EF Unit type of DAC system */
               DAC_UNIT_TYPE_EF, // 2
 
-    /* Enumarator to define CF Unit type of DAC system*/
+    /* Enumerator to define CF Unit type of DAC system*/
               DAC_UNIT_TYPE_CF, // 3
 
-    /* Enumarator to define D3A Unit type of DAC system */
+    /* Enumerator to define D3A Unit type of DAC system */
               DAC_UNIT_TYPE_D3_A, // 4
 
-    /* Enumarator to define D3B Unit type of DAC system */
+    /* Enumerator to define D3B Unit type of DAC system */
               DAC_UNIT_TYPE_D3_B, // 5
 
-    /* Enumarator to define D3C Unit type of DAC system */
+    /* Enumerator to define D3C Unit type of DAC system */
               DAC_UNIT_TYPE_D3_C, // 6
 
-    /* Enumarator to define 3D3S-SF Unit type of DAC system */
+    /* Enumerator to define 3D3S-SF Unit type of DAC system */
               DAC_UNIT_TYPE_3D_SF, // 7
 
-    /* Enumarator to define 3D3S-EF Unit type of DAC system */
+    /* Enumerator to define 3D3S-EF Unit type of DAC system */
               DAC_UNIT_TYPE_3D_EF, // 8
                     
-    /* Enumarator to define LCWS Unit type of DAC system */
+    /* Enumerator to define LCWS Unit type of DAC system */
               DAC_UNIT_TYPE_LCWS,   // 9
 
-    /* Enumarator to define LCWS Unit type of DAC system Dual Line*/
+    /* Enumerator to define LCWS Unit type of DAC system Dual Line*/
               DAC_UNIT_TYPE_LCWS_DL,   // 10
 
-    /* Enumarator to define D4A Unit type of DAC system */
+    /* Enumerator to define D4A Unit type of DAC system */
               DAC_UNIT_TYPE_D4_A, // 11
 
-    /* Enumarator to define D4B Unit type of DAC system */
+    /* Enumerator to define D4B Unit type of DAC system */
               DAC_UNIT_TYPE_D4_B, // 12
 
-    /* Enumarator to define D4C Unit type of DAC system */
+    /* Enumerator to define D4C Unit type of DAC system */
               DAC_UNIT_TYPE_D4_C, // 13
 
-    /* Enumarator to define D4D Unit type of DAC system */
+    /* Enumerator to define D4D Unit type of DAC system */
               DAC_UNIT_TYPE_D4_D // 14
 
              }SSDAC_Unit_Type;
@@ -241,7 +241,7 @@ typedef enum
     for communication established between the units */
 
 #define MAXIMUM_COM_RETRIES             (3)
-#define MAXIMUM_OCCUPIED_COM_RETRIES       (100)
+#define MAXIMUM_OCCUPIED_COM_RETRIES       (3)
     /*  This is the command used for sending/recieving the reset information */
 #define READ_RESET_INFO                 0xAA
 
@@ -288,16 +288,16 @@ typedef enum
 
 typedef enum
             {
-    /* Enumarator to define Baud rate of 1200 */
+    /* Enumerator to define Baud rate of 1200 */
                BAUDRATE_1200 =0,
 
-    /* Enumarator to define Baud rate of 2400 */
+    /* Enumerator to define Baud rate of 2400 */
                BAUDRATE_2400,
 
-    /* Enumarator to define Baud rate of 9600 */
+    /* Enumerator to define Baud rate of 9600 */
                BAUDRATE_9600,
 
-    /* Enumarator to define Baud rate of 19200 */
+    /* Enumerator to define Baud rate of 19200 */
                BAUDRATE_19200
             }Baud_Rate_Config;
 
@@ -387,10 +387,10 @@ typedef enum
             
 /***************************LED states **************************************/
 typedef enum {
-    /* Enumarator to check the status of LED is ON */
+    /* Enumerator to check the status of LED is ON */
              ON =0,
 
-    /* Enumarator to check the status of LED is OFF */
+    /* Enumerator to check the status of LED is OFF */
              OFF
 
              }Led_State;
@@ -400,34 +400,34 @@ typedef enum {
 /**************COMMUNICATION SCHEDULER Process states *********************/
 
 typedef enum {
-    /* Enumarator to indicate that communication Scheduling is not yet started */
+    /* Enumerator to indicate that communication Scheduling is not yet started */
             COMM_SCHEDULER_NOT_STARTED = 0,
 
-    /* Enumarator to indicate that communication scheduler is IDLE */
+    /* Enumerator to indicate that communication scheduler is IDLE */
             COMM_SCHEDULER_IDLE,
 
-    /* Enumarator to check for modem channel free */
+    /* Enumerator to check for modem channel free */
             GET_MODEM_CHANNEL,
 
-    /* Enumarator to set the RS LOW for transmission */
+    /* Enumerator to set the RS LOW for transmission */
             SET_MODEM_TX_MODE,
 
-    /* Enumarator to wait for Data Encryption */
+    /* Enumerator to wait for Data Encryption */
             WAIT_FOR_DATA_ENCRYPT,
 
-    /* Enumarator to wait for carrier to stabilize */
+    /* Enumerator to wait for carrier to stabilize */
             WAIT_FOR_CARRIER_STABALISE,
 
-    /* Enumarator to transmit dummy bytes */
+    /* Enumerator to transmit dummy bytes */
             TRANSMIT_DUMMY_BYTES,
 
-    /* Enumarator to transmit the first telegram */
+    /* Enumerator to transmit the first telegram */
             TRANSMIT_TELEGRAM,
 
-    /* Enumarator to Hold Modem RS low */
+    /* Enumerator to Hold Modem RS low */
             HOLD_MODEM_RS_LOW,
 
-    /* Enumarator to check for error modem without the carrier*/
+    /* Enumerator to check for error modem without the carrier*/
             ERROR_MODEM_NO_CARRIER
 } comm_sch_state_t;
 
@@ -447,28 +447,28 @@ typedef enum {
 
 typedef enum
             {
-    /* Enumarator to indicate the recieve buffer empty */
+    /* Enumerator to indicate the recieve buffer empty */
             COM_RECV_BUFFER_EMPTY =0,
 
-    /* Enumarator to get the Source address */
+    /* Enumerator to get the Source address */
             COM_RECV_SRC_ADDR,
 
-    /* Enumarator to get the data ID */
+    /* Enumerator to get the data ID */
             COM_RECV_DATA_ID,
 
-    /* Enumarator to get the data bytes */
+    /* Enumerator to get the data bytes */
             COM_RECV_DATA_BYTES,
 
-    /* Enumarator to decrypt the data bytes */
+    /* Enumerator to decrypt the data bytes */
             COM_DECRYPT_DATA_BYTES,
 
-    /* Enumarator to check for CRC */
+    /* Enumerator to check for CRC */
             COM_CHECK_CRC16,
 
-    /* Enumarator to check the valid message */
+    /* Enumerator to check the valid message */
             COM_VALID_MESSAGE,
 
-    /* Enumarator to check the Invalid message */
+    /* Enumerator to check the Invalid message */
             COM_INVALID_MESSAGE
 
             }com_receive_state;
@@ -477,37 +477,37 @@ typedef enum
 
 /****************Relay Process states ***************************/
 typedef enum {
-    /* Enumarator to indicate that relay manager is not started */
+    /* Enumerator to indicate that relay manager is not started */
             RELAY_MANAGER_NOT_STARTED = 0,
 
-    /* Enumarator to wait for remote clear in ATC */
+    /* Enumerator to wait for remote clear in ATC */
             ATC_WAIT_FOR_REMOTE_CLEAR,
 
-    /* Enumarator to wait for pilot train */
+    /* Enumerator to wait for pilot train */
             WAIT_FOR_PILOT_TRAIN,
 
-    /* Enumarator to pilot train in section */
+    /* Enumerator to pilot train in section */
             PILOT_TRAIN_IN_SECTION,
 
-    /* Enumarator to no train in section */
+    /* Enumerator to no train in section */
             NO_TRAIN_IN_SECTION,
 
-    /* Enumarator to train in section */
+    /* Enumerator to train in section */
             TRAIN_IN_SECTION,
 
-    /* Enumarator to check for DAC defective */
+    /* Enumerator to check for DAC defective */
             DAC_DEFECTIVE,
 
-    /* Enumarator to check for DAC reset process */
+    /* Enumerator to check for DAC reset process */
             DAC_RESET_PROGRESS,
 
-    /* Enumarator to check the repeater relay ON */
+    /* Enumerator to check the repeater relay ON */
             DAC_REPEATER_RELAY_ON,
 
-    /* Enumarator to check the repeater relay OFF */
+    /* Enumerator to check the repeater relay OFF */
             DAC_REPEATER_RELAY_OFF,
 
-   /* Enumarator to indicate that relay manager is not started */
+   /* Enumerator to indicate that relay manager is not started */
             RELAY_MANAGER_IDLE
 
 } relay_state_type_t;
