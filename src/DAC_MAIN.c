@@ -141,6 +141,7 @@ extern void Initialise_DE_Reset_Monitor(void);
 extern void Start_DE_Reset_Monitor(void);
 extern void Update_DE_Reset_Monitor_State(void);
 extern void Update_DE_Relay_State(void);
+extern void Decrement_comm_check_50msTmr(void);
 
 extern unsigned int COM_DS_pkt_error_cnt,COM_US_pkt_error_cnt;
 extern BYTE Reset_pressed __attribute__((persistent));  
@@ -562,7 +563,7 @@ void Initialise_System(void)
 
     // Speed Detection Timer - 1
     T1CON = 0;
-    T1CONbits.TCKPS = 0b10;     // Timer Prescaler is 1:64. So, 62.5nS * 64 = 4uS is the Clock to Timer
+    T1CONbits.TCKPS = 0b11;     // Timer Prescaler is 1:64. So, 62.5nS * 64 = 4uS is the Clock to Timer
     TMR1 = 0;
     PR1 = 0xFFFF;
     IEC0bits.T1IE = 0;
@@ -2376,6 +2377,7 @@ void Control_DAC_Type_SF(void)
             Start_Sys_Mon_Decrement_50msTmr();          /* from sys_mon.c */
             Decrement_SPI_50msTmr();                    /* from comm_sm.c */
             Decrement_Err_display_50msTmr();
+            Decrement_comm_check_50msTmr();
         }
         if (IFS1bits.T5IF)
         {
@@ -2954,6 +2956,7 @@ void Control_DAC_Type_EF(void)
             Start_Sys_Mon_Decrement_50msTmr();          /* from sys_mon.c  */
             Decrement_SPI_50msTmr();                    /* from comm_sm.c  */
             Decrement_Err_display_50msTmr();
+            Decrement_comm_check_50msTmr();
         }
         if (IFS1bits.T5IF)
         {

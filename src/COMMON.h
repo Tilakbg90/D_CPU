@@ -284,6 +284,12 @@ typedef enum
         /* Macro to check the Unit2 7 segment display */
 #define SEVEN_SEGMENT_UNIT2             (2)
 
+            /*50ms timmer
+             2minutes = 120000ms
+             So 2400 ticks of 50ms timer is required to reach 2mins
+             */
+#define COMM_ERROR_WAIT_TIME            (2400)            
+            
 /************ Serial Communication related definitions (for 40MHz) ***********/
 
 typedef enum
@@ -1400,6 +1406,21 @@ union def_SPI_Failure
         unsigned int unused:13;
     } fail_bits;
 };
+
+typedef enum
+{
+    COMM_GOOD,
+    COMM_FAILED
+}Comm_state;
+
+typedef struct
+{
+    Comm_state State;
+    UINT16 Wait_timeout;
+    BYTE Track_counts[10]; //count lengths in communication
+    BYTE Local_counts[10];
+    BOOL Wheel_match_fail;
+}comm_fail_check;
 
 extern union def_SPI_Failure SPI_Failure;
 

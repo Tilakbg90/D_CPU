@@ -73,6 +73,8 @@ const UINT16 uiCOM1_BalanceTicks_Table[2][2] = {
     };
 
  /*near*/  comm_sch_info_t US_Sch_Info;
+           extern comm_fail_check comm_check_EF1;
+           extern comm_fail_check comm_check_EF2;
 
 
 comm_a_countdown_t Comm_A_CountDown =
@@ -2141,7 +2143,7 @@ void Process_US_Axle_Count_Message(void)
     wordtype_t Axle_CountValue;
     bitadrb_t  SrcMsgAdr,DestMsgAdr,Buffer;
     bitadrb_t  DAC_Config,Flags1,Flags2;
-    BYTE uchDirection;
+    BYTE uchDirection,uchTrack;
     BYTE uchState =0;
 
 
@@ -2307,7 +2309,42 @@ void Process_US_Axle_Count_Message(void)
     Axle_CountValue.Byte.Lo = Com1RecvObject.Msg_Buffer[COM_AXLE_COUNT_LO_OFFSET];
     Axle_CountValue.Byte.Hi = Com1RecvObject.Msg_Buffer[COM_AXLE_COUNT_HI_OFFSET];
 
+    if(DIP_Switch_Info.Flags.Is_DAC_CPU1)
+    {
+        switch(DIP_Switch_Info.DAC_Unit_Type)
+        {
+            case DAC_UNIT_TYPE_SF:
+                break;
+            case DAC_UNIT_TYPE_EF:
+                if(comm_check_EF1.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_EF1.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            default:
+                break;
+        }
+        
+    }
+    else
+    {
+        switch(DIP_Switch_Info.DAC_Unit_Type)
+        {
+            case DAC_UNIT_TYPE_SF:
+                break;
+            case DAC_UNIT_TYPE_EF:
+                if(comm_check_EF2.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_EF2.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            default:
+                break;
+        }
 
+    }
 
     Update_SM_US_Remote_Axle_Counts(Axle_CountValue.Byte.Lo,Axle_CountValue.Byte.Hi);
 

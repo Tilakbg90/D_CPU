@@ -564,15 +564,73 @@ void Monitor_Supervisory_Pulse(void)
 
 void Convert_Timer_Value_To_Speed(void)
 {
+    UINT16 temp_speed = (UINT16)(LU_Speed_Info.TimerValue/10);
+    if(temp_speed > 1400)
+    {
+        LU_Speed_Info.SpeedValue = 0;
+    }
+    else if(temp_speed > 1300)
+    {
+        LU_Speed_Info.SpeedValue = 10;
+    }
+    else if(temp_speed > 1200)
+    {
+        LU_Speed_Info.SpeedValue = 20;
+    }
+    else if(temp_speed > 1100)
+    {
+        LU_Speed_Info.SpeedValue = 30;
+    }
+    else if(temp_speed > 950)
+    {
+        LU_Speed_Info.SpeedValue = 40;
+    }
+    else if(temp_speed > 800)
+    {
+        LU_Speed_Info.SpeedValue = 50;
+    }
+    else if(temp_speed > 600)
+    {
+        LU_Speed_Info.SpeedValue = 60;
+    }
+    else if(temp_speed > 500)
+    {
+        LU_Speed_Info.SpeedValue = 70;
+    }
+    else if(temp_speed > 400)
+    {
+        LU_Speed_Info.SpeedValue = 80;
+    }
+    else if(temp_speed > 250)
+    {
+        LU_Speed_Info.SpeedValue = 90;
+    }
+    else if(temp_speed > 130)
+    {
+        LU_Speed_Info.SpeedValue = 100;
+    }
+    else if(temp_speed > 60)
+    {
+        LU_Speed_Info.SpeedValue = 200;
+    }
+    else if(temp_speed > 45)
+    {
+        LU_Speed_Info.SpeedValue = 300;
+    }    
+    else
+    {
+        LU_Speed_Info.SpeedValue = 350;        
+    }
+#if 0
     if(LU_Speed_Info.TimerValue > 33501)
     {
         LU_Speed_Info.SpeedValue = 0;
     }
-    if(LU_Speed_Info.TimerValue > 33500)
+    if(LU_Speed_Info.TimerValue > 33500)//10 to 49 -> 5
     {
         LU_Speed_Info.SpeedValue = 5;
     }
-    else if(LU_Speed_Info.TimerValue > 15600)
+    else if(LU_Speed_Info.TimerValue > 15600) //50->10
     {
         LU_Speed_Info.SpeedValue = 10;
     }
@@ -676,6 +734,7 @@ void Convert_Timer_Value_To_Speed(void)
     {
         LU_Speed_Info.SpeedValue = 300;
     }
+#endif
 }
 /*********************************************************************
 Component name      :AXLE_MON

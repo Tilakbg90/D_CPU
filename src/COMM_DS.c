@@ -73,8 +73,8 @@ const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
     };
 
  /*near*/  comm_sch_info_t DS_Sch_Info;
-
-
+           extern comm_fail_check comm_check_SF1;
+           extern comm_fail_check comm_check_SF2;
 
 comm_b_countdown_t Comm_B_CountDown =
             {MAXIMUM_COM_RETRIES, MAXIMUM_COM_RETRIES,
@@ -2265,6 +2265,7 @@ void Process_DS_Axle_Count_Message(void)
     BYTE uchDirection;
     BYTE uchState = 0;
     BYTE Local_Count;
+    BYTE uchTrack;
 
 
     DAC_Config.Byte = Com2RecvObject.Msg_Buffer[COM_DAC_CONFIG_OFFSET];
@@ -2427,7 +2428,42 @@ void Process_DS_Axle_Count_Message(void)
     Axle_CountValue.Byte.Lo = Com2RecvObject.Msg_Buffer[COM_AXLE_COUNT_LO_OFFSET];
     Axle_CountValue.Byte.Hi = Com2RecvObject.Msg_Buffer[COM_AXLE_COUNT_HI_OFFSET];
 
+    if(DIP_Switch_Info.Flags.Is_DAC_CPU1)
+    {
+        switch(DIP_Switch_Info.DAC_Unit_Type)
+        {
+            case DAC_UNIT_TYPE_SF:
+                if(comm_check_SF1.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_SF1.Track_counts[uchTrack] = Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            case DAC_UNIT_TYPE_EF:
+                break;
+            default:
+                break;
+        }
+        
+    }
+    else
+    {
+        switch(DIP_Switch_Info.DAC_Unit_Type)
+        {
+            case DAC_UNIT_TYPE_SF:
+                if(comm_check_SF2.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_SF2.Track_counts[uchTrack] = Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            case DAC_UNIT_TYPE_EF:
+                break;
+            default:
+                break;
+        }
 
+    }
 
     Local_Count = (BYTE) Axle_CountValue.Word;
 

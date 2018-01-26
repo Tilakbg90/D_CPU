@@ -54,11 +54,17 @@
 #include "SYS_MON.h"
 #include "ERROR.h"
 #include "COMM_SM.h"
+#include "RESET.h"
+
 
 extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
 extern comm_a_countdown_t Comm_A_CountDown;         /* from comm_us.c */
 extern comm_b_countdown_t Comm_B_CountDown;         /* from comm_ds.c */
+extern msg_info_t   Com2RecvObject;    /* COM2: Message Receiving Buffer etc., */
+extern msg_info_t   Com1RecvObject;    /* COM2: Message Receiving Buffer etc., */
+extern ds_section_mode DS_Section_Mode;            /*structure to hold the DS section local and remote unit modes */
+extern us_section_mode US_Section_Mode;            /*structure to hold the US section local and remote unit modes */
 
 extern spi_transmit_object SPI_Transmit_Object;
 power_supply_status Power_Supply_Status;
@@ -67,6 +73,40 @@ sysmon_info_t SysMon_Info;
 feedback_info_t FeedBack_Info[MAXIMUM_TYPES_OF_FEEDBACKS];
 feedback_error FeedBack_Error;
 track_status_info Track_Status_Info;
+comm_fail_check comm_check_SF1=
+{
+    .State = COMM_GOOD,
+    .Wait_timeout = 0,
+    .Wheel_match_fail = 0,
+    .Track_counts = {0,0,0,0,0,0,0,0,0,0},
+    .Local_counts = {0,0,0,0,0,0,0,0,0,0}
+};
+comm_fail_check comm_check_SF2=
+{
+    .State = COMM_GOOD,
+    .Wait_timeout = 0,
+    .Wheel_match_fail = 0,
+    .Track_counts = {0,0,0,0,0,0,0,0,0,0},
+    .Local_counts = {0,0,0,0,0,0,0,0,0,0}
+};
+
+comm_fail_check comm_check_EF1=
+{
+    .State = COMM_GOOD,
+    .Wait_timeout = 0,
+    .Wheel_match_fail = 0,
+    .Track_counts = {0,0,0,0,0,0,0,0,0,0},
+    .Local_counts = {0,0,0,0,0,0,0,0,0,0}
+};
+comm_fail_check comm_check_EF2={
+    .State = COMM_GOOD,
+    .Wait_timeout = 0,
+    .Wheel_match_fail = 0,
+    .Track_counts = {0,0,0,0,0,0,0,0,0,0},
+    .Local_counts = {0,0,0,0,0,0,0,0,0,0}
+};
+
+
 
 void Update_FeedBack_State(BYTE uchID);
 void Read_FeedBack_Signal_Port(BYTE uchID);
@@ -1415,7 +1455,105 @@ Algorithm           :1.If the Start fed CPU1 doesn't receive proper message more
 void Check_Communication_Links_SF1(void)
 {
     BYTE uchFailure = FALSE;
+    BYTE uchTrack;
+    if(DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    {
+        if (Status.Flags.LU1_to_DS1_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU1_to_DS2_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU2_to_DS1_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU2_to_DS2_Link == COMMUNICATION_FAILED ||
+            Comm_B_CountDown.DS1_to_LU1 == TIMEOUT_EVENT ||
+            Comm_B_CountDown.DS2_to_LU1 == TIMEOUT_EVENT
+            )
+        {
+            Comm_B_CountDown.DS1_to_LU1 = MAXIMUM_COM_RETRIES;//re-assign so that comm does not fail constantly
+            Comm_B_CountDown.DS2_to_LU1 = MAXIMUM_COM_RETRIES;
+            //Comm has failed
+            //if Comm has failed for 1st time in occupied state, start the countdown for 2 mins
+            if(comm_check_SF1.State == COMM_GOOD )
+            {
+                comm_check_SF1.State = COMM_FAILED;
+                comm_check_SF1.Wait_timeout = COMM_ERROR_WAIT_TIME;
+                //Save local count values
+                if(Get_DS_AxleDirection() == (BYTE)REVERSE_DIRECTION)
+                {
+                    //Track only if train is entering from reverse direction	(EF to SF)
+                    comm_check_SF1.Local_counts[0] = (BYTE)Get_DS_Rev_AxleCount();
+                    comm_check_SF1.Local_counts[1] = (BYTE)(Get_DS_Rev_AxleCount()>>8);
+                }
+                return; /*do not declare any error. Wait for timeout*/
+            }
+            else
+            {
+                if(comm_check_SF1.Wait_timeout != 0)
+                {
+                    //Check for local count values
+                    if(Get_DS_AxleDirection() == (BYTE)REVERSE_DIRECTION)
+                    {
+                        comm_check_SF1.Wheel_match_fail = 0;
+                        if(comm_check_SF1.Local_counts[0] != (BYTE)Get_DS_Rev_AxleCount())
+                            comm_check_SF1.Wheel_match_fail = 1;
+                        if(comm_check_SF1.Local_counts[1] != (BYTE)(Get_DS_Rev_AxleCount()>>8))
+                            comm_check_SF1.Wheel_match_fail = 1;
+                        if(comm_check_SF1.Wheel_match_fail)
+                        {
+                            // wheel has mismatched. declare direct out count and comm failures!
+                            Status.Flags.DS1_to_LU1_Link = COMMUNICATION_FAILED;
+                            Status.Flags.DS2_to_LU1_Link = COMMUNICATION_FAILED;
+                            Declare_DAC_Defective();
+                            Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                            Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
 
+                            Status.Flags.Direct_Out_Count = SET_HIGH;
+                            Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                        }
+                    }
+                    return; /*do not declare any error. Wait for timeout*/
+                }
+                //Communication has not been restored
+                // proceed in declaring the error.
+                Comm_B_CountDown.DS1_to_LU1 = TIMEOUT_EVENT;
+                Comm_B_CountDown.DS2_to_LU1 = TIMEOUT_EVENT;
+            }
+            //2mins countdown has elapsed, declare the error
+        }
+        else
+        {
+            //No Comm error
+            //if communication has been restored from failure state, check for the count
+            if (Com2RecvObject.State != (BYTE)COM_VALID_MESSAGE)
+                return;
+            if(comm_check_SF1.State == COMM_FAILED)
+            {
+                //if the wheel counts are unchanged, no error.
+                for(uchTrack = 0;uchTrack<10;uchTrack++)
+                    if(comm_check_SF1.Track_counts[uchTrack] != Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack])
+                        comm_check_SF1.Wheel_match_fail = 1;
+                if(comm_check_SF1.Wheel_match_fail)
+                {
+                    // wheel has mismatched. declare direct out count and comm failures!
+                    Status.Flags.DS1_to_LU1_Link = COMMUNICATION_FAILED;
+                    Status.Flags.DS2_to_LU1_Link = COMMUNICATION_FAILED;
+                    Declare_DAC_Defective();
+                    Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                    Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
+                    
+                    Status.Flags.Direct_Out_Count = SET_HIGH;
+                    Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                    
+                    comm_check_SF1.State = COMM_GOOD;
+                    return;
+                }    
+                //count matches, do not declare error
+            }   
+            comm_check_SF1.State = COMM_GOOD;
+        }
+    }
+    else if(DS_Section_Mode.Local_Unit == SYSTEM_CLEAR_MODE)
+    {
+        comm_check_SF1.State = COMM_GOOD;
+        comm_check_SF1.Wait_timeout = 0;
+    }
     if (Comm_B_CountDown.DS1_to_LU1 == TIMEOUT_EVENT)
     {
         Status.Flags.DS1_to_LU1_Link = COMMUNICATION_FAILED;
@@ -1510,6 +1648,107 @@ Algorithm           :1.If the Start fed CPU2 doesn't receive proper message more
 void Check_Communication_Links_SF2(void)
 {
     BYTE uchFailure = FALSE;
+    BYTE uchTrack;
+    
+        if(DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    {
+        if (Status.Flags.LU2_to_DS1_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU2_to_DS2_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU1_to_DS1_Link == COMMUNICATION_FAILED ||
+            Status.Flags.LU1_to_DS2_Link == COMMUNICATION_FAILED ||
+            Comm_B_CountDown.DS1_to_LU2 == TIMEOUT_EVENT ||
+            Comm_B_CountDown.DS2_to_LU2 == TIMEOUT_EVENT
+            )
+        {
+            Comm_B_CountDown.DS1_to_LU2 = MAXIMUM_COM_RETRIES;//re-assign so that comm does not fail constantly
+            Comm_B_CountDown.DS2_to_LU2 = MAXIMUM_COM_RETRIES;
+            //Comm has failed
+            //if Comm has failed for 1st time in occupied state, start the countdown for 2 mins
+            if(comm_check_SF2.State == COMM_GOOD )
+            {
+                comm_check_SF2.State = COMM_FAILED;
+                comm_check_SF2.Wait_timeout = COMM_ERROR_WAIT_TIME;
+                //Save local count values
+                if(Get_DS_AxleDirection() == (BYTE)REVERSE_DIRECTION)
+                {
+                    //Track only if train is entering from reverse direction	(EF to SF)
+                    comm_check_SF2.Local_counts[0] = (BYTE)Get_DS_Rev_AxleCount();
+                    comm_check_SF2.Local_counts[1] = (BYTE)(Get_DS_Rev_AxleCount()>>8);
+                }
+                return; /*do not declare any error. Wait for timeout*/
+            }
+            else
+            {
+                if(comm_check_SF2.Wait_timeout != 0)
+                {
+                    //Check for local count values
+                    if(Get_DS_AxleDirection() == (BYTE)REVERSE_DIRECTION)
+                    {
+                        comm_check_SF2.Wheel_match_fail = 0;
+                        if(comm_check_SF2.Local_counts[0] != (BYTE)Get_DS_Rev_AxleCount())
+                            comm_check_SF2.Wheel_match_fail = 1;
+                        if(comm_check_SF2.Local_counts[1] != (BYTE)(Get_DS_Rev_AxleCount()>>8))
+                            comm_check_SF2.Wheel_match_fail = 1;
+                        if(comm_check_SF2.Wheel_match_fail)
+                        {
+                            // wheel has mismatched. declare direct out count and comm failures!
+                            Status.Flags.DS1_to_LU2_Link = COMMUNICATION_FAILED;
+                            Status.Flags.DS2_to_LU2_Link = COMMUNICATION_FAILED;
+                            Declare_DAC_Defective();
+                            Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                            Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
+
+                            Status.Flags.Direct_Out_Count = SET_HIGH;
+                            Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                        }
+                    }
+                    return; /*do not declare any error. Wait for timeout*/
+                }
+                Comm_B_CountDown.DS1_to_LU2 = TIMEOUT_EVENT;
+                Comm_B_CountDown.DS2_to_LU2 = TIMEOUT_EVENT;
+                //Communication has not been restored
+                // proceed in declaring the error.
+                
+            }
+            //2mins countdown has elapsed, declare the error
+        }
+        else
+        {
+            //No Comm error
+            //if communication has been restored from failure state, check for the count
+            if (Com2RecvObject.State != (BYTE)COM_VALID_MESSAGE)
+                return;
+            if(comm_check_SF2.State == COMM_FAILED)
+            {
+                //if the wheel counts are unchanged, no error.
+                for(uchTrack = 0;uchTrack<10;uchTrack++)
+                    if(comm_check_SF2.Track_counts[uchTrack] != Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack])
+                        comm_check_SF2.Wheel_match_fail = 1;
+                if(comm_check_SF2.Wheel_match_fail)
+                {
+                    // wheel has mismatched. declare direct out count and comm failures!
+                    Status.Flags.DS1_to_LU2_Link = COMMUNICATION_FAILED;
+                    Status.Flags.DS2_to_LU2_Link = COMMUNICATION_FAILED;
+                    Declare_DAC_Defective();
+                    Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                    Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
+                    
+                    Status.Flags.Direct_Out_Count = SET_HIGH;
+                    Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                    
+                    comm_check_SF2.State = COMM_GOOD;
+                    return;
+                }    
+                //count matches, do not declare error
+            }   
+            comm_check_SF2.State = COMM_GOOD;
+        }
+    }
+    else if(DS_Section_Mode.Local_Unit == SYSTEM_CLEAR_MODE)
+    {
+        comm_check_SF2.State = COMM_GOOD;
+        comm_check_SF2.Wait_timeout = 0;
+    }
 
     if (Comm_B_CountDown.DS1_to_LU2 == TIMEOUT_EVENT)
     {
@@ -1994,7 +2233,106 @@ Algorithm           :1.If the End fed CPU1 doesn't receive proper message more t
 void Check_Communication_Links_EF1(void)
 {
     BYTE uchFailure = FALSE;
+    BYTE uchTrack;
+    if(US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    {
+        if (Status.Flags.LU1_to_US1_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU1_to_US2_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU2_to_US1_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU2_to_US2_Link == COMMUNICATION_FAILED ||
+            Comm_A_CountDown.US1_to_LU1 == TIMEOUT_EVENT ||
+            Comm_A_CountDown.US2_to_LU1 == TIMEOUT_EVENT
+            )
+        {
+            Comm_A_CountDown.US1_to_LU1 = MAXIMUM_COM_RETRIES;//re-assign so that comm does not fail constantly
+            Comm_A_CountDown.US2_to_LU1 = MAXIMUM_COM_RETRIES;
+            //Comm has failed
+            //if Comm has failed for 1st time in occupied state, start the countdown for 2 mins
+            if(comm_check_EF1.State == COMM_GOOD )
+            {
+                comm_check_EF1.State = COMM_FAILED;
+                comm_check_EF1.Wait_timeout = COMM_ERROR_WAIT_TIME;
+                //Save local count values
+                if(Get_US_AxleDirection() == (BYTE)FORWARD_DIRECTION)
+                {
+                    //Track only if train is entering from reverse direction	(EF to SF)
+                    comm_check_EF1.Local_counts[0] = (BYTE)Get_US_Fwd_AxleCount();
+                    comm_check_EF1.Local_counts[1] = (BYTE)(Get_US_Fwd_AxleCount()>>8);
+                }
+                return; /*do not declare any error. Wait for timeout*/
+            }
+            else
+            {
+                if(comm_check_EF1.Wait_timeout != 0)
+                {
+                    //Check for local count values
+                    if(Get_US_AxleDirection() == (BYTE)FORWARD_DIRECTION)
+                    {
+                        comm_check_EF1.Wheel_match_fail = 0;
+                        if(comm_check_EF1.Local_counts[0] != (BYTE)Get_US_Fwd_AxleCount())
+                            comm_check_EF1.Wheel_match_fail = 1;
+                        if(comm_check_EF1.Local_counts[1] != (BYTE)(Get_US_Fwd_AxleCount()>>8))
+                            comm_check_EF1.Wheel_match_fail = 1;
+                        if(comm_check_EF1.Wheel_match_fail)
+                        {
+                            // wheel has mismatched. declare direct out count and comm failures!
+                            Status.Flags.US1_to_LU1_Link = COMMUNICATION_FAILED;
+                            Status.Flags.US2_to_LU1_Link = COMMUNICATION_FAILED;
+                            Declare_DAC_Defective();
+                            Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                            Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
 
+                            Status.Flags.Direct_Out_Count = SET_HIGH;
+                            Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                        }
+                    }
+                    return; /*do not declare any error. Wait for timeout*/
+                }
+                Comm_A_CountDown.US1_to_LU1 = TIMEOUT_EVENT;
+                Comm_A_CountDown.US2_to_LU1 = TIMEOUT_EVENT;
+                //Communication has not been restored
+                // proceed in declaring the error.
+                
+            }
+            //2mins countdown has elapsed, declare the error
+        }
+        else
+        {
+            //No Comm error
+            //if communication has been restored from failure state, check for the count
+            if (Com1RecvObject.State != (BYTE)COM_VALID_MESSAGE)
+                return;
+            if(comm_check_EF1.State == COMM_FAILED)
+            {
+                //if the wheel counts are unchanged, no error.
+                for(uchTrack = 0;uchTrack<10;uchTrack++)
+                    if(comm_check_EF1.Track_counts[uchTrack] != Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack])
+                        comm_check_EF1.Wheel_match_fail = 1;
+                if(comm_check_EF1.Wheel_match_fail)
+                {
+                    // wheel has mismatched. declare direct out count and comm failures!
+                    Status.Flags.US1_to_LU1_Link = COMMUNICATION_FAILED;
+                    Status.Flags.US2_to_LU1_Link = COMMUNICATION_FAILED;
+                    Declare_DAC_Defective();
+                    Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                    Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
+                    
+                    Status.Flags.Direct_Out_Count = SET_HIGH;
+                    Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                    
+                    comm_check_EF1.State = COMM_GOOD;
+                    return;
+                }    
+                //count matches, do not declare error
+            }   
+            comm_check_EF1.State = COMM_GOOD;
+        }
+    }
+    else if(US_Section_Mode.Local_Unit == SYSTEM_CLEAR_MODE)
+    {
+        comm_check_EF1.State = COMM_GOOD;
+        comm_check_EF1.Wait_timeout = 0;
+    }
     if (Comm_A_CountDown.US1_to_LU1 == TIMEOUT_EVENT)
     {
         Status.Flags.US1_to_LU1_Link = COMMUNICATION_FAILED;
@@ -2093,7 +2431,106 @@ Algorithm           :1.If the End fed CPU2 doesn't receive proper message more t
 void Check_Communication_Links_EF2(void)
 {
     BYTE uchFailure = FALSE;
+    BYTE uchTrack;
+    if(US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    {
+        if (Status.Flags.LU2_to_US1_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU2_to_US2_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU1_to_US1_Link == COMMUNICATION_FAILED ||
+        Status.Flags.LU1_to_US2_Link == COMMUNICATION_FAILED ||
+            Comm_A_CountDown.US1_to_LU2 == TIMEOUT_EVENT ||
+            Comm_A_CountDown.US2_to_LU2 == TIMEOUT_EVENT
+            )
+        {
+            Comm_A_CountDown.US1_to_LU2 = MAXIMUM_COM_RETRIES;//re-assign so that comm does not fail constantly
+            Comm_A_CountDown.US2_to_LU2 = MAXIMUM_COM_RETRIES;
+            //Comm has failed
+            //if Comm has failed for 1st time in occupied state, start the countdown for 2 mins
+            if(comm_check_EF2.State == COMM_GOOD )
+            {
+                comm_check_EF2.State = COMM_FAILED;
+                comm_check_EF2.Wait_timeout = COMM_ERROR_WAIT_TIME;
+                //Save local count values
+                if(Get_US_AxleDirection() == (BYTE)FORWARD_DIRECTION)
+                {
+                    //Track only if train is entering from reverse direction	(EF to SF)
+                    comm_check_EF2.Local_counts[0] = (BYTE)Get_US_Fwd_AxleCount();
+                    comm_check_EF2.Local_counts[1] = (BYTE)(Get_US_Fwd_AxleCount()>>8);
+                }
+                return; /*do not declare any error. Wait for timeout*/
+            }
+            else
+            {
+                if(comm_check_EF2.Wait_timeout != 0)
+                {
+                    //Check for local count values
+                    if(Get_US_AxleDirection() == (BYTE)FORWARD_DIRECTION)
+                    {
+                        comm_check_EF2.Wheel_match_fail = 0;
+                        if(comm_check_EF2.Local_counts[0] != (BYTE)Get_US_Fwd_AxleCount())
+                            comm_check_EF2.Wheel_match_fail = 1;
+                        if(comm_check_EF2.Local_counts[1] != (BYTE)(Get_US_Fwd_AxleCount()>>8))
+                            comm_check_EF2.Wheel_match_fail = 1;
+                        if(comm_check_EF2.Wheel_match_fail)
+                        {
+                            // wheel has mismatched. declare direct out count and comm failures!
+                            Status.Flags.US1_to_LU2_Link = COMMUNICATION_FAILED;
+                            Status.Flags.US2_to_LU2_Link = COMMUNICATION_FAILED;
+                            Declare_DAC_Defective();
+                            Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                            Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
 
+                            Status.Flags.Direct_Out_Count = SET_HIGH;
+                            Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                        }                        
+                    }
+                    return; /*do not declare any error. Wait for timeout*/
+                }
+                Comm_A_CountDown.US1_to_LU2 = TIMEOUT_EVENT;
+                Comm_A_CountDown.US2_to_LU2 = TIMEOUT_EVENT;
+                //Communication has not been restored
+                // proceed in declaring the error.
+                
+            }
+            //2mins countdown has elapsed, declare the error
+        }
+        else
+        {
+            //No Comm error
+            //if communication has been restored from failure state, check for the count
+            if (Com1RecvObject.State != (BYTE)COM_VALID_MESSAGE)
+                            return;
+            if(comm_check_EF2.State == COMM_FAILED)
+            {
+                //if the wheel counts are unchanged, no error.
+                for(uchTrack = 0;uchTrack<10;uchTrack++)
+                    if(comm_check_EF2.Track_counts[uchTrack] != Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack])
+                        comm_check_EF2.Wheel_match_fail = 1;
+                if(comm_check_EF2.Wheel_match_fail)
+                {
+                    // wheel has mismatched. declare direct out count and comm failures!
+                    Status.Flags.US1_to_LU2_Link = COMMUNICATION_FAILED;
+                    Status.Flags.US2_to_LU2_Link = COMMUNICATION_FAILED;
+                    Declare_DAC_Defective();
+                    Set_Error_Status_Byte(COMM1_LINK_FAIL_ID,Status.Byte[3]);
+                    Set_Error_Status_Byte(COMM2_LINK_FAIL_ID,Status.Byte[4]);
+                    
+                    Status.Flags.Direct_Out_Count = SET_HIGH;
+                    Set_Error_Status_Bit(DIRECT_OUT_ERROR_NUM);
+                    
+                    comm_check_EF2.State = COMM_GOOD;
+                    return;
+                }    
+                //count matches, do not declare error
+            }   
+            comm_check_EF2.State = COMM_GOOD;
+        }
+    }
+    else if(US_Section_Mode.Local_Unit == SYSTEM_CLEAR_MODE)
+    {
+        comm_check_EF2.State = COMM_GOOD;
+        comm_check_EF2.Wait_timeout = 0;
+    }
     if (Comm_A_CountDown.US1_to_LU2 == TIMEOUT_EVENT)
     {
         Status.Flags.US1_to_LU2_Link = COMMUNICATION_FAILED;
@@ -2977,4 +3414,26 @@ void Clear_Comm_DS_Failures(void)
     Status.Flags.DS1_to_LU2_Link = COMMUNICATION_OK;
     Status.Flags.DS2_to_LU1_Link = COMMUNICATION_OK;
     Status.Flags.DS2_to_LU2_Link = COMMUNICATION_OK;
+}
+
+
+void Decrement_comm_check_50msTmr(void)
+{
+    if(comm_check_SF1.Wait_timeout > 0)
+    {
+        comm_check_SF1.Wait_timeout = comm_check_SF1.Wait_timeout -1;
+    }
+    if(comm_check_SF2.Wait_timeout > 0)
+    {
+        comm_check_SF2.Wait_timeout = comm_check_SF2.Wait_timeout -1;
+    }
+    if(comm_check_EF1.Wait_timeout > 0)
+    {
+        comm_check_EF1.Wait_timeout = comm_check_EF1.Wait_timeout -1;
+    }
+    if(comm_check_EF2.Wait_timeout > 0)
+    {
+        comm_check_EF2.Wait_timeout = comm_check_EF2.Wait_timeout -1;
+    }
+    
 }
