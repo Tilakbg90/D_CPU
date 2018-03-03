@@ -1434,6 +1434,8 @@ void Update_3S_Relay_Counts(void)
         Update_Relay_A_Counts();
         Update_3S_Relay_B_Counts();                 /* from relaymgr.c */
         break;
+     default:
+         break;
     }
 }
 
@@ -1721,11 +1723,12 @@ References          :
 Derived Requirements:
 
 ********************************************************************************/
-Led_State led_a_status=OFF;
-Led_State led_b_status=OFF;
+
+
 
 void B_Sec_Led_drive(Led_State Led_status)
 {
+    static Led_State led_b_status=OFF;
     switch(Led_status)
     {
         case ON:
@@ -1745,12 +1748,15 @@ void B_Sec_Led_drive(Led_State Led_status)
               led_b_status = OFF;
             }
              break;
+        default:
+            break;
     }
 }
 
 
 void A_Sec_Led_drive(Led_State Led_status)
 {
+    static Led_State led_a_status=OFF;
     switch(Led_status)
     {
         case ON:

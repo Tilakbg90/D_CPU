@@ -58,7 +58,7 @@ extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from DAC_MAIN.c */
 extern checksum_info_t Checksum_Info;               /* from DAC_MAIN.c */
 extern ds_section_mode DS_Section_Mode;             /*from DAC_MAIN.c*/
 extern track_status_info Track_Status_Info;
-const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
+static const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
                         /*
                          * Communcation Sequence is LU1-RU1-LU2-RU2
                          * Message originated from Unit...
@@ -72,7 +72,7 @@ const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
     /* Receiving Unit CPU2 */   { 50,            600}
     };
 
- /*near*/  comm_sch_info_t DS_Sch_Info;
+ /*near*/  static comm_sch_info_t DS_Sch_Info;
            extern comm_fail_check comm_check_SF1;
            extern comm_fail_check comm_check_SF2;
            extern comm_fail_check comm_check_DS_CF1;
@@ -213,6 +213,9 @@ void SetupCOM2BaudRate(void)
                 break;
             case BAUDRATE_19200:
                 U2BRG = 207;
+                break;
+            default:
+                U2BRG = 415;
                 break;
         }
     }
@@ -378,6 +381,10 @@ void Initialise_DS_CommSch(void)
             Com2RecvObject.BytePeriod = BYTE_PERIOD_1MS;
             break;
         case BAUDRATE_19200:
+            Com2XmitObject.BytePeriod = BYTE_PERIOD_1MS;
+            Com2RecvObject.BytePeriod = BYTE_PERIOD_1MS;
+            break;
+        default:
             Com2XmitObject.BytePeriod = BYTE_PERIOD_1MS;
             Com2RecvObject.BytePeriod = BYTE_PERIOD_1MS;
             break;
@@ -765,6 +772,8 @@ void Update_DS_Sch_State(void)
             }
             break;
         case ERROR_MODEM_NO_CARRIER:
+            break;
+        default:
             break;
     }
 
@@ -2826,6 +2835,8 @@ void Process_3S_DS_AxleCount(bitadrb_t SrcAdr, UINT16 uiFwdAxleCount, UINT16 uiR
                Update_B_DS2_OUT_Count(uiRevAxleCount);
              }
             break;
+        default:
+            break;
         }
 }
 /*************************************************************************
@@ -3166,6 +3177,8 @@ void Configure_Modem_B (void)
             }
              break;
          case CONFIGURATION_COMPLETED:
+             break;
+         default:
              break;
          }
     }

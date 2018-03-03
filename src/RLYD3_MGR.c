@@ -2422,6 +2422,8 @@ void Process_D3_Local_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
                     Update_D3_C2_OUT_Count(uiFwdAxleCount);
                 }
             break;
+        default:
+            break;
 
         }
 }
@@ -2542,6 +2544,8 @@ void Process_D3_Peer_AxleCount(UINT16 uiFwdAxleCount,UINT16 uiRevAxleCount)
                     Update_D3_C1_IN_Count (uiRevAxleCount);
                     Update_D3_C1_OUT_Count(uiFwdAxleCount);
                 }
+            break;
+        default:
             break;
         }
 }
@@ -2667,6 +2671,8 @@ void Process_D3_Remote_AxleCount(bitadrb_t SrcAdr,SSDAC_Unit_Type Src_Unit_Type,
                     Update_D3_C2_IN_Count (uiRevAxleCount);
                     Update_D3_C2_OUT_Count(uiFwdAxleCount);
                 }
+            break;
+        default:
             break;
      }
 
@@ -2862,6 +2868,8 @@ void Process_D3_Local_Direction(BYTE uchDirection,UINT16 uiAxleCount)
                     }
             }
             break;
+        default:
+            break;
     }
 }
 /******************************************************************************
@@ -3047,6 +3055,8 @@ void  Process_D3_Peer_Direction(BYTE uchDirection,UINT16 uiAxleCount)
                         Update_D3_C1_OUT_AxleCount(uiAxleCount);
                     }
             }
+            break;
+        default:
             break;
     }
 }
@@ -3243,6 +3253,8 @@ void Process_D3_Remote_Direction(bitadrb_t SrcAdr ,SSDAC_Unit_Type Src_Unit_Type
                         Update_D3_C2_OUT_AxleCount(uiAxleCount);
                     }
                 }
+            break;
+        default:
             break;
       }
 }

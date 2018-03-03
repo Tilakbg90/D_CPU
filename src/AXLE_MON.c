@@ -66,7 +66,7 @@
 
 
 extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
- /*near*/  track_info_t Track_Info;
+ /*near*/  static track_info_t Track_Info;
 
 
 struct def_LU_Speed_Info LU_Speed_Info;
@@ -345,6 +345,7 @@ void Validate_PD_Signals(void)
 {
     bitadrb_t Track0_IO;
     bitadrb_t Temp_IO;
+    BYTE PD1S_pulse,PD2S_pulse;
 
     Monitor_Supervisory_Pulse();
     if(Track_Info.Wheel_Type == WHEEL_TYPE_NOT_DETERMINED)
@@ -352,7 +353,9 @@ void Validate_PD_Signals(void)
         Analyse_Supervisory_Sequence();
     }
     Track0_IO.Byte = (BYTE) 0;
-    if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY && PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
+    PD1S_pulse = PD1_PULSE_SECONDARY;
+    PD2S_pulse = PD2_PULSE_SECONDARY;
+    if(((BYTE)PD2_PULSE_MAIN == PD2S_pulse) && ((BYTE)PD1_PULSE_MAIN == PD1S_pulse))
     {
         Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
         Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
@@ -369,8 +372,9 @@ void Validate_PD_Signals(void)
         /* Before declaring error, Main and secondary pulses are compared once again for equality
            Because there may be some nano sec gap between main and secondary. By that time we should
            not declare error. */
-        if(PD2_PULSE_MAIN == PD2_PULSE_SECONDARY &&
-           PD1_PULSE_MAIN == PD1_PULSE_SECONDARY)
+        PD1S_pulse = PD1_PULSE_SECONDARY;
+        PD2S_pulse = PD2_PULSE_SECONDARY;        
+        if(((BYTE)PD2_PULSE_MAIN == PD2S_pulse) && ((BYTE)PD1_PULSE_MAIN == PD1S_pulse))
         {
            Temp_IO.Bit.b0 = PD2_PULSE_MAIN;
            Temp_IO.Bit.b1 = PD2_PULSE_SECONDARY;
@@ -1131,6 +1135,8 @@ void Determine_TrackState(BYTE uchPD_IO_Value)
             Declare_DAC_Defective();
             Set_Error_Status_Bit(AD_STATE_FAIL_ERROR_NUM);
             break;
+        default:
+                break;
      }
 
     Track_Info.State = (Axle_Counter_State)uchNewState;

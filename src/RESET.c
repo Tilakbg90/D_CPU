@@ -826,6 +826,8 @@ void Update_LCWS_Reset_Monitor_State(void)
                 break;
         case SF_RESET_SEQUENCE_COMPLETED:
                 break;
+        default:
+            break;
     }
 }
 
@@ -896,6 +898,8 @@ void Update_DE_Reset_Monitor_State(void)
                 break;
         case SF_RESET_SEQUENCE_COMPLETED:
                 break;
+        default:
+            break;
     }
 }
 
@@ -1058,6 +1062,8 @@ void Update_SF_Reset_Monitor_State(void)
                 break;
         case SF_RESET_SEQUENCE_COMPLETED:
                 break;
+        default:
+            break;
     }
 }
 /*********************************************************************
@@ -1529,6 +1535,8 @@ void Update_CF_Reset_Monitor_State(void)
              break;
         case CF_DS_RESET_SEQUENCE_COMPLETED:
             break;
+        default:
+            break;
       }
 
     switch(Reset_Info.CF.US_State)
@@ -1578,6 +1586,8 @@ void Update_CF_Reset_Monitor_State(void)
             }
              break;
         case CF_US_RESET_SEQUENCE_COMPLETED:
+            break;
+        default:
             break;
      }
 }
@@ -2566,6 +2576,8 @@ void Update_EF_Reset_Monitor_State(void)
             break;
         case EF_RESET_SEQUENCE_COMPLETED:
             break;
+        default:
+            break;
     }
 }
 /*********************************************************************
@@ -3130,6 +3142,8 @@ void Clear_Reset_Info(void)
         case DAC_UNIT_TYPE_DE:
             Reset_Info.SF.Flags.Peer_CPU_has_been_Reset1 = FALSE;
             
+            break;
+        default:
             break;
     }
     Reset_Button_Info.Timeout_ms = 0;

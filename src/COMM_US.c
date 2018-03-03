@@ -43,6 +43,7 @@
 
 #include "COMMON.h"
 #include "COMM_US.h"
+#include "COMM_DS.h"
 #include "CRC16.h"
 #include "RESET.h"
 #include "SYS_MON.h"
@@ -55,7 +56,7 @@
 extern  /*near*/  dac_status_t Status;                        /* from DAC_MAIN.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;          /* from DAC_MAIN.c */
 extern checksum_info_t Checksum_Info;                   /* from DAC_MAIN.c */
-
+extern ds_section_mode DS_Section_Mode;
 extern us_section_mode US_Section_Mode;                 /*from DAC_MAIN.c*/
 extern track_status_info Track_Status_Info;
 const UINT16 uiCOM1_BalanceTicks_Table[2][2] = {
@@ -220,6 +221,9 @@ void SetupCOM1BaudRate(void)
                 break;
             case BAUDRATE_19200:
                 U1BRG = 207;
+                break;
+            default:
+                U1BRG = 415;
                 break;
         }
      }
@@ -386,6 +390,10 @@ void Initialise_US_CommSch(void)
         case BAUDRATE_19200:
             Com1XmitObject.BytePeriod = BYTE_PERIOD_1MS;
             Com1RecvObject.BytePeriod = BYTE_PERIOD_1MS;
+            break;
+         default:
+            Com1XmitObject.BytePeriod = BYTE_PERIOD_1MS;
+            Com1RecvObject.BytePeriod = BYTE_PERIOD_1MS;             
             break;
         }
     }
@@ -779,6 +787,8 @@ void Update_US_Sch_State(void)
             }
             break;
         case ERROR_MODEM_NO_CARRIER:
+            break;
+        default:
             break;
     }
 
@@ -2324,16 +2334,22 @@ void Process_US_Axle_Count_Message(void)
                 }
                 break;
             case DAC_UNIT_TYPE_CF:
+            case DAC_UNIT_TYPE_3D_SF:
+            case DAC_UNIT_TYPE_3D_EF:
+                if(comm_check_US_CF1.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_US_CF1.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;                
             case DAC_UNIT_TYPE_D3_A:
             case DAC_UNIT_TYPE_D3_B:
             case DAC_UNIT_TYPE_D3_C:                
-            case DAC_UNIT_TYPE_3D_SF:
-            case DAC_UNIT_TYPE_3D_EF:
             case DAC_UNIT_TYPE_D4_A:                
             case DAC_UNIT_TYPE_D4_B:                
             case DAC_UNIT_TYPE_D4_C:                
             case DAC_UNIT_TYPE_D4_D:                
-                if(comm_check_US_CF1.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                if(comm_check_US_CF1.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
                 {
                     for(uchTrack = 0;uchTrack<10;uchTrack++)
                         comm_check_US_CF1.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
@@ -2361,16 +2377,22 @@ void Process_US_Axle_Count_Message(void)
                 }
                 break;
             case DAC_UNIT_TYPE_CF:
+            case DAC_UNIT_TYPE_3D_SF:
+            case DAC_UNIT_TYPE_3D_EF:
+                if(comm_check_US_CF2.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_US_CF2.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;                
             case DAC_UNIT_TYPE_D3_A:
             case DAC_UNIT_TYPE_D3_B:
             case DAC_UNIT_TYPE_D3_C:                
-            case DAC_UNIT_TYPE_3D_SF:
-            case DAC_UNIT_TYPE_3D_EF:
             case DAC_UNIT_TYPE_D4_A:                
             case DAC_UNIT_TYPE_D4_B:                
             case DAC_UNIT_TYPE_D4_C:                
             case DAC_UNIT_TYPE_D4_D:                
-                if(comm_check_US_CF2.State == COMM_GOOD && US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                if(comm_check_US_CF2.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
                 {
                     for(uchTrack = 0;uchTrack<10;uchTrack++)
                         comm_check_US_CF2.Track_counts[uchTrack] = Com1RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
@@ -2644,6 +2666,8 @@ void Process_3S_US_AxleCount(bitadrb_t SrcAdr,UINT16 uiFwdAxleCount,UINT16 uiRev
               Update_A_US2_OUT_Count(uiRevAxleCount);
             }
              break;
+        default:
+            break;
         }
 
 }
@@ -3071,6 +3095,8 @@ void Configure_Modem_A (void)
             }
              break;
          case CONFIGURATION_COMPLETED:
+             break;
+         default:
              break;
          }
    }

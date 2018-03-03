@@ -55,12 +55,12 @@
 #include "ERROR.h"
 #include "COMM_SM.h"
 #include "RESET.h"
-
-
+#include "COMM_DS.h"
+#include "COMM_US.h"
 extern  /*near*/  dac_status_t Status;                    /* from dac_main.c */
 extern  /*near*/  dip_switch_info_t DIP_Switch_Info;      /* from dac_main.c */
-extern comm_a_countdown_t Comm_A_CountDown;         /* from comm_us.c */
-extern comm_b_countdown_t Comm_B_CountDown;         /* from comm_ds.c */
+
+
 extern msg_info_t   Com2RecvObject;    /* COM2: Message Receiving Buffer etc., */
 extern msg_info_t   Com1RecvObject;    /* COM2: Message Receiving Buffer etc., */
 extern ds_section_mode DS_Section_Mode;            /*structure to hold the DS section local and remote unit modes */
@@ -344,6 +344,8 @@ void Update_Sys_Mon_State(void)
             }
             SysMon_Info.State = SYS_CHECK_BOARDS;
             break;
+        default:
+            break;
     }
 }
 
@@ -562,6 +564,8 @@ void Decrement_Sys_Mon_50msTmr(void)
              }
              SysMon_Info.Decrement_State = FEEDBACK_DECREMENT_IDLE;
              break;
+        default:
+            break;
     }
 }
 /******************************************************************************
@@ -705,6 +709,8 @@ void Start_FeedBack_Check(feedBack_ID uchID)
                break;
             }
             FeedBack_Info[uchID].Timeout_50ms = TRACK_STATUS_COMPARE_WAIT_TIMEOUT;
+            break;
+        default:
             break;
     }
 
@@ -1879,7 +1885,22 @@ void Check_Communication_US_CF1(void)
 {
     BYTE uchFailure = FALSE;
     BYTE uchTrack;
-    if(US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    BYTE Sys_mode;
+    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D      )
+    {
+        Sys_mode = (BYTE)DS_Section_Mode.Local_Unit;
+    }
+    else
+    {
+        Sys_mode = (BYTE)US_Section_Mode.Local_Unit;
+    }
+    if(Sys_mode == (BYTE)SYSTEM_OCCUPIED_MODE)
     {
         if (Status.Flags.LU1_to_US1_Link == COMMUNICATION_FAILED ||
             Status.Flags.LU1_to_US2_Link == COMMUNICATION_FAILED ||
@@ -1898,7 +1919,9 @@ void Check_Communication_US_CF1(void)
                 comm_check_US_CF1.State = COMM_FAILED;
                 comm_check_US_CF1.Wait_timeout = COMM_ERROR_WAIT_TIME;
                 //Save local count values
-                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF)
+                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A )
                 {
 //                    if(Get_US_AxleDirection() == (BYTE)REVERSE_DIRECTION)
 //                    {
@@ -1923,7 +1946,9 @@ void Check_Communication_US_CF1(void)
                 if(comm_check_US_CF1.Wait_timeout != 0)
                 {
                     //Check for local count values
-                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF)
+                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A )
                     {
                         comm_check_US_CF1.Wheel_match_fail = 0;
 //                         if(Get_US_AxleDirection() == (BYTE)REVERSE_DIRECTION)
@@ -2109,7 +2134,22 @@ void Check_Communication_US_CF2(void)
 {
     BYTE uchFailure = FALSE;
     BYTE uchTrack;
-    if(US_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+    BYTE Sys_mode;
+    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+       DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D      )
+    {
+        Sys_mode = (BYTE)DS_Section_Mode.Local_Unit;
+    }
+    else
+    {
+        Sys_mode = (BYTE)US_Section_Mode.Local_Unit;
+    }
+    if(Sys_mode == (BYTE)SYSTEM_OCCUPIED_MODE)
     {
         if (Status.Flags.LU2_to_US1_Link == COMMUNICATION_FAILED ||
             Status.Flags.LU2_to_US2_Link == COMMUNICATION_FAILED ||
@@ -2128,7 +2168,9 @@ void Check_Communication_US_CF2(void)
                 comm_check_US_CF2.State = COMM_FAILED;
                 comm_check_US_CF2.Wait_timeout = COMM_ERROR_WAIT_TIME;
                 //Save local count values
-                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF  )
+                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A )
                 {
 //                    if(Get_US_AxleDirection() == (BYTE)REVERSE_DIRECTION)
 //                    {
@@ -2153,7 +2195,9 @@ void Check_Communication_US_CF2(void)
                 if(comm_check_US_CF2.Wait_timeout != 0)
                 {
                     //Check for local count values
-                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF )
+                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_SF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_A ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_A )
                 {
                     comm_check_US_CF2.Wheel_match_fail = 0;
 //                    if(Get_US_AxleDirection() == (BYTE)REVERSE_DIRECTION)
@@ -2359,7 +2403,12 @@ void Check_Communication_DS_CF1(void)
                 comm_check_DS_CF1.State = COMM_FAILED;
                 comm_check_DS_CF1.Wait_timeout = COMM_ERROR_WAIT_TIME;
                 //Save local count values
-                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF )
+                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D )
                 {
 //                    if(Get_DS_AxleDirection() == (BYTE)FORWARD_DIRECTION)
 //                    {
@@ -2385,7 +2434,12 @@ void Check_Communication_DS_CF1(void)
                 if(comm_check_DS_CF1.Wait_timeout != 0)
                 {
                     //Check for local count values
-                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF )
+                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D )
                     {
                         comm_check_DS_CF1.Wheel_match_fail = 0;
 //                        if(Get_DS_AxleDirection() == (BYTE)FORWARD_DIRECTION)
@@ -2591,7 +2645,12 @@ void Check_Communication_DS_CF2(void)
                 comm_check_DS_CF2.State = COMM_FAILED;
                 comm_check_DS_CF2.Wait_timeout = COMM_ERROR_WAIT_TIME;
                 //Save local count values
-                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF )
+                if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D )
                 {    
 //                    if(Get_DS_AxleDirection() == (BYTE)FORWARD_DIRECTION)
 //                    {
@@ -2616,7 +2675,12 @@ void Check_Communication_DS_CF2(void)
                 if(comm_check_DS_CF2.Wait_timeout != 0)
                 {
                     //Check for local count values
-                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF )
+                    if(DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_3D_EF ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D3_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_B ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_C ||
+                   DIP_Switch_Info.DAC_Unit_Type == DAC_UNIT_TYPE_D4_D )
                     {
                         comm_check_DS_CF2.Wheel_match_fail = 0;
 //                        if(Get_DS_AxleDirection() == (BYTE)FORWARD_DIRECTION)

@@ -22,7 +22,7 @@
 #include <libpic30.h>
 #include "COMMON.h"
 #include "CRC32.h"
-BYTE Prog_Val_Temp[4*10] = {0,0,0,0};
+static BYTE Prog_Val_Temp[4*10];
 /*********************************************************************************
 *File name 			:crc32.c
 *Function Name		:resultType crc32(resultType remainder)

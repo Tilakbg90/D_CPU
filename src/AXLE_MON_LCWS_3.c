@@ -71,7 +71,7 @@ extern  /*near*/  dac_status_t Status;                /* from dac_main.c */
 
 
 
-extern const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIONS];
+
 void Monitor_Supervisory_Pulse_3(void);
 void Monitor_Wheel_Pulse_3( bitadrb_t Temp_IO);
 void Determine_TrackState_3(BYTE uchPD_IO_Value);
@@ -874,6 +874,8 @@ void Determine_TrackState_3(BYTE uchPD_IO_Value)
             Status.Flags.PD2_Status = PHASE_DETECTOR_FAILED;
             Declare_DAC_Defective();
             Set_Error_Status_Bit(AD_STATE_FAIL_ERROR_NUM);
+            break;
+        default:
             break;
      }
 

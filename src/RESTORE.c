@@ -477,7 +477,7 @@ void Check_DIP_Switches(void)
                     DIP_Switch_Info.Peer_Address = DIP_Switch_Info.Address - 1;
                 }
             }
-            return;
+            break;
       default:
                 Status.Flags.Configuration = WRONG_CONFIGURATION;
                 Status.Flags.System_Status = CATASTROPHIC_ERROR;

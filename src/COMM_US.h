@@ -49,7 +49,7 @@
 /********** Output signal from  microcontroller to modem card  *************/
 
 extern void SetupCOM1BaudRate(void);    /* defined in COMM_US.c */
-
+extern comm_a_countdown_t Comm_A_CountDown;         /* from comm_us.c */
 
 #endif
 

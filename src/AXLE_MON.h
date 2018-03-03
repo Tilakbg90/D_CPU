@@ -318,5 +318,7 @@ extern track_info_t Track_Info_2;
 extern track_info_t Track_Info_3;
 extern track_info_t Track_Info_4;
 
+extern const BYTE uchPD_Transition_Table[NO_OF_TRACK_PROCESS_STATES][NO_OF_PD_TRANSITIONS];
+
 #endif
 

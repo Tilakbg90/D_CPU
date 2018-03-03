@@ -47,13 +47,13 @@
 
 static BYTE US_roundCounter;
 static BYTE US_rcon;
-BYTE US_iE;
-BYTE US_iD;
-ciper_message_info US_Ciper_Message_Info;
+static BYTE US_iE;
+static BYTE US_iD;
+static ciper_message_info US_Ciper_Message_Info;
 extern msg_info_t    Com1XmitObject;    /* COM1: Message Transmission Buffer etc., */
 extern msg_info_t    Com1RecvObject;    /* COM1: Message Receiving Buffer etc., */
-enciper_info US_Enciper_Info;
-deciper_info US_Deciper_Info;
+static enciper_info US_Enciper_Info;
+static deciper_info US_Deciper_Info;
 extern const BYTE STable[256];
 extern const BYTE SiTable[256];
 extern const BYTE x1[256];
@@ -105,8 +105,10 @@ void Update_US_Data_Encode(void)
             case ENCRYPT_FAILURE:
                 break;
             case ENCRYPTION_COMLETED:
+                break;  
+            default:
                 break;
-        }
+    }
 }
 
 void Load_Encrypt_Key(void)
@@ -269,6 +271,8 @@ void Update_US_Data_Decode(void)
                 break;
             case DECRYPTION_COMPLETED:
                 break;
+            default:
+                break;    
         }
 }
 

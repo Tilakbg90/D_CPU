@@ -50,13 +50,13 @@
 
 static BYTE DS_roundCounter;
 static BYTE DS_rcon;
-BYTE DS_iE;
-BYTE DS_iD;
-ciper_message_info DS_Ciper_Message_Info;
+static BYTE DS_iE;
+static BYTE DS_iD;
+static ciper_message_info DS_Ciper_Message_Info;
 extern msg_info_t    Com2XmitObject;    /* COM1: Message Transmission Buffer etc., */
 extern msg_info_t    Com2RecvObject;    /* COM1: Message Receiving Buffer etc., */
-enciper_info DS_Enciper_Info;
-deciper_info DS_Deciper_Info;
+static enciper_info DS_Enciper_Info;
+static deciper_info DS_Deciper_Info;
 extern const BYTE STable[256];
 extern const BYTE SiTable[256];
 extern const BYTE x1[256];
@@ -109,6 +109,8 @@ void Update_DS_Data_Encode(void)
                 Nop();
                 break;
             case ENCRYPTION_COMLETED:
+                break;
+            default:
                 break;
         }
 }
@@ -273,6 +275,8 @@ void Update_DS_Data_Decode(void)
                 Nop();
                 break;
             case DECRYPTION_COMPLETED:
+                break;
+            default:
                 break;
         }
 }
