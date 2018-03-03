@@ -2541,6 +2541,7 @@ void Control_DAC_Type_CF(void)
             Start_Sys_Mon_Decrement_50msTmr();          /* from sys_mon.c */
             Decrement_SPI_50msTmr();                    /* from comm_sm.c */
             Decrement_Err_display_50msTmr();
+            Decrement_comm_check_50msTmr();
             uchPreparatoryState1 = Get_CF_US_Reset_State();
             if(uchPreparatoryState1 != (BYTE)CF_US_RESET_SEQUENCE_COMPLETED)
                {
@@ -3096,6 +3097,7 @@ void Control_DAC_Type_D3(void)
             Decrement_SPI_50msTmr();                    /* from comm_sm.c */
             Decrement_Err_display_50msTmr();
             Decrement_D3_Track_Clearing_Timeout_50msTmr();
+            Decrement_comm_check_50msTmr();
         }
         if (IFS1bits.T5IF)
         {
@@ -3234,6 +3236,7 @@ void Control_DAC_Type_D4(void)
             Decrement_SPI_50msTmr();                    /* from comm_sm.c */
             Decrement_Err_display_50msTmr();
             Decrement_D4_Track_Clearing_Timeout_50msTmr();
+            Decrement_comm_check_50msTmr();
         }
         if (IFS1bits.T5IF)
         {
@@ -3296,6 +3299,7 @@ void Control_DAC_Type_3S(void)
             Start_Sys_Mon_Decrement_50msTmr();          /* from sys_mon.c */
             Decrement_SPI_50msTmr();                    /* from comm_sm.c */
             Decrement_Err_display_50msTmr();
+            Decrement_comm_check_50msTmr();
             uchPreparatoryState1 = Get_CF_US_Reset_State();
             if(uchPreparatoryState1 != (BYTE)CF_US_RESET_SEQUENCE_COMPLETED)
                {

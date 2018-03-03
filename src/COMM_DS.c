@@ -75,6 +75,8 @@ const UINT16 uiCOM2_BalanceTicks_Table[2][2] = {
  /*near*/  comm_sch_info_t DS_Sch_Info;
            extern comm_fail_check comm_check_SF1;
            extern comm_fail_check comm_check_SF2;
+           extern comm_fail_check comm_check_DS_CF1;
+           extern comm_fail_check comm_check_DS_CF2;
 
 comm_b_countdown_t Comm_B_CountDown =
             {MAXIMUM_COM_RETRIES, MAXIMUM_COM_RETRIES,
@@ -2441,6 +2443,25 @@ void Process_DS_Axle_Count_Message(void)
                 break;
             case DAC_UNIT_TYPE_EF:
                 break;
+            case DAC_UNIT_TYPE_CF:
+            case DAC_UNIT_TYPE_D3_A:
+            case DAC_UNIT_TYPE_D3_B:
+            case DAC_UNIT_TYPE_D3_C:                
+            case DAC_UNIT_TYPE_3D_SF:
+            case DAC_UNIT_TYPE_3D_EF:
+            case DAC_UNIT_TYPE_D4_A:                
+            case DAC_UNIT_TYPE_D4_B:                
+            case DAC_UNIT_TYPE_D4_C:                
+            case DAC_UNIT_TYPE_D4_D:                
+                if(comm_check_DS_CF1.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_DS_CF1.Track_counts[uchTrack] = Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            case DAC_UNIT_TYPE_LCWS:
+            case DAC_UNIT_TYPE_LCWS_DL:
+            case DAC_UNIT_TYPE_DE:                
             default:
                 break;
         }
@@ -2459,6 +2480,25 @@ void Process_DS_Axle_Count_Message(void)
                 break;
             case DAC_UNIT_TYPE_EF:
                 break;
+            case DAC_UNIT_TYPE_CF:
+            case DAC_UNIT_TYPE_D3_A:
+            case DAC_UNIT_TYPE_D3_B:
+            case DAC_UNIT_TYPE_D3_C:                
+            case DAC_UNIT_TYPE_3D_SF:
+            case DAC_UNIT_TYPE_3D_EF:
+            case DAC_UNIT_TYPE_D4_A:                
+            case DAC_UNIT_TYPE_D4_B:                
+            case DAC_UNIT_TYPE_D4_C:                
+            case DAC_UNIT_TYPE_D4_D:                
+                if(comm_check_DS_CF2.State == COMM_GOOD && DS_Section_Mode.Local_Unit == SYSTEM_OCCUPIED_MODE)
+                {
+                    for(uchTrack = 0;uchTrack<10;uchTrack++)
+                        comm_check_DS_CF2.Track_counts[uchTrack] = Com2RecvObject.Msg_Buffer[COM_FWD_AXLE_COUNT_LO_OFFSET + uchTrack];
+                }
+                break;
+            case DAC_UNIT_TYPE_LCWS:
+            case DAC_UNIT_TYPE_LCWS_DL:
+            case DAC_UNIT_TYPE_DE:                
             default:
                 break;
         }
