@@ -758,7 +758,7 @@ void Check_Flash(void)
 //    CalculatedSum.LWord = 0xA7CA919B;
     CPU_Calculated_Checksum = CalculatedSum.LWord;
     //CalculatedSum.LWord = Crc32((UINT32) ROMSIZE );
-	if (CalculatedSum.LWord == SavedSum.LWord)
+	if(CalculatedSum.LWord == SavedSum.LWord)
 	{
 		/* CRC-32 Check sum computed matches with the one stored in ID LOCATION */
 		Status.Flags.Flash_CheckSum = CRC32_CHECKSUM_OK;

@@ -143,7 +143,6 @@ comm_fail_check comm_check_DS_CF2=
 };
 
 
-
 void Update_FeedBack_State(BYTE uchID);
 void Read_FeedBack_Signal_Port(BYTE uchID);
 void Check_Communication_Links(void);
